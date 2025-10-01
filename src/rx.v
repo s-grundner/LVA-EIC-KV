@@ -49,9 +49,9 @@ module rx (
     // --------------------- Combinatorial Processes -------------------------- //
 
     // Next State Conditions
-    wire nextBitReady = (cycleCounter == CYCLES_PER_BIT) ||
+    wire nextBitReady = (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT)) ||
                         (fsmState == FSM_STOP) &&
-                        (cycleCounter == CYCLES_PER_BIT/2);
+                        (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT/2));
     wire payloadDone = (bitCounter == `MIDI_PAYLOAD_BITS);
     assign dataReady_o = payloadDone;
 
@@ -81,7 +81,7 @@ module rx (
     always @(posedge clk_i or negedge nrst_i) begin : sampleBit_p
         if (!nrst_i) begin
             sampledBit <= 1'b0;
-        end else if (cycleCounter == CYCLES_PER_BIT / 2) begin
+        end else if (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT / 2)) begin
             // Take sample in the middle of a bit
             sampledBit <= rxDataReg0;
         end
