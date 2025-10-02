@@ -11,6 +11,7 @@ module osc (
     input wire clk_i,
     input wire nrst_i,
     input wire nrstPhase_i,
+    input wire enable_i,
     input wire [7:0] note_i,
     output wire wave_o
 );
@@ -40,7 +41,7 @@ module osc (
     always @(posedge clk_i or negedge nrst_i) begin
         if (!nrst_i) begin
             wave <= 1'b0;
-        end else if (toggleOsc) begin
+        end else if (enable_i && toggleOsc) begin
             wave <= ~wave;
         end
     end
@@ -59,9 +60,9 @@ module osc (
     // Determine counter reset condition
     always @(*) begin
         if (nrstPhase_i | toggleOsc) begin
-            nrstCnt <= 1'b0;
+            nrstCnt = 1'b0;
         end else begin
-            nrstCnt <= 1'b1;
+            nrstCnt = 1'b1;
         end
     end
     

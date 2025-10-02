@@ -4,6 +4,7 @@
  */
 
 `default_nettype none
+`include "global.v"
 
 module tt_um_s_grundner (
     input  wire [7:0] ui_in,    // Dedicated inputs
