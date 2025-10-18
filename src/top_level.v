@@ -21,7 +21,7 @@ module tt_um_s_grundner (
         .clk_i(clk),
         .nrst_i(rst_n),
         .rxData_i(ui_in[0]),
-        .oscOut_o(uo_out[6:0]),
+        .oscOut_o(uo_out[`OSC_VOICES-1:0]),
         .activeOscPwm_o(uo_out[7])
     );
 

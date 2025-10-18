@@ -23,8 +23,6 @@ module osc (
     
     localparam CNT_BW = 16;
 
-    // ------------------------ Assign Outputs ------------------------------ //
-    assign wave_o = wave;
     // ---------------------------- Signals --------------------------------- //
 
     reg [CNT_BW-1:0] oscCmp;
@@ -33,8 +31,10 @@ module osc (
     reg wave;
     reg nrstCnt;
 
-    // -------------------- Logic Implementations --------------------------- //
+    // ------------------------ Assign Outputs ------------------------------ //
+    assign wave_o = wave;
 
+    // -------------------- Logic Implementations --------------------------- //
     wire toggleOsc = (oscCounter == oscCmp);
     
     // Toggle wave 

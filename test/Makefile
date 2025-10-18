@@ -1,27 +1,38 @@
+# ============================================================================== 
 # Makefile
 # See https://docs.cocotb.org/en/stable/quickstart.html for more info
+# ============================================================================== 
 
+# ------------------------------------------------------------------------------ 
 # defaults
+# ------------------------------------------------------------------------------ 
+
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = top_level.v
-PROJECT_SOURCES += global.v
 
-# Submodules
-PROJECT_SOURCES += counter.v
-PROJECT_SOURCES += pwm.v
+# ------------------------------------------------------------------------------ 
+# Project source files:
+# ------------------------------------------------------------------------------ 
 
-# Modules
-PROJECT_SOURCES += rx.v
-PROJECT_SOURCES += midi.v
-PROJECT_SOURCES += osc.v
-PROJECT_SOURCES += synth.v
+PROJECT_SOURCES = \
+	top_level.v \
+	global.v \
+	counter.v \
+	pwm.v \
+	rx.v \
+	midi.v \
+	osc.v \
+	synth.v 
+
+# ------------------------------------------------------------------------------ 
+# Simulation settings: RTL / Gate Level
+# ------------------------------------------------------------------------------
 
 ifneq ($(GATES),yes)
 
 # RTL simulation:
-SIM_BUILD				= sim_build/rtl
+SIM_BUILD		= sim_build/rtl
 VERILOG_SOURCES += $(addprefix $(SRC_DIR)/,$(PROJECT_SOURCES))
 
 else
@@ -41,15 +52,58 @@ VERILOG_SOURCES += $(PWD)/gate_level_netlist.v
 
 endif
 
-# Allow sharing configuration between design and testbench via `include`:
-COMPILE_ARGS 		+= -I$(SRC_DIR)
+# Common Compiler arguments:
+# Set include path for project source files
+COMPILE_ARGS += -I$(SRC_DIR)
 
-# Include the testbench sources:
-VERILOG_SOURCES += $(PWD)/tb.v
-TOPLEVEL = tb
+# ------------------------------------------------------------------------------
+# Define each test and its Verilog testbench
+# Format: TEST_NAME:TOPLEVEL:TESTBENCH_FILE
+# ------------------------------------------------------------------------------
 
-# List test modules to run, separated by commas and without the .py suffix:
-COCOTB_TEST_MODULES = test
+TEST_CONFIGS = \
+	test:tb:tb.v \
+	test_counter:tb_counter:tb_counter.v
 
-# include cocotb's make rules to take care of the simulator setup
-include $(shell cocotb-config --makefiles)/Makefile.sim
+# Default rule to run all tests
+.DEFAULT_GOAL := all
+
+# Generate Test Names
+TEST_NAMES = $(foreach config,$(TEST_CONFIGS),$(firstword $(subst :, ,$(config))))
+
+# Run all tests
+all: $(TEST_NAMES)
+	
+# Rule to run each test
+$(TEST_NAMES):
+	$(eval CFG := $(filter $@:%, $(TEST_CONFIGS)))
+	$(eval TEST_MODULE := $(word 1,$(subst :, ,$(CFG))))
+	$(eval TOPLEVEL := $(word 2,$(subst :, ,$(CFG))))
+	$(eval TB_FILE := $(word 3,$(subst :, ,$(CFG))))
+
+	@echo "=============================================="
+	@echo " Running Cocotb test: $(TEST_MODULE)"
+	@echo "   Top-level: $(TOPLEVEL)"
+	@echo "   Testbench: $(TB_FILE)"
+	@echo "=============================================="
+
+	@mkdir -p results/$(TEST_MODULE)
+
+	$(MAKE) -f $(shell cocotb-config --makefiles)/Makefile.sim \
+		SIM=$(SIM) \
+		TOPLEVEL_LANG=$(TOPLEVEL_LANG) \
+		TOPLEVEL=$(TOPLEVEL) \
+		MODULE=$(TEST_MODULE) \
+		COMPILE_ARGS="$(COMPILE_ARGS)" \
+		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/$(TB_FILE)" \
+		SIM_BUILD="$(PWD)/$(SIM_BUILD)/$(TEST_MODULE)" \
+
+# ------------------------------
+# Cleanup
+# ------------------------------
+
+clean:
+	rm -rf results sim_build
+
+.PHONY: all clean-builds $(TEST_NAMES)
+

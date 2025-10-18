@@ -8,10 +8,10 @@
 `default_nettype none
 `timescale 1ns/1ps
 
-module counter_tb;
+module tb_counter;
 	initial begin
-		$dumpfile("counter_tb.vcd");
-		$dumpvars(0, counter_tb);
+		$dumpfile("./waves/tb_counter.vcd");
+		$dumpvars(0, tb_counter);
 	end
 
 	// Parameters
