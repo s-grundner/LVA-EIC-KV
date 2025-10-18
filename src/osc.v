@@ -27,10 +27,10 @@ module osc (
     assign wave_o = wave;
     // ---------------------------- Signals --------------------------------- //
 
-    reg [CNT_BW-1:0] oscCmp = {CNT_BW{1'b0}};
+    reg [CNT_BW-1:0] oscCmp;
     wire [CNT_BW-1:0] oscCounter;
 
-    reg wave = 1'b0;
+    reg wave;
     reg nrstCnt;
 
     // -------------------- Logic Implementations --------------------------- //
@@ -72,9 +72,14 @@ module osc (
     function [CNT_BW-1:0] noteToHalfCntPeriod;
         input [7:0] note;
         begin
+            // Formula:
             // n_cntPeriod = (f_clk / f_note) / 2
             // f_note = 440 * 2^((note - 69)/12)
+
+            /* verilator lint_off WIDTHTRUNC */
+            // RHS will be truncated to CNT_BW bits: OK
             noteToHalfCntPeriod = (`F_CLK_HZ / (440 * (2**((note - 69) / 12)))) >> 1;
+            /* verilator lint_on WIDTHTRUNC */
         end
     endfunction
 

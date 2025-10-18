@@ -1,0 +1,5 @@
+export PDK=sky130A
+export PDKPATH=$PDK_ROOT/$PDK
+export STD_CELL_LIBRARY=sky130_fd_sc_hd
+export SPICE_USERINIT_DIR=$PDKPATH/libs.tech/ngspice
+export KLAYOUT_PATH=$PDKPATH/libs.tech/klayout:$PDKPATH/libs.tech/klayout/tech

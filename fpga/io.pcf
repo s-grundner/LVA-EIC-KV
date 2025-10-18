@@ -1,0 +1,16 @@
+# Lattice iCE40 FPGA Stick
+
+# Inputs
+set_io clk 			21 # 12 MHz
+set_io rst_n		119
+set_io ena			118
+
+# Outputs
+set_io uo_out[0] 	117
+set_io uo_out[1] 	116
+set_io uo_out[2] 	115
+set_io uo_out[3] 	99
+set_io uo_out[4] 	98
+set_io uo_out[5] 	97
+set_io uo_out[6] 	96
+set_io uo_out[7] 	95
