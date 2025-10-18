@@ -9,6 +9,6 @@
 `define MIDI_CHANNEL 0  // MIDI channel 1
 `define MIDI_PAYLOAD_BITS 8
 
-`define OSC_VOICES 5 // MAX 7
+`define OSC_VOICES 7 // MAX 7
 
 `endif  // GLOBAL_V

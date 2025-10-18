@@ -78,7 +78,8 @@ module osc (
 
             /* verilator lint_off WIDTHTRUNC */
             // RHS will be truncated to CNT_BW bits: OK
-            noteToHalfCntPeriod = (`F_CLK_HZ / (440 * (2**((note - 69) / 12)))) >> 1;
+            // noteToHalfCntPeriod = (`F_CLK_HZ / (440 * (2**((note - 69) / 12)))) >> 1;
+            noteToHalfCntPeriod = CNT_BW'(0);
             /* verilator lint_on WIDTHTRUNC */
         end
     endfunction

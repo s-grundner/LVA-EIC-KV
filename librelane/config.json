@@ -1,6 +1,6 @@
 {
-	"DESIGN_NAME": "tt_um_counter_top",
-	"VERILOG_FILES": "dir::../verilog/src/tt_um_counter_top.v",
+	"DESIGN_NAME": "tt_um_s_grundner",
+	"VERILOG_FILES": "dir::../src/top_level.v",
 	"DIE_AREA": "0 0 160 100",
 	"PNR_SDC_FILE": "dir::impl.sdc",
     "SIGNOFF_SDC_FILE": "dir::signoff.sdc",
