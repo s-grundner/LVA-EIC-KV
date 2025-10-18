@@ -10,6 +10,7 @@
 SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
+# GATES ?= yes
 
 # ------------------------------------------------------------------------------ 
 # Project source files:
@@ -61,9 +62,12 @@ COMPILE_ARGS += -I$(SRC_DIR)
 # Format: TEST_NAME:TOPLEVEL:TESTBENCH_FILE
 # ------------------------------------------------------------------------------
 
-TEST_CONFIGS = \
-	test:tb:tb.v \
+TEST_CONFIGS = test:tb:tb.v 
+
+ifneq ($(GATES),yes)
+TEST_CONFIGS += \
 	test_counter:tb_counter:tb_counter.v
+endif
 
 # Default rule to run all tests
 .DEFAULT_GOAL := all
@@ -93,7 +97,7 @@ $(TEST_NAMES):
 		SIM=$(SIM) \
 		TOPLEVEL_LANG=$(TOPLEVEL_LANG) \
 		TOPLEVEL=$(TOPLEVEL) \
-		MODULE=$(TEST_MODULE) \
+		COCOTB_TEST_MODULES=$(TEST_MODULE) \
 		COMPILE_ARGS="$(COMPILE_ARGS)" \
 		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/$(TB_FILE)" \
 		SIM_BUILD="$(PWD)/$(SIM_BUILD)/$(TEST_MODULE)" \
