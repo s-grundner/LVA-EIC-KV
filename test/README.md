@@ -3,10 +3,14 @@
 This is a sample testbench for a Tiny Tapeout project. It uses [cocotb](https://docs.cocotb.org/en/stable/) to drive the DUT and check the outputs.
 See below to get started or for more information, check the [website](https://tinytapeout.com/hdl/testing/).
 
-## Setting up
+## Add testcases
 
-1. Edit [Makefile](Makefile) and modify `PROJECT_SOURCES` to point to your Verilog files.
-2. Edit [tb.v](tb.v) and replace `tt_um_example` with your module name.
+1. Create a CocoTB Script `test_<modulename>.py` and write unittests (View existing CocoB Scripts for reference)
+2. Edit [Makefile](Makefile) and add tests to `TEST_CONFIGS` with the Format
+   - `<scriptname>:<toplevel-entity>:<testbench-file>`
+   - `<scriptname>`: Name of the CocoTB script without .py extension
+   - `<toplevel-entity>`: Name of the top level module to be tested
+   - `<testbench-file>`: File name of the testbench Verilog file located in `test/benches/` (with .v extension)
 
 ## How to run
 

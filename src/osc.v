@@ -6,6 +6,7 @@
 *******************************************************************************/
 
 `include "counter.v"
+`include "note2cnt.v"
 
 module osc (
     input wire clk_i,
@@ -18,10 +19,7 @@ module osc (
 
     // -------------------------- Parameters -------------------------------- //
 
-    localparam MAX_NOTE = 8'd127;
-    localparam MIN_NOTE = 8'd21; // A0
-    
-    localparam CNT_BW = 16;
+    localparam CNT_BW = `OSC_CNT_BW;
 
     // ---------------------------- Signals --------------------------------- //
 
@@ -46,17 +44,6 @@ module osc (
         end
     end
 
-    // Clamp note input and convert to counter period
-    always @(*) begin 
-        if (note_i < MIN_NOTE) begin
-            oscCmp = noteToHalfCntPeriod(MIN_NOTE);
-        end else if (note_i > MAX_NOTE) begin
-            oscCmp = noteToHalfCntPeriod(MAX_NOTE);
-        end else begin
-            oscCmp = noteToHalfCntPeriod(note_i);
-        end
-    end
-
     // Determine counter reset condition
     always @(*) begin
         if (nrstPhase_i | toggleOsc) begin
@@ -65,29 +52,6 @@ module osc (
             nrstCnt = 1'b1;
         end
     end
-    
-    // -------------------------- Functions --------------------------------- //
-
-    // MIDI note to counter Period conversion
-    function [CNT_BW-1:0] noteToHalfCntPeriod;
-        input [7:0] note;
-        begin
-            // Formula:
-            // n_halfCntPeriod = (f_clk / f_note) / 2
-            // f_note = 440 * 2^((note - 69)/12)
-
-            /* verilator lint_off WIDTHTRUNC */
-            // RHS will be truncated to CNT_BW bits: OK
-            // noteToHalfCntPeriod = (`F_CLK_HZ / (440 * (2**((note - 69) / 12)))) >> 1;
-            /* verilator lint_on WIDTHTRUNC */
-            noteToHalfCntPeriod = CNT_BW'(0);            
-            // Formular too complex. Solution:
-            // - Store one octave of (f*10) (12 notes) in a small ROM
-            // - Shift left/right depending on octave
-
-            
-        end
-    endfunction
 
     // ----------------------- Module Instances ----------------------------- //
 
@@ -98,6 +62,15 @@ module osc (
         .nrst_i(nrst_i),
         .nrstSync_i(nrstCnt),
         .count_o(oscCounter)
+    );
+    
+    note2cnt #(
+        .BW(CNT_BW)
+    ) note2cnt_inst (
+        .clk_i(clk_i),
+        .nrst_i(nrst_i),
+        .note_i(note_i),
+        .halfCntPeriod_o(oscCmp)
     );
 
 endmodule  // osc

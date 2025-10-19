@@ -2,8 +2,8 @@
 # @file    : test_counter.py                                                  #
 # @author  : @s-grundner                                                      #
 # @license : Apache-2.0                                                       #
-# @brief   : Counter Module Testbench for Cocotb. This directly tests the     #
-#              implementation and NOT the testbench in ./benches              #
+# @brief   : Counter Module Testbench for Cocotb.                             #
+#            - Tests counting behavior with synchronous and overflow resets.  #
 # *************************************************************************** #
 
 import cocotb
@@ -15,6 +15,7 @@ from cocotb.triggers import ClockCycles, RisingEdge, Timer
 async def counting_test(dut, reset_type):
     dut._log.info("Start")
 
+    # Clock Frequency: 100 kHz
     clock = Clock(dut.clk, 10, unit="us")
     cocotb.start_soon(clock.start())
 
