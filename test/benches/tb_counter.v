@@ -2,7 +2,7 @@
 * @file    : counter_tb.v                                                      *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
-* @brief   : Testbench for counter module.                                     *
+* @brief   : Counter Module Testbench for Waveform Viewer                      *
 *******************************************************************************/
 
 `default_nettype none
@@ -10,7 +10,7 @@
 
 module tb_counter;
 	initial begin
-		$dumpfile("./waves/tb_counter.vcd");
+		$dumpfile("../waves/tb_counter.vcd");
 		$dumpvars(0, tb_counter);
 	end
 
@@ -26,7 +26,7 @@ module tb_counter;
 	// Clock generation
 	initial begin
 		clk = 1'b0;
-		forever #5 clk = ~clk; // 100MHz clock
+		forever #10 clk = ~clk; // 100MHz clock
 	end
 
 	// DUT instantiation
@@ -39,14 +39,14 @@ module tb_counter;
 		.count_o(count)
 	);
 
-	// Test sequence
+	// Test sequence for wave output
 	initial begin
 		// Initialize signals
 		nrst = 1'b0;
 		nrstSync = 1'b0;
 
 		// Release reset
-		#15;
+		#20;
 		nrst = 1'b1;
 		nrstSync = 1'b1;
 

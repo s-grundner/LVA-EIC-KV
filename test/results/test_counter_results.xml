@@ -1,0 +1,7 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1760843106" />
+    <testcase name="counting_test" classname="test_counter" file="/foss/designs/test/test_counter.py" lineno="16" time="0.001132965087890625" sim_time_ns="110000.0" ratio_time="97090370.37037037" />
+    <testcase name="sync_reset_test" classname="test_counter" file="/foss/designs/test/test_counter.py" lineno="42" time="0.0012335777282714844" sim_time_ns="190000.0" ratio_time="154023533.0498647" />
+  </testsuite>
+</testsuites>
