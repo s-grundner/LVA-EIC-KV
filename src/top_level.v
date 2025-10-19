@@ -4,7 +4,6 @@
  */
 
 `default_nettype none
-`timescale 1ns/1ps
 `include "global.v"
 
 module tt_um_s_grundner (

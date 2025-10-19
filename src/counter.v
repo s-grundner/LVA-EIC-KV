@@ -6,7 +6,6 @@
 *******************************************************************************/
 
 `default_nettype none
-`timescale 1ns / 1ps
 `ifndef __COUNTER__
 `define __COUNTER__ 
 
