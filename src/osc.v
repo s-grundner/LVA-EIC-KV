@@ -73,14 +73,19 @@ module osc (
         input [7:0] note;
         begin
             // Formula:
-            // n_cntPeriod = (f_clk / f_note) / 2
+            // n_halfCntPeriod = (f_clk / f_note) / 2
             // f_note = 440 * 2^((note - 69)/12)
 
             /* verilator lint_off WIDTHTRUNC */
             // RHS will be truncated to CNT_BW bits: OK
             // noteToHalfCntPeriod = (`F_CLK_HZ / (440 * (2**((note - 69) / 12)))) >> 1;
-            noteToHalfCntPeriod = CNT_BW'(0);
             /* verilator lint_on WIDTHTRUNC */
+            noteToHalfCntPeriod = CNT_BW'(0);            
+            // Formular too complex. Solution:
+            // - Store one octave of (f*10) (12 notes) in a small ROM
+            // - Shift left/right depending on octave
+
+            
         end
     endfunction
 

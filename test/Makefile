@@ -8,9 +8,10 @@
 # ------------------------------------------------------------------------------ 
 
 SIM ?= icarus
+# SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
-SRC_DIR = $(PWD)/../src
-# GATES ?= yes
+RELATIVE_SRC_DIR ?= ../src
+SRC_DIR = $(PWD)/$(RELATIVE_SRC_DIR)
 
 # ------------------------------------------------------------------------------ 
 # Project source files:
@@ -62,8 +63,10 @@ COMPILE_ARGS += -I$(SRC_DIR)
 # Format: TEST_NAME:TOPLEVEL:TESTBENCH_FILE
 # ------------------------------------------------------------------------------
 
+# Mandatory testbench test for GHA pass
 TEST_CONFIGS = test:tb:tb.v 
 
+# Custom module tests
 ifneq ($(GATES),yes)
 TEST_CONFIGS += \
 	test_counter:tb_counter:tb_counter.v
@@ -87,20 +90,22 @@ $(TEST_NAMES):
 
 	@echo "=============================================="
 	@echo " Running Cocotb test: $(TEST_MODULE)"
-	@echo "   Top-level: $(TOPLEVEL)"
-	@echo "   Testbench: $(TB_FILE)"
+	@echo " Top-level: $(TOPLEVEL)"
+	@echo " File: $(TB_FILE)"
 	@echo "=============================================="
 
-	@mkdir -p results/$(TEST_MODULE)
+	@mkdir -p results
 
 	$(MAKE) -f $(shell cocotb-config --makefiles)/Makefile.sim \
 		SIM=$(SIM) \
 		TOPLEVEL_LANG=$(TOPLEVEL_LANG) \
 		TOPLEVEL=$(TOPLEVEL) \
 		COCOTB_TEST_MODULES=$(TEST_MODULE) \
+		COCOTB_RESULTS_FILE=$(PWD)/results/$(TEST_MODULE)_results.xml \
 		COMPILE_ARGS="$(COMPILE_ARGS)" \
-		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/$(TB_FILE)" \
+		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/benches/$(TB_FILE)" \
 		SIM_BUILD="$(PWD)/$(SIM_BUILD)/$(TEST_MODULE)" \
+		WAVES=1 \
 
 # ------------------------------
 # Cleanup

@@ -2,13 +2,14 @@
 * @file    : counter_tb.v                                                      *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
-* @brief   : Testbench for counter module.                                     *
+* @brief   : Counter Module Testbench for Waveform Viewer                      *
 *******************************************************************************/
 
 `default_nettype none
 `timescale 1ns/1ps
 
 module tb_counter;
+
 	initial begin
 		$dumpfile("./waves/tb_counter.vcd");
 		$dumpvars(0, tb_counter);
@@ -26,7 +27,7 @@ module tb_counter;
 	// Clock generation
 	initial begin
 		clk = 1'b0;
-		forever #5 clk = ~clk; // 100MHz clock
+		forever #10 clk = ~clk; // 100MHz clock
 	end
 
 	// DUT instantiation
@@ -38,31 +39,4 @@ module tb_counter;
 		.nrstSync_i(nrstSync),
 		.count_o(count)
 	);
-
-	// Test sequence
-	initial begin
-		// Initialize signals
-		nrst = 1'b0;
-		nrstSync = 1'b0;
-
-		// Release reset
-		#15;
-		nrst = 1'b1;
-		nrstSync = 1'b1;
-
-		// Run counter
-		#105;
-
-		// synchronous reset
-		nrstSync = 1'b0;
-		#20;
-		nrstSync = 1'b1;
-
-		// Run counter
-		#100;
-
-		$finish;
-	end
 endmodule
-
-

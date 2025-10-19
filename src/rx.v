@@ -125,11 +125,11 @@ module rx (
     // Increment Cycle Counter
     always @(posedge clk_i or negedge nrst_i) begin : countCycles_p
         if (!nrst_i) begin
-            cycleCounter <= 12'b0;
+            cycleCounter <= COUNT_REG_LEN'(0);
         end else if (nextBitReady) begin
-            cycleCounter <= 12'b0;
+            cycleCounter <= COUNT_REG_LEN'(0);
         end else if (fsmState == FSM_START || fsmState == FSM_RECV || fsmState == FSM_STOP) begin
-            cycleCounter <= cycleCounter + 12'b1;
+            cycleCounter <= cycleCounter + COUNT_REG_LEN'(1);
         end
     end
 
