@@ -7,8 +7,8 @@
 # defaults
 # ------------------------------------------------------------------------------ 
 
-SIM ?= icarus
-# SIM ?= verilator
+# SIM ?= icarus
+SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
 RELATIVE_SRC_DIR ?= ../src
 SRC_DIR = $(PWD)/$(RELATIVE_SRC_DIR)
