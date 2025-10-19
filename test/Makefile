@@ -95,6 +95,7 @@ $(TEST_NAMES):
 	@echo "=============================================="
 
 	@mkdir -p results
+	@mkdir -p waves
 
 	$(MAKE) -f $(shell cocotb-config --makefiles)/Makefile.sim \
 		SIM=$(SIM) \
