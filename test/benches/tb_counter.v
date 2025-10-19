@@ -9,8 +9,9 @@
 `timescale 1ns/1ps
 
 module tb_counter;
+
 	initial begin
-		$dumpfile("tb_counter.vcd");
+		$dumpfile("./waves/tb_counter.vcd");
 		$dumpvars(0, tb_counter);
 	end
 

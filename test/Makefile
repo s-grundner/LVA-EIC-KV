@@ -8,6 +8,7 @@
 # ------------------------------------------------------------------------------ 
 
 SIM ?= icarus
+# SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
 RELATIVE_SRC_DIR ?= ../src
 SRC_DIR = $(PWD)/$(RELATIVE_SRC_DIR)
@@ -85,12 +86,12 @@ $(TEST_NAMES):
 	$(eval CFG := $(filter $@:%, $(TEST_CONFIGS)))
 	$(eval TEST_MODULE := $(word 1,$(subst :, ,$(CFG))))
 	$(eval TOPLEVEL := $(word 2,$(subst :, ,$(CFG))))
-	$(eval MOD_FILE := $(word 3,$(subst :, ,$(CFG))))
+	$(eval TB_FILE := $(word 3,$(subst :, ,$(CFG))))
 
 	@echo "=============================================="
 	@echo " Running Cocotb test: $(TEST_MODULE)"
 	@echo " Top-level: $(TOPLEVEL)"
-	@echo " File: $(MOD_FILE)"
+	@echo " File: $(TB_FILE)"
 	@echo "=============================================="
 
 	@mkdir -p results
@@ -102,7 +103,7 @@ $(TEST_NAMES):
 		COCOTB_TEST_MODULES=$(TEST_MODULE) \
 		COCOTB_RESULTS_FILE=$(PWD)/results/$(TEST_MODULE)_results.xml \
 		COMPILE_ARGS="$(COMPILE_ARGS)" \
-		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/benches/$(MOD_FILE)" \
+		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/benches/$(TB_FILE)" \
 		SIM_BUILD="$(PWD)/$(SIM_BUILD)/$(TEST_MODULE)" \
 		WAVES=1 \
 

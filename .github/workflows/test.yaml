@@ -29,12 +29,12 @@ jobs:
           make clean
           make
           # make will return success even if the test fails, so check for failure in the results.xml
-          ! grep failure results.xml
+          ! grep failure results/*.xml
 
       - name: Test Summary
         uses: test-summary/action@v2.3
         with:
-          paths: "test/results/test_results.xml"
+          paths: "test/results.xml"
         if: always()
 
       - name: upload vcd
@@ -43,7 +43,7 @@ jobs:
         with:
           name: test-vcd
           path: |
-            test/tb.vcd
-            test/results.xml
+            test/waves/*.vcd
+            test/results/*.xml
             test/output/*
 

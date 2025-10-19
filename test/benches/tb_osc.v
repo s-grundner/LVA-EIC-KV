@@ -10,8 +10,8 @@
 
 module osc_tb;
 	initial begin
-		$dumpfile("osc_tb.vcd");
-		$dumpvars(0, counter_tb);
+		$dumpfile("./waves/osc_tb.vcd");
+		$dumpvars(0, osc_tb);
 	end
 
 	// Clock generation
