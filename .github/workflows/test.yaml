@@ -34,7 +34,7 @@ jobs:
       - name: Test Summary
         uses: test-summary/action@v2.3
         with:
-          paths: "test/results.xml"
+          paths: "test/results/test_results.xml"
         if: always()
 
       - name: upload vcd
@@ -46,3 +46,4 @@ jobs:
             test/tb.vcd
             test/results.xml
             test/output/*
+
