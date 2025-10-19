@@ -10,7 +10,7 @@
 
 module tb_counter;
 	initial begin
-		$dumpfile("../waves/tb_counter.vcd");
+		$dumpfile("tb_counter.vcd");
 		$dumpvars(0, tb_counter);
 	end
 
@@ -38,31 +38,4 @@ module tb_counter;
 		.nrstSync_i(nrstSync),
 		.count_o(count)
 	);
-
-	// Test sequence for wave output
-	initial begin
-		// Initialize signals
-		nrst = 1'b0;
-		nrstSync = 1'b0;
-
-		// Release reset
-		#20;
-		nrst = 1'b1;
-		nrstSync = 1'b1;
-
-		// Run counter
-		#105;
-
-		// synchronous reset
-		nrstSync = 1'b0;
-		#20;
-		nrstSync = 1'b1;
-
-		// Run counter
-		#100;
-
-		$finish;
-	end
 endmodule
-
-

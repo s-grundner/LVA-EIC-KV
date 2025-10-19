@@ -1,7 +1,7 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1760844053" />
-    <testcase name="counting_test" classname="test_counter" file="/foss/designs/test/test_counter.py" lineno="16" time="0.0011725425720214844" sim_time_ns="110000.0" ratio_time="93813224.88816592" />
-    <testcase name="sync_reset_test" classname="test_counter" file="/foss/designs/test/test_counter.py" lineno="42" time="0.0011043548583984375" sim_time_ns="190000.0" ratio_time="172046148.53195164" />
+    <property name="random_seed" value="1760845202" />
+    <testcase name="counting_test" classname="test_counter" file="/foss/designs/test/test_counter.py" lineno="16" time="0.006686687469482422" sim_time_ns="220.0" ratio_time="32901.19375311987" />
+    <testcase name="sync_reset_test" classname="test_counter" file="/foss/designs/test/test_counter.py" lineno="42" time="0.0005810260772705078" sim_time_ns="379.999" ratio_time="654013.674885515" />
   </testsuite>
 </testsuites>

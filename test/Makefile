@@ -63,12 +63,12 @@ COMPILE_ARGS += -I$(SRC_DIR)
 # ------------------------------------------------------------------------------
 
 # Mandatory testbench test for GHA pass
-TEST_CONFIGS = test:tb:$(PWD)/tb.v 
+TEST_CONFIGS = test:tb:tb.v 
 
 # Custom module tests
 ifneq ($(GATES),yes)
 TEST_CONFIGS += \
-	test_counter:counter:$(SRC_DIR)/counter.v
+	test_counter:tb_counter:tb_counter.v
 endif
 
 # Default rule to run all tests
@@ -102,7 +102,7 @@ $(TEST_NAMES):
 		COCOTB_TEST_MODULES=$(TEST_MODULE) \
 		COCOTB_RESULTS_FILE=$(PWD)/results/$(TEST_MODULE)_results.xml \
 		COMPILE_ARGS="$(COMPILE_ARGS)" \
-		VERILOG_SOURCES="$(VERILOG_SOURCES) $(MOD_FILE)" \
+		VERILOG_SOURCES="$(VERILOG_SOURCES) $(PWD)/benches/$(MOD_FILE)" \
 		SIM_BUILD="$(PWD)/$(SIM_BUILD)/$(TEST_MODULE)" \
 		WAVES=1 \
 
