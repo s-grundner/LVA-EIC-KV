@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="summary">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1760969127" />
-    <testcase name="counting_test/reset_type=sync" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.008146524429321289" sim_time_ns="400000.0" ratio_time="49100693.61116802" />
-    <testcase name="counting_test/reset_type=overflow" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.0029304027557373047" sim_time_ns="470000.00000000006" ratio_time="160387509.55984056" />
+    <property name="random_seed" value="1760983385" />
+    <testcase name="counting_test/reset_type=sync" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.008396387100219727" sim_time_ns="400000.0" ratio_time="47639537.72325865" />
+    <testcase name="counting_test/reset_type=overflow" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.002223968505859375" sim_time_ns="470000.00000000006" ratio_time="211333927.95883363" />
   </testsuite>
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1760969128" />
-    <testcase name="lookup_test/test_note=0" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.007679939270019531" sim_time_ns="5720.0" ratio_time="744797.5561902396" />
-    <testcase name="lookup_test/test_note=69" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0013003349304199219" sim_time_ns="6006.0" ratio_time="4618810.01540154" />
-    <testcase name="lookup_test/test_note=127" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.001522064208984375" sim_time_ns="6006.0" ratio_time="3945957.052631579" />
+    <property name="random_seed" value="1760983386" />
+    <testcase name="lookup_test/test_note=0" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.008608579635620117" sim_time_ns="5720.0" ratio_time="664453.3990638935" />
+    <testcase name="lookup_test/test_note=69" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0014853477478027344" sim_time_ns="6006.0" ratio_time="4043497.564044944" />
+    <testcase name="lookup_test/test_note=127" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012440681457519531" sim_time_ns="6006.0" ratio_time="4827709.816788041" />
   </testsuite>
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1760969130" />
-    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.012829780578613281" sim_time_ns="1090000.0" ratio_time="84958584.70229688" />
-    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0009005069732666016" sim_time_ns="100000.0" ratio_time="111048557.05586444" />
-    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008697509765625" sim_time_ns="100000.0" ratio_time="114975438.59649123" />
-    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007929801940917969" sim_time_ns="100000.0" ratio_time="126106554.41972339" />
-    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008003711700439453" sim_time_ns="100000.0" ratio_time="124942031.57581174" />
+    <property name="random_seed" value="1760983388" />
+    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.013037443161010742" sim_time_ns="1090000.0" ratio_time="83605350.10880895" />
+    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008323192596435547" sim_time_ns="100000.0" ratio_time="120146204.5259238" />
+    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007598400115966797" sim_time_ns="100000.0" ratio_time="131606652.02384688" />
+    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008075237274169922" sim_time_ns="100000.0" ratio_time="123835370.53439622" />
+    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008299350738525391" sim_time_ns="100000.0" ratio_time="120491353.05946568" />
+  </testsuite>
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1760983382" />
+    <testcase name="parallelize_data/data_frame=single" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.15273690223693848" sim_time_ns="35940000.0" ratio_time="235306592.40585366" />
+    <testcase name="parallelize_data/data_frame=multi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.4348022937774658" sim_time_ns="103149999.99999999" ratio_time="237234259.05566338" />
+    <testcase name="parallelize_data/data_frame=midi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.4413435459136963" sim_time_ns="103150000.0" ratio_time="233718156.64926648" />
   </testsuite>
 </testsuites>

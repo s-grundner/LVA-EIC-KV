@@ -17,22 +17,17 @@ module osc_tb;
 	reg note[7:0];
 	reg clk;
 	reg nrst;
-	reg nrstPhase;
 	reg enable;
 	wire wave;
 
 	osc dut (
 		.clk_i(clk),
 		.nrst_i(nrst),
-		.nrstPhase_i(nrstPhase),
 		.enable_i(enable),
 		.note_i(note),
 		.wave_o(wave)
 	);
 
-	initial begin
-		$finish;
-	end
 endmodule
 
 

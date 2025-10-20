@@ -66,6 +66,7 @@ COMPILE_ARGS += -I$(SRC_DIR)
 # Custom module tests
 ifneq ($(GATES),yes)
 TEST_CONFIGS = \
+	test_rx:tb_rx:tb_rx.v \
 	test_counter:tb_counter:tb_counter.v \
 	test_note2cnt:tb_note2cnt:tb_note2cnt.v
 endif

@@ -8,30 +8,25 @@
 `default_nettype none
 `timescale 1ns/1ps
 
-module tb_counter;
+module tb_rx;
 
 	initial begin
 		$dumpfile("./waves/tb_rx.vcd");
 		$dumpvars(0, tb_rx);
 	end
 
-	// Parameters
-	localparam BW = 4;
-
 	// Signals
 	reg clk;
 	reg nrst;
-	reg nrstSync;
-	wire [BW-1:0] count;
+	reg rxData;
+	wire [7:0] payload;
 
 
 	// DUT instantiation
-	counter #(
-		.BW(BW)
-	) dut (
+	rx dut (
 		.clk_i(clk),
 		.nrst_i(nrst),
-		.nrstSync_i(nrstSync),
-		.count_o(count)
+		.rxData_i(rxData),
+		.midiData_o(payload)
 	);
 endmodule
