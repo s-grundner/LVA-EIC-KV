@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.7.24)  20 OCT 2025 00:46
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.4) (preloaded format=pdflatex 2025.7.24)  20 OCT 2025 13:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1385,7 +1385,27 @@ Overfull \vbox (0.7337pt too high) has occurred while \output is active []
  <./logos/jku_k_black.pdf> <./logos/jku_en_black.pdf
 
 pdfTeX warning: pdflatex (file ./logos/jku_en_black.pdf): PDF inclusion: multiple pdfs with page group included in a single page
-> <./logos/iic.png>] (main-report.toc)
+> <./logos/iic.png>] (main-report.toc
+Underfull \hbox (badness 10000) detected at line 2
+\T1/phv/b/n/10.95 1. 
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 3
+\T1/phv/b/n/10.95 2. 
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 4
+\T1/phv/b/n/10.95 3. 
+ []
+
+
+Underfull \hbox (badness 10000) detected at line 5
+\T1/phv/b/n/10.95 4. 
+ []
+
+)
 \tf@toc=\write4
 \openout4 = `main-report.toc'.
 
@@ -1393,27 +1413,27 @@ pdfTeX warning: pdflatex (file ./logos/jku_en_black.pdf): PDF inclusion: multipl
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 221.
+(hyperref)                removing `\\' on input line 249.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\hfill' on input line 221.
+(hyperref)                removing `\hfill' on input line 249.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 221.
+(hyperref)                removing `\\' on input line 249.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 221.
+(hyperref)                removing `\\' on input line 249.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\hfill' on input line 221.
+(hyperref)                removing `\hfill' on input line 249.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 221.
+(hyperref)                removing `\\' on input line 249.
 
 (C:\Users\Smon\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\se-pdfdoc.def
 File: se-pdfdoc.def 2019/11/29 v1.12 stringenc: PDFDocEncoding
@@ -1432,17 +1452,17 @@ LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
  ) 
 Here is how much of TeX's memory you used:
- 75517 strings out of 468149
- 1963390 string characters out of 5431566
- 2927132 words of memory out of 5000000
- 103222 multiletter control sequences out of 15000+600000
- 665882 words of font info for 109 fonts, out of 8000000 for 9000
+ 75526 strings out of 468149
+ 1963536 string characters out of 5431566
+ 2927134 words of memory out of 5000000
+ 103228 multiletter control sequences out of 15000+600000
+ 666979 words of font info for 110 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  108i,27n,120p,10937b,1407s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<C:/Users/Smon/AppData/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb><C:/Users/Smon/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/Smon/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb>
-Output written on main-report.pdf (2 pages, 69989 bytes).
+ <C:\Users\Smon\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk><C:/Users/Smon/AppData/Local/Programs/MiKTeX/fonts/type1/public/fontawesome5/FontAwesome5Free-Solid.pfb><C:/Users/Smon/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvb8a.pfb><C:/Users/Smon/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb>
+Output written on main-report.pdf (2 pages, 86813 bytes).
 PDF statistics:
- 85 PDF objects out of 1000 (max. 8388607)
- 9 named destinations out of 1000 (max. 500000)
- 76 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 146 PDF objects out of 1000 (max. 8388607)
+ 11 named destinations out of 1000 (max. 500000)
+ 92 words of extra memory for PDF output out of 10000 (max. 10000000)
 

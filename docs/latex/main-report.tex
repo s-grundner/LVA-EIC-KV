@@ -216,6 +216,34 @@
 
 \section{Introduction}
 
+\section{Notes}
+
+Link with Markdown documentation.
+
+Synthesizer Oscillator stack routing:
+
+Oscillators store the MIDI note number (0-127) in a register.
+
+Incoming Note ON:
+
+\begin{itemize}
+    \item Find first free oscillator (enabled = 0 -> unlocked)
+    \item and write note number to register
+    \item set enabled = 1 (locked).
+\end{itemize}
+
+Incoming Note OFF:
+
+\begin{itemize}
+    \item Find matching note number in all oscillators
+    \item set enabled = 0 (unlocked)
+    \item Disable flag: midi\_note == stored\_note AND note\_off
+\end{itemize}
+
+\section{System Overview}
+
+
+
 \section{Oscillator Design}
 
 \end{document}

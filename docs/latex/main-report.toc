@@ -1,4 +1,6 @@
 \babel@toc {english}{}\relax 
 \contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
-\contentsline {section}{\numberline {2}Oscillator Design}{2}{section.2}%
+\contentsline {section}{\numberline {2}Notes}{2}{section.2}%
+\contentsline {section}{\numberline {3}System Overview}{2}{section.3}%
+\contentsline {section}{\numberline {4}Oscillator Design}{2}{section.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
