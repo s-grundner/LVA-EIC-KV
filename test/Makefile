@@ -80,8 +80,12 @@ endif
 TEST_NAMES = $(foreach config,$(TEST_CONFIGS),$(firstword $(subst :, ,$(config))))
 
 # Run all tests
-all: $(TEST_NAMES)
-	
+all: $(TEST_NAMES) post
+
+post: $(TEST_NAMES)
+	cp results/test_results.xml results.xml
+	cp waves/tb.vcd tb.vcd
+
 # Rule to run each test
 $(TEST_NAMES):
 	$(eval CFG := $(filter $@:%, $(TEST_CONFIGS)))
@@ -114,7 +118,7 @@ $(TEST_NAMES):
 # ------------------------------
 
 clean:
-	rm -rf results sim_build waves
+	rm -rf results sim_build waves results.xml tb.vcd
 
-.PHONY: all clean-builds $(TEST_NAMES)
+.PHONY: all clean $(TEST_NAMES) post
 
