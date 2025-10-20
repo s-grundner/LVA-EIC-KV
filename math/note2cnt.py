@@ -26,18 +26,9 @@ def octave_from_to(from_idx, to_idx):
     else:
         return np.array(octave_cnts) << shift_amount
 
-def cnt_from_note(note):
+def cnt_from_note(note, stored_octave=8):
     actual_note = 0 if note < 21 else note - 21
     octave = actual_note // keys_per_octave
     note_in_octave = actual_note % keys_per_octave
-    octave_cnts = octave_from_to(8, octave)
+    octave_cnts = octave_from_to(stored_octave, octave)
     return octave_cnts[note_in_octave]
-
-print(get_octave_freqs(1))
-
-print(octave_from_to(0, 1))
-print(octave_from_to(8, 1))
-
-print(cnt_from_note(0))
-print(cnt_from_note(69))
-print(cnt_from_note(127))
