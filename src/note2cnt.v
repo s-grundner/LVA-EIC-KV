@@ -37,27 +37,29 @@ module note2cnt #(
 
 	reg [BW-1:0] halfCntPeriod; 
 	reg [3:0] shift;
-	
 	reg[`OSC_ROM_BW-1:0] actualNote; 
 	
 	always @(*) begin
-		if (note_i < 21) actualNote <= `OSC_ROM_BW'd21;
-		else actualNote <= note_i - `OSC_ROM_BW'd21;
+		if (note_i < 21) begin
+			actualNote = `OSC_ROM_BW'd0;
+		end else begin
+			actualNote = note_i - `OSC_ROM_BW'd21;
+		end
 	end
 	
 	always @(*) begin
-		if (actualNote < 12) shift = 8'h8;
-		else if (actualNote < 24) shift = 8'h7;
-		else if (actualNote < 36) shift = 8'h6;
-		else if (actualNote < 48) shift = 8'h5;
-		else if (actualNote < 60) shift = 8'h4;
-		else if (actualNote < 72) shift = 8'h3;
-		else if (actualNote < 84) shift = 8'h2;
-		else if (actualNote < 96) shift = 8'h1;
-		else shift = 8'h0; 
+		if (actualNote < 12) shift = 4'h8;
+		else if (actualNote < 24) shift = 4'h7;
+		else if (actualNote < 36) shift = 4'h6;
+		else if (actualNote < 48) shift = 4'h5;
+		else if (actualNote < 60) shift = 4'h4;
+		else if (actualNote < 72) shift = 4'h3;
+		else if (actualNote < 84) shift = 4'h2;
+		else if (actualNote < 96) shift = 4'h1;
+		else shift = 4'h0; 
 	end
 
-	wire[3:0] noteIndex = actualNote % 12;
+	wire[3:0] noteIndex = actualNote - ((4'h8 - shift) * 12);
 	wire[`OSC_ROM_BW-1:0] baseNoteCnt = noteRom[noteIndex];
 	
 	always @(posedge clk_i or negedge nrst_i) begin

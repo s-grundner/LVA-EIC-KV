@@ -2,7 +2,7 @@
 * @file    : tb_note2cnt.v                                                     *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
-* @brief   : Note Lookup Module Testbench     								   *
+* @brief   : Note Lookup Module Testbench                                      *
 *******************************************************************************/
 
 `default_nettype none
@@ -12,7 +12,7 @@ module tb_note2cnt;
 
 	initial begin
 		$dumpfile("./waves/tb_note2cnt.vcd");
-		$dumpvars(0, tb_note2cnt, dut.shift, dut.baseNoteCnt, dut.noteIndex, dut.actualNote);
+		$dumpvars(0, tb_note2cnt);
 	end
 
 	// Parameters
