@@ -14,12 +14,6 @@ module osc_tb;
 		$dumpvars(0, osc_tb);
 	end
 
-	// Clock generation
-	initial begin
-		clk = 1'b0;
-		forever #5 clk = ~clk; // 100MHz clock
-	end
-
 	reg note[7:0];
 	reg clk;
 	reg nrst;

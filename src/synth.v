@@ -61,16 +61,13 @@ module synth (
 
     // Generate Oscillator stack
 
-    wire [`OSC_VOICES-1:0] wave;
-
     genvar i;
     generate
         for (i = 0; i < `OSC_VOICES; i = i + 1) begin : oscStack_gen
             osc osc_inst (
                 .clk_i(clk_i),
                 .nrst_i(nrst_i),
-                .nrstPhase_i(1'b1),
-                .note_i(8'b0),
+                .note_i(note),
                 .enable_i(i < oscCount),
                 .wave_o(oscOut_o[i])
             );

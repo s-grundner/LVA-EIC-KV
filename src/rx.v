@@ -108,7 +108,7 @@ module rx (
     end
 
     // Update the Sampled Bit to the rx-buffer
-    integer i = 0;
+    integer i;
     always @(posedge clk_i or negedge nrst_i) begin : updRxBuffer_p
         if (!nrst_i) begin
             midiData <= `MIDI_PAYLOAD_BITS'b0;

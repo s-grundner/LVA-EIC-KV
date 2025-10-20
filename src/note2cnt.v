@@ -59,8 +59,11 @@ module note2cnt #(
 		else shift = 4'h0; 
 	end
 
-	wire[3:0] noteIndex = actualNote - ((4'h8 - shift) * 12);
-	wire[`OSC_ROM_BW-1:0] baseNoteCnt = noteRom[noteIndex];
+	/* verilator lint_off UNUSEDSIGNAL */
+	// truncate to 4 bits as only 12 entries in ROM
+	wire[7:0] noteIndex = (actualNote - 8'd96 + shift * 12);
+	wire[`OSC_ROM_BW-1:0] baseNoteCnt = noteRom[noteIndex[3:0]];
+	/* verilator lint_on UNUSEDSIGNAL */
 	
 	always @(posedge clk_i or negedge nrst_i) begin
 		if(!nrst_i) begin
