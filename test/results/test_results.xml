@@ -1,6 +1,6 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1760960756" />
-    <testcase name="test_project" classname="test" file="/foss/designs/test/test.py" lineno="9" time="0.006921052932739258" sim_time_ns="90000.0" ratio_time="13003801.715525854" />
+    <property name="random_seed" value="1760962845" />
+    <testcase name="test_project" classname="test" file="/foss/designs/test/test.py" lineno="9" time="0.007544517517089844" sim_time_ns="90000.0" ratio_time="11929192.26393629" />
   </testsuite>
 </testsuites>

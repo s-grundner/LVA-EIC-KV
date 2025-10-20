@@ -82,9 +82,12 @@ TEST_NAMES = $(foreach config,$(TEST_CONFIGS),$(firstword $(subst :, ,$(config))
 # Run all tests
 all: $(TEST_NAMES) post
 
+# Copy results into parent directory. Required for GitHub Actions report
 post: $(TEST_NAMES)
+ifneq ($(LOCAL),yes)
 	cp results/test_results.xml results.xml
 	cp waves/tb.vcd tb.vcd
+endif
 
 # Rule to run each test
 $(TEST_NAMES):
