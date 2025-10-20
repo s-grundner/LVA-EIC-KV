@@ -5,7 +5,10 @@
 * @brief   : Oscillator module. Generates a square wave for a given midi note  *
 *******************************************************************************/
 
-`include "counter.v"
+`default_nettype none
+`ifndef __OSC
+`define __OSC
+`include "global.v"
 
 module osc (
 	input wire clk_i,
@@ -72,3 +75,5 @@ module osc (
 	);
 
 endmodule  // osc
+`endif // __OSC
+`default_nettype wire

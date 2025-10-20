@@ -19,12 +19,11 @@ SRC_DIR = $(PWD)/$(RELATIVE_SRC_DIR)
 
 PROJECT_SOURCES = \
 	tt_um_s_grundner.v \
-	global.v \
+	note2cnt.v \
 	counter.v \
 	pwm.v \
 	rx.v \
 	midi.v \
-	note2cnt.v \
 	osc.v \
 	synth.v
 
