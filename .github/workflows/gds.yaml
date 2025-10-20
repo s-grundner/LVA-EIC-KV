@@ -37,7 +37,7 @@ jobs:
           submodules: recursive
       - name: Move results
         run: |
-          cp test/results/test_results.xml results.xml
+          cp test/results/test_results.xml test/results.xml
       - name: GL test
         uses: TinyTapeout/tt-gds-action/gl_test@ttsky25b
         with:
