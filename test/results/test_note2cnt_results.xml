@@ -1,0 +1,6 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1760922359" />
+    <testcase name="lookup_test" classname="test_note2cnt" file="/foss/designs/test/test_note2cnt.py" lineno="12" time="0.00771331787109375" sim_time_ns="5720.0" ratio_time="741574.5202769535" />
+  </testsuite>
+</testsuites>

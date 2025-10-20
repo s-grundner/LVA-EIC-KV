@@ -7,8 +7,8 @@
 # defaults
 # ------------------------------------------------------------------------------ 
 
-# SIM ?= icarus
-SIM ?= verilator
+SIM ?= icarus
+# SIM ?= verilator
 TOPLEVEL_LANG ?= verilog
 RELATIVE_SRC_DIR ?= ../src
 SRC_DIR = $(PWD)/$(RELATIVE_SRC_DIR)
@@ -69,7 +69,8 @@ TEST_CONFIGS = test:tb:tb.v
 # Custom module tests
 ifneq ($(GATES),yes)
 TEST_CONFIGS += \
-	test_counter:tb_counter:tb_counter.v
+	test_counter:tb_counter:tb_counter.v \
+	test_note2cnt:tb_note2cnt:tb_note2cnt.v
 endif
 
 # Default rule to run all tests
@@ -113,7 +114,7 @@ $(TEST_NAMES):
 # ------------------------------
 
 clean:
-	rm -rf results sim_build
+	rm -rf results sim_build waves
 
 .PHONY: all clean-builds $(TEST_NAMES)
 
