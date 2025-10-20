@@ -1,13 +1,13 @@
 /*******************************************************************************
-* @file    : counter.v                                                         *
+* @file    : counter.v (Atomic)                                                *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Counter module. Counts up on each clock cycle                     *
 *******************************************************************************/
 
 `default_nettype none
-`ifndef __COUNTER__
-`define __COUNTER__ 
+`ifndef __COUNTER
+`define __COUNTER 
 
 module counter #(
     parameter BW = 8
@@ -31,6 +31,5 @@ module counter #(
         end
     end
 endmodule  // counter
-
-`endif
+`endif // __COUNTER
 `default_nettype wire

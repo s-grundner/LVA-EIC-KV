@@ -24,6 +24,7 @@ PROJECT_SOURCES = \
 	pwm.v \
 	rx.v \
 	midi.v \
+	note2cnt.v \
 	osc.v \
 	synth.v
 

@@ -6,6 +6,9 @@
 *            stack.                                                            *
 *******************************************************************************/
 
+`default_nettype none
+`ifndef __SYNTH
+`define __SYNTH
 `include "global.v"
 
 module synth (
@@ -75,4 +78,6 @@ module synth (
     endgenerate
     
 
-endmodule
+endmodule // synth
+`endif // __SYNTH
+`default_nettype wire

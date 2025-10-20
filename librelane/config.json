@@ -1,6 +1,14 @@
 {
 	"DESIGN_NAME": "tt_um_s_grundner",
-	"VERILOG_FILES": "dir::../src/tt_um_s_grundner.v",
+	"VERILOG_FILES": [
+		"dir::../src/tt_um_s_grundner.v",
+		"dir::../src/synth.v",
+		"dir::../src/midi.v",
+		"dir::../src/rx.v",
+		"dir::../src/osc.v",
+		"dir::../src/counter.v",
+		"dir::../src/note2cnt.v"
+	],
 	"DIE_AREA": "0 0 160 100",
 	"PNR_SDC_FILE": "dir::impl.sdc",
 	"SIGNOFF_SDC_FILE": "dir::signoff.sdc",

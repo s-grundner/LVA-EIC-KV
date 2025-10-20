@@ -1,9 +1,14 @@
-/*
- * Copyright (c) 2024 Simon Grundner
- * SPDX-License-Identifier: Apache-2.0
- */
+/*******************************************************************************
+* @file    : tt_um_s_grundner.v (Top Level)                                    *
+* @author  : @s-grundner                                                       *
+* @license : Apache-2.0                                                        *
+* @brief   : Tiny Tapeout: MIDI Synthesizer                                    *
+*******************************************************************************/
 
 `default_nettype none
+`ifndef __TT_UM_S_GRUNDNER
+`define __TT_UM_S_GRUNDNER
+
 `include "global.v"
 
 module tt_um_s_grundner (
@@ -33,4 +38,6 @@ module tt_um_s_grundner (
     // List all unused inputs to prevent warnings
     wire _unused = &{ena, 1'b0, ui_in[7:1], uio_in[7:0]};
 
-endmodule
+endmodule // tt_um_s_grundner
+`endif // __TT_UM_S_GRUNDNER
+`default_nettype wire

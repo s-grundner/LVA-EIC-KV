@@ -1,9 +1,13 @@
 /*******************************************************************************
-* @file    : rx.v                                                              *
+* @file    : rx.v (Atomic)                                                     *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : RX frontend of midi input. 31250 baud, 8 data bits, no parity     *
 *******************************************************************************/
+
+`default_nettype none
+`ifndef __RX
+`define __RX
 
 `include "global.v"
 
@@ -145,3 +149,5 @@ module rx (
     end
 
 endmodule  // rx
+`endif // __RX
+`default_nettype wire

@@ -1,5 +1,5 @@
-`ifndef GLOBAL_V
-`define GLOBAL_V
+`ifndef __GLOBAL
+`define __GLOBAL
 
 `define F_CLK_HZ 3_500_000
 `define F_CLK_PERIOD_NS (1_000_000_000 / `F_CLK_HZ)
@@ -15,4 +15,4 @@
 `define OSC_ROM_BW 8 // Note ROM bit width
 `define OCTAVE_STORED `OSC_CNT_BW - `OSC_ROM_BW 
 
-`endif  // GLOBAL_V
+`endif  // __GLOBAL

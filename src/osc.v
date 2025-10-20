@@ -6,7 +6,6 @@
 *******************************************************************************/
 
 `include "counter.v"
-`include "note2cnt.v"
 
 module osc (
 	input wire clk_i,

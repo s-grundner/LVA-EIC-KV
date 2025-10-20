@@ -1,11 +1,15 @@
 /*******************************************************************************
-* @file    : note.v                                                            *
+* @file    : note.v (Atomic)                                                   *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Note to half counter period conversion.                           *
 * 			 Uses a ROM for the lowest octave and calculates    			   *
 *            higher octaves by right shifting the values.                      *
 *******************************************************************************/
+
+`default_nettype none
+`ifndef __NOTE2CNT
+`define __NOTE2CNT
 
 `include "global.v"
 
@@ -76,3 +80,5 @@ module note2cnt #(
 	assign halfCntPeriod_o = halfCntPeriod;
 
 endmodule  // note2cnt
+`endif // __NOTE2CNT
+`default_nettype wire

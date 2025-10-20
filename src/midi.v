@@ -6,6 +6,9 @@
 *            channel. Only feed Channel Voice Messages (0x8n, 0x9n)            *
 *******************************************************************************/
 
+`default_nettype none
+`ifndef __MIDI
+`define __MIDI
 `include "global.v"
 
 module midi #(
@@ -81,4 +84,5 @@ module midi #(
         end
     end
 
-endmodule
+endmodule // midi
+`endif // __MIDI
