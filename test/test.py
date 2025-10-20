@@ -1,13 +1,17 @@
-# SPDX-FileCopyrightText: © 2024 Tiny Tapeout
-# SPDX-License-Identifier: Apache-2.0
+# *************************************************************************** #
+# @file    : test.py                                                          #
+# @author  : @s-grundner                                                      #
+# @license : Apache-2.0                                                       #
+# @brief   : Toplevel Design Testbench for Cocotb.                            #
+# *************************************************************************** #
 
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
-
 @cocotb.test()
-async def test_project(dut):
+@cocotb.parametrize(voices=["idle", "monophonic", "polyphonic", "arpeggiator", "voice overflow"])
+async def test_project(dut, voices):
     dut._log.info("Start")
 
     # Set the clock period to 10 us (100 KHz)
@@ -25,16 +29,16 @@ async def test_project(dut):
 
     dut._log.info("Test project behavior")
 
-    # Set the input values you want to test
-    # dut.ui_in.value = 20
-    # dut.uio_in.value = 30
+    match voices:
+        case "idle":
+            dut._log.info("Testing idle state")
+            await ClockCycles(dut.clk, 100)
+        case "monophonic":
+            dut._log.info("Testing monophonic midi input - single note")
+        case "polyphonic":
+            dut._log.info("Testing polyphonic midi input - multiple notes at once")
+        case "arpeggiator":
+            dut._log.info("Testing arpeggiator mode - multiple notes in sequence")
+        case "voice overflow":
+            dut._log.info("Testing voice overflow - more notes than available voices")
 
-    # Wait for one clock cycle to see the output values
-    # await ClockCycles(dut.clk, 1)
-
-    # The following assersion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    # assert dut.uo_out.value == 50
-
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.

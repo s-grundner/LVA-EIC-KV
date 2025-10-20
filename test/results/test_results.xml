@@ -1,6 +1,10 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1760962845" />
-    <testcase name="test_project" classname="test" file="/foss/designs/test/test.py" lineno="9" time="0.007544517517089844" sim_time_ns="90000.0" ratio_time="11929192.26393629" />
+    <property name="random_seed" value="1760969130" />
+    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.012829780578613281" sim_time_ns="1090000.0" ratio_time="84958584.70229688" />
+    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0009005069732666016" sim_time_ns="100000.0" ratio_time="111048557.05586444" />
+    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008697509765625" sim_time_ns="100000.0" ratio_time="114975438.59649123" />
+    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007929801940917969" sim_time_ns="100000.0" ratio_time="126106554.41972339" />
+    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008003711700439453" sim_time_ns="100000.0" ratio_time="124942031.57581174" />
   </testsuite>
 </testsuites>

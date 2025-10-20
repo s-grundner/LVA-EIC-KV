@@ -11,7 +11,7 @@ from cocotb.triggers import ClockCycles
 
 import numpy as np
 
-# ******************************** Constants ******************************** #
+# -------------------------------- Constants -------------------------------- #
 
 midi_note_max = 128
 midi_note_min = 21
@@ -22,7 +22,7 @@ f_a4_hz = 440
 f_clk_hz = 3_500_000
 f_clk_half_hz = f_clk_hz / 2
 
-# ************************** Calculation functions ************************** #
+# -------------------------- Calculation functions -------------------------- #
 
 def get_octave_freqs(index):
     base = index * keys_per_octave + midi_note_min
@@ -48,7 +48,7 @@ def cnt_from_note(note, stored_octave=8):
     octave_cnts = octave_from_to(stored_octave, octave)
     return octave_cnts[note_in_octave]
 
-# ******************************* Test Cases ******************************** #
+# ------------------------------- Test Cases -------------------------------- #
 
 @cocotb.test()
 @cocotb.parametrize(test_note=[0, 69, 127])

@@ -34,7 +34,7 @@ jobs:
       - name: Test Summary
         uses: test-summary/action@v2.3
         with:
-          paths: "test/results/test_results.xml"
+          paths: "test/results/summary.xml"
         if: always()
 
       - name: upload vcd

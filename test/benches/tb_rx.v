@@ -1,8 +1,8 @@
 /*******************************************************************************
-* @file    : tb_counter.v                                                      *
+* @file    : tb_rx.v                                                           *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
-* @brief   : Counter Module Testbench                                          *
+* @brief   : Reciever Module Testbench                                         *
 *******************************************************************************/
 
 `default_nettype none
@@ -11,8 +11,8 @@
 module tb_counter;
 
 	initial begin
-		$dumpfile("./waves/tb_counter.vcd");
-		$dumpvars(0, tb_counter);
+		$dumpfile("./waves/tb_rx.vcd");
+		$dumpvars(0, tb_rx);
 	end
 
 	// Parameters
@@ -24,6 +24,7 @@ module tb_counter;
 	reg nrstSync;
 	wire [BW-1:0] count;
 
+
 	// DUT instantiation
 	counter #(
 		.BW(BW)
@@ -33,6 +34,4 @@ module tb_counter;
 		.nrstSync_i(nrstSync),
 		.count_o(count)
 	);
-
-	// Stimulus generation in coco routine
 endmodule

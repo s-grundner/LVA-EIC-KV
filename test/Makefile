@@ -63,15 +63,15 @@ COMPILE_ARGS += -I$(SRC_DIR)
 # Format: TEST_NAME:TOPLEVEL:TESTBENCH_FILE
 # ------------------------------------------------------------------------------
 
-# Mandatory testbench test for GHA pass
-TEST_CONFIGS = test:tb:tb.v 
-
 # Custom module tests
 ifneq ($(GATES),yes)
-TEST_CONFIGS += \
+TEST_CONFIGS = \
 	test_counter:tb_counter:tb_counter.v \
 	test_note2cnt:tb_note2cnt:tb_note2cnt.v
 endif
+
+# Mandatory testbench test for GHA pass
+TEST_CONFIGS += test:tb:tb.v 
 
 # Default rule to run all tests
 .DEFAULT_GOAL := all
@@ -88,6 +88,14 @@ ifneq ($(LOCAL),yes)
 	cp results/test_results.xml results.xml
 	cp waves/tb.vcd tb.vcd
 endif
+# Merge all individual test result XML files into one
+	@echo "Merging test result XML files..."
+	@echo '<?xml version="1.0" encoding="UTF-8"?>' > results/summary.xml
+	@echo '<testsuites name="summary">' >> results/summary.xml
+	@for file in results/*_results.xml ; do \
+		sed '1d;$$d' $$file >> results/summary.xml ; \
+	done
+	@echo '</testsuites>' >> results/summary.xml
 
 # Rule to run each test
 $(TEST_NAMES):
