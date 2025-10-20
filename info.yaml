@@ -21,6 +21,7 @@ project:
     - global.v
     - synth.v
     - osc.v
+    - note2cnt.v
     - midi.v
     - rx.v
     - pwm.v
