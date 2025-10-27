@@ -13,65 +13,71 @@
 module osc (
 	input wire clk_i,
 	input wire nrst_i,
-	input wire enable_i,
-	input wire [7:0] note_i,
+	input wire noteOnStrb_i,
+	input wire noteOffStrb_i,
+	input wire ch_i,
+	input wire [`OSC_CNT_BW-1:0] halfCntPeriod_i,
+	output wire active_o,
 	output wire wave_o
 );
 
-	// -------------------------- Parameters -------------------------------- //
-
-	localparam CNT_BW = `OSC_CNT_BW;
-
 	// ---------------------------- Signals --------------------------------- //
 
-	reg [CNT_BW-1:0] oscCmp;
-	wire [CNT_BW-1:0] oscCounter;
-
 	reg wave;
-	reg nrstCnt;
+	reg enabled;
+	reg [`OSC_CNT_BW-1:0] halfCntPeriod;
 
-	// ------------------------ Assign Outputs ------------------------------ //
+	reg nrstSync;
+	reg cntReached;
+
+	wire [`OSC_CNT_BW-1:0] oscCounter;
+
+	assign active_o = enabled;
 	assign wave_o = wave;
 
 	// -------------------- Logic Implementations --------------------------- //
-	wire toggleOsc = (oscCounter == oscCmp);
 	
-	// Toggle wave 
+	always @(*) begin
+		cntReached = oscCounter == halfCntPeriod;
+		nrstSync = cntReached & enabled;	
+	end
+	
+	always @(posedge clk_i or negedge nrst_i) begin
+		if (!nrst_i) begin
+			enabled <= 1'b0;
+		end else if (noteOnStrb_i && ch_i) begin
+			enabled <= 1'b1;
+		end else if (noteOffStrb_i && ch_i) begin
+			enabled <= 1'b0;
+		end
+	end	
+	
 	always @(posedge clk_i or negedge nrst_i) begin
 		if (!nrst_i) begin
 			wave <= 1'b0;
-		end else if (enable_i && toggleOsc) begin
+		end else if (nrstSync) begin
 			wave <= ~wave;
 		end
 	end
-
-	// Determine counter reset condition
-	always @(*) begin
-		if (!enable_i || toggleOsc) begin
-			nrstCnt = 1'b0;
-		end else begin
-			nrstCnt = 1'b1;
+	
+	always @(posedge clk_i or negedge nrst_i) begin
+		if (!nrst_i) begin
+			halfCntPeriod <= `OSC_CNT_BW'b0;
+		end else if (noteOnStrb_i && ch_i) begin 
+			halfCntPeriod <= halfCntPeriod_i;
 		end
 	end
+
 
 	// ----------------------- Module Instances ----------------------------- //
 
 	counter #(
-		.BW(CNT_BW)
+		.BW(`OSC_CNT_BW)
 	) oscCounter_inst (
 		.clk_i(clk_i),
 		.nrst_i(nrst_i),
-		.nrstSync_i(nrstCnt),
+		.nrstSync_i(nrstSync),
 		.count_o(oscCounter)
-	);
-	
-	note2cnt #(
-		.BW(CNT_BW)
-	) note2cnt_inst (
-		.clk_i(clk_i),
-		.nrst_i(nrst_i),
-		.note_i(note_i),
-		.halfCntPeriod_o(oscCmp)
 	);
 
 endmodule  // osc

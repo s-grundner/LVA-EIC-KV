@@ -1,0 +1,11 @@
+<testsuites name="results">
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1761600286" />
+    <testcase name="bitcount_test/test_vector=0" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0063092708587646484" sim_time_ns="10.0" ratio_time="1584.969202282432" />
+    <testcase name="bitcount_test/test_vector=85" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0001575946807861328" sim_time_ns="10.000000000000002" ratio_time="63453.91830559759" />
+    <testcase name="bitcount_test/test_vector=170" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00012445449829101562" sim_time_ns="10.0" ratio_time="80350.65134099616" />
+    <testcase name="bitcount_test/test_vector=240" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00011563301086425781" sim_time_ns="10.0" ratio_time="86480.49484536082" />
+    <testcase name="bitcount_test/test_vector=52" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00011849403381347656" sim_time_ns="10.0" ratio_time="84392.43460764588" />
+    <testcase name="bitcount_test/test_vector=255" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00011587142944335938" sim_time_ns="10.0" ratio_time="86302.55144032922" />
+  </testsuite>
+</testsuites>

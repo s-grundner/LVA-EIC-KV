@@ -17,13 +17,22 @@ module osc_tb;
 	reg note[7:0];
 	reg clk;
 	reg nrst;
-	reg enable;
-	wire wave;
+	reg noteOnStrb;
+	reg noteOffStrb;
+	reg oscHalfCntPeriod;
 
-	osc dut (
+	wire wave;
+	wire active;
+
+	osc #(
+		.CH(0)
+	) dut (
 		.clk_i(clk),
 		.nrst_i(nrst),
-		.enable_i(enable),
+		.active_o(active),
+		.noteOnStrb_i(noteOnStrb),
+		.noteOffStrb_i(noteOffStrb),
+		.halfCntPeriod_i(oscHalfCntPeriod),
 		.note_i(note),
 		.wave_o(wave)
 	);

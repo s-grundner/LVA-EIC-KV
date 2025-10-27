@@ -19,6 +19,8 @@ module synth (
     output wire activeOscPwm_o
 );
 
+    localparam PWM_BW = $clog2(`OSC_VOICES + 1);
+
     wire noteOnStrb;
     wire noteOffStrb;
     wire [`MIDI_PAYLOAD_BITS-1:0] note;
@@ -26,7 +28,10 @@ module synth (
     wire midiByteValid;
     wire [`MIDI_PAYLOAD_BITS-1:0] midiByte;
     
-    assign activeOscPwm_o = noteOnStrb;
+    wire [`OSC_VOICES-1:0] activeOscs; // one bit per oscillator
+    wire [PWM_BW-1:0] sumActiveOscs; 
+    wire [`OSC_CNT_BW-1:0] oscCmp;
+    wire [2:0] channel;
 
     // ---------------------------- Modules --------------------------------- //
 
@@ -38,45 +43,57 @@ module synth (
         .midiData_o(midiByte)
     );
 
-    midi #(
-        .MIDI_CHANNEL(0) // Define MIDI channel here
-    ) midi_inst (
+    midi midi_inst (
         .clk_i(clk_i),
         .nrst_i(nrst_i),
         .midiByte_i(midiByte),
         .midiByteValid_i(midiByteValid),
+        .ch_o(channel),
         .note_o(note),
         .noteOnStrb_o(noteOnStrb),
         .noteOffStrb_o(noteOffStrb)
     );
 
-    reg [3:0] oscCount;
-    
-    always @(posedge clk_i or negedge nrst_i) begin
-        if (!nrst_i) begin
-            oscCount <= 4'b0;
-        end else if (noteOnStrb) begin
-            oscCount <= oscCount + 4'b1;
-        end else if (noteOffStrb) begin
-            oscCount <= oscCount - 4'b1;
-        end
-    end
+	note2cnt #(
+		.BW(`OSC_CNT_BW)
+	) note2cnt_inst (
+		.clk_i(clk_i),
+		.nrst_i(nrst_i),
+		.note_i(note),
+		.halfCntPeriod_o(oscCmp)
+	);
 
     // Generate Oscillator stack
-
     genvar i;
     generate
         for (i = 0; i < `OSC_VOICES; i = i + 1) begin : oscStack_gen
             osc osc_inst (
                 .clk_i(clk_i),
                 .nrst_i(nrst_i),
-                .note_i(note),
-                .enable_i(i < oscCount),
+                .halfCntPeriod_i(oscCmp),
+                .ch_i(channel == i),
+                .active_o(activeOscs[i]),
+                .noteOnStrb_i(noteOnStrb),
+                .noteOffStrb_i(noteOffStrb), 
                 .wave_o(oscOut_o[i])
             );
         end
     endgenerate
     
+    bitcount #(
+        .WORDLEN(`OSC_VOICES)
+    ) bitcount_inst (
+        .word_i(activeOscs),
+        .count_o(sumActiveOscs)
+    );
+
+    pwm pwm_inst (
+        .clk_i(clk_i),
+        .nrst_i(nrst_i),
+        .onCnt_i(sumActiveOscs), // max 7 active oscillators
+        .periodCnt_i(PWM_BW'(`OSC_VOICES)),
+        .pwm_o(activeOscPwm_o)
+    );
 
 endmodule // synth
 `endif // __SYNTH

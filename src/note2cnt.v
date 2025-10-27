@@ -22,7 +22,6 @@ module note2cnt #(
 	output wire [BW-1:0] halfCntPeriod_o
 );
 	reg [`OSC_ROM_BW-1:0] noteRom [11:0];
-	
 	// Initialize the note ROM. Values generated with noteROM-f-deviation.ipynb
 	initial begin
 		noteRom[0]  = `OSC_ROM_BW'd248;
@@ -41,7 +40,9 @@ module note2cnt #(
 
 	reg [BW-1:0] halfCntPeriod; 
 	reg [3:0] shift;
-	reg[`OSC_ROM_BW-1:0] actualNote; 
+	reg [`OSC_ROM_BW-1:0] actualNote; 
+	reg [7:0] noteIndex; 
+	reg [`OSC_ROM_BW-1:0] baseNoteCnt; 
 	
 	always @(*) begin
 		if (note_i < 21) begin
@@ -63,11 +64,13 @@ module note2cnt #(
 		else shift = 4'h0; 
 	end
 
-	/* verilator lint_off UNUSEDSIGNAL */
-	// truncate to 4 bits as only 12 entries in ROM
-	wire[7:0] noteIndex = (actualNote - 8'd96 + shift * 12);
-	wire[`OSC_ROM_BW-1:0] baseNoteCnt = noteRom[noteIndex[3:0]];
-	/* verilator lint_on UNUSEDSIGNAL */
+	always @(*) begin
+		/* verilator lint_off UNUSEDSIGNAL */
+		// truncate to 4 bits as only 12 entries in ROM
+		noteIndex = (actualNote - 8'd96 + shift * 12);
+		baseNoteCnt = noteRom[noteIndex[3:0]];	
+		/* verilator lint_on UNUSEDSIGNAL */
+	end
 	
 	always @(posedge clk_i or negedge nrst_i) begin
 		if(!nrst_i) begin

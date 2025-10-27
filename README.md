@@ -5,6 +5,30 @@
 - [Moodle Course](https://moodle.jku.at/course/view.php?id=39685)
 - [Tiny Tapeout Website](https://tinytapeout.com)
 
+## Local Testing and Building
+
+In the IIC OSIC Tools containter:
+
+- Testing the Source Code
+
+```bash
+verilator --lint-only src/*.v
+yosys -p "read_verilog "$name".v; proc; opt; flatten; techmap; stat"
+```
+
+- Testing the Testbeches
+
+```bash
+make
+```
+
+- Testing GDS generation
+
+```bash
+librelane --manual-pdk config.json
+librelane --manual-pdk config.json --last-run --flow OpenInOpenROAD
+```
+
 # Tiny Tapeout Verilog Project Template
 
 - [Read the documentation for project](docs/info.md)  

@@ -39,3 +39,22 @@ Using Surfer
 ```sh
 surfer tb.vcd
 ```
+
+## Tested
+
+Atomic Modules
+
+- [x] counter
+- [x] rx
+- [x] note2cnt
+- [x] bitcount
+- [ ] midi
+
+Dependent Modules
+
+- [ ] pwm
+- [ ] oscillator stack
+
+Top Level Module
+
+- [ ] Top Level Design
