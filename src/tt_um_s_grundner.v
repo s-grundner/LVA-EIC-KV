@@ -25,7 +25,7 @@ module tt_um_s_grundner (
     synth synth_inst (
         .clk_i(clk),
         .nrst_i(rst_n),
-        .rxData_i(ui_in[0]),
+        .rxData_i(ui_in[3]),
         .oscOut_o(uo_out[`OSC_VOICES-1:0]),
         .activeOscPwm_o(uo_out[7])
     );

@@ -13,6 +13,5 @@
 `define OSC_VOICES 2 // MAX 7
 `define OSC_CNT_BW 16 // Counter bit width
 `define OSC_ROM_BW 8 // Note ROM bit width
-`define OCTAVE_STORED `OSC_CNT_BW - `OSC_ROM_BW 
 
 `endif  // __GLOBAL

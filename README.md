@@ -25,6 +25,7 @@ make
 - Testing GDS generation
 
 ```bash
+source sak-pdk-script.sh sky130A sky130_fd_sc_hd > /dev/null
 librelane --manual-pdk config.json
 librelane --manual-pdk config.json --last-run --flow OpenInOpenROAD
 ```
