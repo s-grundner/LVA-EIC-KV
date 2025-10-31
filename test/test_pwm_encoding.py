@@ -30,7 +30,7 @@ async def pwm_encode_active_oscs(dut, active_oscs):
     dut.activeOscs.value = active_oscs
 
     await ClockCycles(dut.clk, 1)
-    period_cnt = dut.MAX_CNT.value.to_unsigned()
+    period_cnt = dut.OSC_VOICES.value.to_unsigned()
     on_cnt = dut.nActiveOscs.value.to_unsigned()
 
     assert on_cnt == bin(active_oscs).count("1"), f"Expected on_cnt {bin(active_oscs).count('1')} but got {on_cnt}"

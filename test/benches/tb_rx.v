@@ -21,7 +21,6 @@ module tb_rx;
 	reg rxData;
 	wire [7:0] payload;
 
-
 	// DUT instantiation
 	rx dut (
 		.clk_i(clk),

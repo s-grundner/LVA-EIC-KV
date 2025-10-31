@@ -55,8 +55,6 @@ def cnt_from_note(note, stored_octave=8):
 @cocotb.test()
 @cocotb.parametrize(note=[21, 40, 69, 88, 108, 127])
 async def counting_test(dut, note):
-    dut._log.info("Start")
-
     clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns")
     cocotb.start_soon(clock.start())
 

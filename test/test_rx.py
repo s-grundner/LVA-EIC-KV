@@ -21,10 +21,7 @@ cycles_per_bit = f_clk_hz // baud_rate
 @cocotb.test()
 @cocotb.parametrize(data_frame=["single", "multi", "midi"])
 async def parallelize_data(dut, data_frame):
-    dut._log.info("Start")
-
-    # Clock Frequency: 100 kHz
-    clock = Clock(dut.clk, 10, unit="us")
+    clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns") 
     cocotb.start_soon(clock.start())
 
     # Reset

@@ -16,20 +16,20 @@ module tb_pwm;
 		$dumpvars(0, tb_pwm);
 	end
 
+	localparam OSC_VOICES = 7;
 	localparam PWM_BW = 3;
-	localparam MAX_CNT = PWM_BW'(`OSC_VOICES);
-	localparam OSC_CNT_BW = $clog2(`OSC_VOICES+1);
+	localparam OSC_CNT_BW = $clog2(OSC_VOICES+1);
 
 	reg clk;
 	reg nrst;
-	reg [`OSC_VOICES-1:0] activeOscs;
+	reg [OSC_VOICES-1:0] activeOscs;
 	reg [OSC_CNT_BW-1:0] nActiveOscs;
 	wire pwmOut;
 	
 	// bitcount to count inactive oscillators
 	// Test bitcount seperately beforehand
     bitcount #(
-        .WORDLEN(`OSC_VOICES)
+        .WORDLEN(OSC_VOICES)
 	) helper_bitcount (
         .word_i(activeOscs),
         .count_o(nActiveOscs)
@@ -41,11 +41,8 @@ module tb_pwm;
 		.clk_i(clk),
 		.nrst_i(nrst),
 		.onCnt_i(nActiveOscs),
-        .periodCnt_i(MAX_CNT), // cnt from 0 to 6 (7 steps)
+        .periodCnt_i(OSC_VOICES),
 		.pwm_o(pwmOut)
 	);
 
 endmodule
-
-
-

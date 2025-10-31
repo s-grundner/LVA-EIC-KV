@@ -35,6 +35,5 @@ module pwm #(
     assign pwm_o = (pwmCountVal < onCnt_i);
 
 endmodule // pwm
-
 `endif // __PWM
 `default_nettype wire

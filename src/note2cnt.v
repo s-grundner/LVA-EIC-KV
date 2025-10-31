@@ -41,8 +41,11 @@ module note2cnt #(
 	reg [BW-1:0] halfCntPeriod; 
 	reg [3:0] shift;
 	reg [`OSC_ROM_BW-1:0] actualNote; 
-	reg [7:0] noteIndex; 
 	reg [`OSC_ROM_BW-1:0] baseNoteCnt; 
+	/* verilator lint_off UNUSEDSIGNAL */
+	// truncate to 4 bits as only 12 entries in ROM
+	reg [7:0] noteIndex; 
+	/* verilator lint_on UNUSEDSIGNAL */
 	
 	always @(*) begin
 		if (note_i < 21) begin
@@ -65,11 +68,8 @@ module note2cnt #(
 	end
 
 	always @(*) begin
-		/* verilator lint_off UNUSEDSIGNAL */
-		// truncate to 4 bits as only 12 entries in ROM
 		noteIndex = (actualNote - 8'd96 + shift * 12);
 		baseNoteCnt = noteRom[noteIndex[3:0]];	
-		/* verilator lint_on UNUSEDSIGNAL */
 	end
 	
 	always @(posedge clk_i or negedge nrst_i) begin

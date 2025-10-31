@@ -53,8 +53,6 @@ def cnt_from_note(note, stored_octave=8):
 @cocotb.test()
 @cocotb.parametrize(test_note=[0, 69, 127])
 async def lookup_test(dut, test_note):
-    dut._log.info("Start")
-
     clock = Clock(dut.clk, np.round(1_000_000_000/f_clk_hz), unit="ns")
     cocotb.start_soon(clock.start())
 

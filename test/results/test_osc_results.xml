@@ -1,11 +1,11 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761877502" />
-    <testcase name="counting_test/note=21" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="2.760418653488159" sim_time_ns="18160428.0" ratio_time="6578867.295021306" />
-    <testcase name="counting_test/note=40" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.7943367958068848" sim_time_ns="6043466.0" ratio_time="7608190.923424448" />
-    <testcase name="counting_test/note=69" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.15573787689208984" sim_time_ns="1137994.0" ratio_time="7307111.299510726" />
-    <testcase name="counting_test/note=88" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.06414246559143066" sim_time_ns="380666.0" ratio_time="5934695.470310334" />
-    <testcase name="counting_test/note=108" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.022652864456176758" sim_time_ns="122694.0" ratio_time="5416268.668245398" />
-    <testcase name="counting_test/note=127" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.00826573371887207" sim_time_ns="42900.0" ratio_time="5190101.866220543" />
+    <property name="random_seed" value="1761914910" />
+    <testcase name="counting_test/note=21" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="2.082918405532837" sim_time_ns="18160428.0" ratio_time="8718741.911234075" />
+    <testcase name="counting_test/note=40" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.6719210147857666" sim_time_ns="6043466.0" ratio_time="8994310.145109663" />
+    <testcase name="counting_test/note=69" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.1324770450592041" sim_time_ns="1137994.0" ratio_time="8590122.156570066" />
+    <testcase name="counting_test/note=88" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.04491233825683594" sim_time_ns="380666.0" ratio_time="8475755.544570433" />
+    <testcase name="counting_test/note=108" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.014379024505615234" sim_time_ns="122694.0" ratio_time="8532845.87922401" />
+    <testcase name="counting_test/note=127" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.006034135818481445" sim_time_ns="42900.0" ratio_time="7109551.606148011" />
   </testsuite>
 </testsuites>

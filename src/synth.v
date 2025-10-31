@@ -31,7 +31,7 @@ module synth (
     wire [`OSC_VOICES-1:0] activeOscs; // one bit per oscillator
     wire [PWM_BW-1:0] nActiveOscs; 
     wire [`OSC_CNT_BW-1:0] oscCmp;
-    wire [2:0] channel;
+    wire [PWM_BW-1:0] channel;
 
     // ---------------------------- Modules --------------------------------- //
 
@@ -67,15 +67,16 @@ module synth (
     genvar i;
     generate
         for (i = 0; i < `OSC_VOICES; i = i + 1) begin : oscStack_gen
+            localparam OSC_CH = i[PWM_BW-1:0]; // Truncate to reduce operation width
             osc osc_inst (
                 .clk_i(clk_i),
                 .nrst_i(nrst_i),
                 .halfCntPeriod_i(oscCmp),
-                .ch_i(channel == i),
-                .active_o(activeOscs[i]),
+                .ch_i(channel == OSC_CH),
+                .active_o(activeOscs[OSC_CH]),
                 .noteOnStrb_i(noteOnStrb),
                 .noteOffStrb_i(noteOffStrb), 
-                .wave_o(oscOut_o[i])
+                .wave_o(oscOut_o[OSC_CH])
             );
         end
     endgenerate

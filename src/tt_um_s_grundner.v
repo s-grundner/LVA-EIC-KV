@@ -36,7 +36,7 @@ module tt_um_s_grundner (
     assign uo_out[6: `OSC_VOICES] = 0;
 
     // List all unused inputs to prevent warnings
-    wire _unused = &{ena, 1'b0, ui_in[7:1], uio_in[7:0]};
+    wire _unused = &{ena, 1'b0, ui_in[7:4], ui_in[2:0], uio_in[7:0]};
 
 endmodule // tt_um_s_grundner
 `endif // __TT_UM_S_GRUNDNER

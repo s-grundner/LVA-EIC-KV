@@ -12,8 +12,7 @@ from cocotb.triggers import Timer
 @cocotb.parametrize(mode=['count 1s', 'count 0s'], test_vector=[0x00, 0x55, 0xAA, 0xF0, 0x34, 0xFF])
 async def bitcount_test(dut, test_vector, mode):
 
-    # Automatically reduces the wordlength to the number of active voices in the Project. (set in gloval.v)
-
+    # Determine word length from DUT parameter
     word_len = dut.WORDLEN.value.to_unsigned()    
     word_mask = (1 << word_len) - 1
 

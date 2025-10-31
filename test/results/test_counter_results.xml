@@ -1,7 +1,7 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761877498" />
-    <testcase name="counting_test/reset_type=sync" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.009372472763061523" sim_time_ns="400000.0" ratio_time="42678171.50415914" />
-    <testcase name="counting_test/reset_type=overflow" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.0023984909057617188" sim_time_ns="470000.00000000006" ratio_time="195956548.7077535" />
+    <property name="random_seed" value="1761914905" />
+    <testcase name="counting_test/reset_type=sync" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.00853276252746582" sim_time_ns="11440.0" ratio_time="1340714.682164911" />
+    <testcase name="counting_test/reset_type=overflow" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.0021293163299560547" sim_time_ns="13442.0" ratio_time="6312824.360989811" />
   </testsuite>
 </testsuites>

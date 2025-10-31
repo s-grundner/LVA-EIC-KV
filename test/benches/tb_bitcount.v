@@ -17,7 +17,8 @@ module tb_bitcount;
 		$dumpvars(0, tb_bitcount);
 	end
 
-	localparam WORDLEN = `OSC_VOICES;
+	localparam OSC_VOICES = 7;
+	localparam WORDLEN = OSC_VOICES;
 	localparam CNTLEN = $clog2(WORDLEN+1);
 	reg [WORDLEN-1:0] word;
 	wire [CNTLEN-1:0] count;
