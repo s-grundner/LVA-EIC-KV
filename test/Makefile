@@ -67,10 +67,12 @@ COMPILE_ARGS += -I$(SRC_DIR)
 # Custom module tests
 ifneq ($(GATES),yes)
 TEST_CONFIGS = \
-	test_bitcount:tb_bitcount:tb_bitcount.v \
-	test_rx:tb_rx:tb_rx.v \
 	test_counter:tb_counter:tb_counter.v \
-	test_note2cnt:tb_note2cnt:tb_note2cnt.v
+	test_bitcount:tb_bitcount:tb_bitcount.v \
+	test_pwm:tb_pwm:tb_pwm.v \
+	test_note2cnt:tb_note2cnt:tb_note2cnt.v \
+	test_osc:tb_osc:tb_osc.v \
+	test_rx:tb_rx:tb_rx.v
 endif
 
 # Mandatory testbench test for GHA pass

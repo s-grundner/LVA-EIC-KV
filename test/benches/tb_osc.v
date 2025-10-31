@@ -1,5 +1,5 @@
 /*******************************************************************************
-* @file    : osc_tb.v                                                          *
+* @file    : tb_osc.v                                                          *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Testbench for oscillator module.                                  *
@@ -8,32 +8,31 @@
 `default_nettype none
 `timescale 1ns/1ps
 
-module osc_tb;
+module tb_osc;
 	initial begin
-		$dumpfile("./waves/osc_tb.vcd");
-		$dumpvars(0, osc_tb);
+		$dumpfile("./waves/tb_osc.vcd");
+		$dumpvars(0, tb_osc);
 	end
 
-	reg note[7:0];
+	reg[7:0] note;
 	reg clk;
 	reg nrst;
 	reg noteOnStrb;
 	reg noteOffStrb;
-	reg oscHalfCntPeriod;
+	reg[15:0] oscHalfCntPeriod;
+	reg ch;
 
 	wire wave;
 	wire active;
 
-	osc #(
-		.CH(0)
-	) dut (
+	osc dut (
 		.clk_i(clk),
 		.nrst_i(nrst),
-		.active_o(active),
 		.noteOnStrb_i(noteOnStrb),
 		.noteOffStrb_i(noteOffStrb),
 		.halfCntPeriod_i(oscHalfCntPeriod),
-		.note_i(note),
+		.ch_i(ch),
+		.active_o(active),
 		.wave_o(wave)
 	);
 

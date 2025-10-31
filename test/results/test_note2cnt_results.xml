@@ -1,8 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600291" />
-    <testcase name="lookup_test/test_note=0" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.007441520690917969" sim_time_ns="5720.0" ratio_time="768660.0948353198" />
-    <testcase name="lookup_test/test_note=69" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012845993041992188" sim_time_ns="6006.0" ratio_time="4675387.86636971" />
-    <testcase name="lookup_test/test_note=127" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012347698211669922" sim_time_ns="6006.0" ratio_time="4864064.457231126" />
+    <property name="random_seed" value="1761877500" />
+    <testcase name="lookup_test/test_note=0" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.008455514907836914" sim_time_ns="5720.0" ratio_time="676481.5699985902" />
+    <testcase name="lookup_test/test_note=69" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0013279914855957031" sim_time_ns="6006.0" ratio_time="4522619.357989228" />
+    <testcase name="lookup_test/test_note=127" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012485980987548828" sim_time_ns="6006.0" ratio_time="4810194.734389918" />
   </testsuite>
 </testsuites>

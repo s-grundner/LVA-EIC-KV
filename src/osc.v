@@ -39,7 +39,7 @@ module osc (
 	
 	always @(*) begin
 		cntReached = oscCounter == halfCntPeriod;
-		nrstSync = cntReached & enabled;	
+		nrstSync = !(cntReached & enabled);	
 	end
 	
 	always @(posedge clk_i or negedge nrst_i) begin
@@ -55,7 +55,7 @@ module osc (
 	always @(posedge clk_i or negedge nrst_i) begin
 		if (!nrst_i) begin
 			wave <= 1'b0;
-		end else if (nrstSync) begin
+		end else if (!nrstSync) begin
 			wave <= ~wave;
 		end
 	end

@@ -15,12 +15,12 @@ module bitcount #(
     input wire [WORDLEN-1:0] word_i,
     output reg [$clog2(WORDLEN+1)-1:0] count_o
 );
-    localparam CNTLEN = $clog2(WORDLEN+1);
+    localparam CNT_BW = $clog2(WORDLEN+1);
     integer i;
     always @(*) begin
         count_o = 0;
         for (i = 0; i < WORDLEN; i = i + 1) begin
-            count_o = count_o + {{(CNTLEN - 1) {1'b0}}, word_i[i]};
+            count_o = count_o + {{(CNT_BW - 1) {1'b0}}, word_i[i]};
         end
     end
 endmodule // bitcount

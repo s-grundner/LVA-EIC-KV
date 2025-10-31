@@ -53,6 +53,7 @@ Atomic Modules
 Dependent Modules
 
 - [ ] pwm
+- [x] oscillator single
 - [ ] oscillator stack
 
 Top Level Module

@@ -1,10 +1,10 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600292" />
-    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.012081146240234375" sim_time_ns="1090000.0" ratio_time="90223227.02873382" />
-    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007877349853515625" sim_time_ns="100000.0" ratio_time="126946246.97336562" />
-    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007612705230712891" sim_time_ns="100000.0" ratio_time="131359348.57500783" />
-    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0011296272277832031" sim_time_ns="100000.0" ratio_time="88524778.38750528" />
-    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007722377777099609" sim_time_ns="100000.0" ratio_time="129493794.38098179" />
+    <property name="random_seed" value="1761877511" />
+    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.013325214385986328" sim_time_ns="1090000.0" ratio_time="81799809.62605117" />
+    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008819103240966797" sim_time_ns="100000.0" ratio_time="113390213.57123546" />
+    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0012269020080566406" sim_time_ns="100000.0" ratio_time="81506101.82666148" />
+    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008075237274169922" sim_time_ns="100000.0" ratio_time="123835370.53439622" />
+    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008392333984375" sim_time_ns="100000.0" ratio_time="119156363.63636364" />
   </testsuite>
 </testsuites>

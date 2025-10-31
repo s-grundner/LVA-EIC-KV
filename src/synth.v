@@ -29,7 +29,7 @@ module synth (
     wire [`MIDI_PAYLOAD_BITS-1:0] midiByte;
     
     wire [`OSC_VOICES-1:0] activeOscs; // one bit per oscillator
-    wire [PWM_BW-1:0] sumActiveOscs; 
+    wire [PWM_BW-1:0] nActiveOscs; 
     wire [`OSC_CNT_BW-1:0] oscCmp;
     wire [2:0] channel;
 
@@ -84,14 +84,16 @@ module synth (
         .WORDLEN(`OSC_VOICES)
     ) bitcount_inst (
         .word_i(activeOscs),
-        .count_o(sumActiveOscs)
+        .count_o(nActiveOscs)
     );
 
-    pwm pwm_inst (
+    pwm #(
+        .PWM_BW(PWM_BW)
+    ) pwm_inst (
         .clk_i(clk_i),
         .nrst_i(nrst_i),
-        .onCnt_i(sumActiveOscs), // max 7 active oscillators
-        .periodCnt_i(PWM_BW'(`OSC_VOICES)),
+        .onCnt_i(nActiveOscs), // max 7 active oscillators
+        .periodCnt_i(PWM_BW'(`OSC_VOICES)), // cnt from 0 to 6 (7 steps)
         .pwm_o(activeOscPwm_o)
     );
 

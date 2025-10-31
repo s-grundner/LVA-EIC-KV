@@ -1,37 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites name="summary">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600286" />
-    <testcase name="bitcount_test/test_vector=0" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0063092708587646484" sim_time_ns="10.0" ratio_time="1584.969202282432" />
-    <testcase name="bitcount_test/test_vector=85" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0001575946807861328" sim_time_ns="10.000000000000002" ratio_time="63453.91830559759" />
-    <testcase name="bitcount_test/test_vector=170" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00012445449829101562" sim_time_ns="10.0" ratio_time="80350.65134099616" />
-    <testcase name="bitcount_test/test_vector=240" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00011563301086425781" sim_time_ns="10.0" ratio_time="86480.49484536082" />
-    <testcase name="bitcount_test/test_vector=52" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00011849403381347656" sim_time_ns="10.0" ratio_time="84392.43460764588" />
-    <testcase name="bitcount_test/test_vector=255" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.00011587142944335938" sim_time_ns="10.0" ratio_time="86302.55144032922" />
+    <property name="random_seed" value="1761877501" />
+    <testcase name="bitcount_test/mode=0/test_vector=0" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="0.006817817687988281" sim_time_ns="10.0" ratio_time="1466.7449993006014" />
+    <testcase name="bitcount_test/mode=0/test_vector=85" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="0.00011610984802246094" sim_time_ns="10.000000000000002" ratio_time="86125.33880903492" />
+    <testcase name="bitcount_test/mode=0/test_vector=170" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="7.414817810058594e-05" sim_time_ns="10.0" ratio_time="134865.08038585208" />
+    <testcase name="bitcount_test/mode=0/test_vector=240" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="6.771087646484375e-05" sim_time_ns="10.0" ratio_time="147686.7605633803" />
+    <testcase name="bitcount_test/mode=0/test_vector=52" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="5.984306335449219e-05" sim_time_ns="10.0" ratio_time="167103.74501992032" />
+    <testcase name="bitcount_test/mode=0/test_vector=255" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="6.508827209472656e-05" sim_time_ns="10.0" ratio_time="153637.50915750916" />
+    <testcase name="bitcount_test/mode=1/test_vector=0" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="5.6743621826171875e-05" sim_time_ns="10.0" ratio_time="176231.2605042017" />
+    <testcase name="bitcount_test/mode=1/test_vector=85" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="6.651878356933594e-05" sim_time_ns="10.0" ratio_time="150333.47670250895" />
+    <testcase name="bitcount_test/mode=1/test_vector=170" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="6.437301635742188e-05" sim_time_ns="10.0" ratio_time="155344.59259259258" />
+    <testcase name="bitcount_test/mode=1/test_vector=240" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="0.0001437664031982422" sim_time_ns="10.0" ratio_time="69557.28026533997" />
+    <testcase name="bitcount_test/mode=1/test_vector=52" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="6.866455078125e-05" sim_time_ns="10.0" ratio_time="145635.55555555556" />
+    <testcase name="bitcount_test/mode=1/test_vector=255" classname="test_bitcount" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="11" time="7.152557373046875e-05" sim_time_ns="10.0" ratio_time="139810.13333333333" />
   </testsuite>
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600289" />
-    <testcase name="counting_test/reset_type=sync" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.010611772537231445" sim_time_ns="400000.0" ratio_time="37693985.486081466" />
-    <testcase name="counting_test/reset_type=overflow" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.002263784408569336" sim_time_ns="470000.00000000006" ratio_time="207616943.65455505" />
+    <property name="random_seed" value="1761877498" />
+    <testcase name="counting_test/reset_type=sync" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.009372472763061523" sim_time_ns="400000.0" ratio_time="42678171.50415914" />
+    <testcase name="counting_test/reset_type=overflow" classname="test_counter" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="13" time="0.0023984909057617188" sim_time_ns="470000.00000000006" ratio_time="195956548.7077535" />
   </testsuite>
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600291" />
-    <testcase name="lookup_test/test_note=0" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.007441520690917969" sim_time_ns="5720.0" ratio_time="768660.0948353198" />
-    <testcase name="lookup_test/test_note=69" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012845993041992188" sim_time_ns="6006.0" ratio_time="4675387.86636971" />
-    <testcase name="lookup_test/test_note=127" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012347698211669922" sim_time_ns="6006.0" ratio_time="4864064.457231126" />
+    <property name="random_seed" value="1761877500" />
+    <testcase name="lookup_test/test_note=0" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.008455514907836914" sim_time_ns="5720.0" ratio_time="676481.5699985902" />
+    <testcase name="lookup_test/test_note=69" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0013279914855957031" sim_time_ns="6006.0" ratio_time="4522619.357989228" />
+    <testcase name="lookup_test/test_note=127" classname="test_note2cnt" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="53" time="0.0012485980987548828" sim_time_ns="6006.0" ratio_time="4810194.734389918" />
   </testsuite>
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600292" />
-    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.012081146240234375" sim_time_ns="1090000.0" ratio_time="90223227.02873382" />
-    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007877349853515625" sim_time_ns="100000.0" ratio_time="126946246.97336562" />
-    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007612705230712891" sim_time_ns="100000.0" ratio_time="131359348.57500783" />
-    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0011296272277832031" sim_time_ns="100000.0" ratio_time="88524778.38750528" />
-    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0007722377777099609" sim_time_ns="100000.0" ratio_time="129493794.38098179" />
+    <property name="random_seed" value="1761877502" />
+    <testcase name="counting_test/note=21" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="2.760418653488159" sim_time_ns="18160428.0" ratio_time="6578867.295021306" />
+    <testcase name="counting_test/note=40" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.7943367958068848" sim_time_ns="6043466.0" ratio_time="7608190.923424448" />
+    <testcase name="counting_test/note=69" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.15573787689208984" sim_time_ns="1137994.0" ratio_time="7307111.299510726" />
+    <testcase name="counting_test/note=88" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.06414246559143066" sim_time_ns="380666.0" ratio_time="5934695.470310334" />
+    <testcase name="counting_test/note=108" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.022652864456176758" sim_time_ns="122694.0" ratio_time="5416268.668245398" />
+    <testcase name="counting_test/note=127" classname="test_osc" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="55" time="0.00826573371887207" sim_time_ns="42900.0" ratio_time="5190101.866220543" />
   </testsuite>
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761600287" />
-    <testcase name="parallelize_data/data_frame=single" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.15007281303405762" sim_time_ns="35940000.0" ratio_time="239483749.7438244" />
-    <testcase name="parallelize_data/data_frame=multi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.42151308059692383" sim_time_ns="103149999.99999999" ratio_time="244713639.3820201" />
-    <testcase name="parallelize_data/data_frame=midi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.4329390525817871" sim_time_ns="103150000.0" ratio_time="238255244.90081382" />
+    <property name="random_seed" value="1761877497" />
+    <testcase name="pwm_encode_active_oscs/active_oscs=0" classname="test_pwm" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.007998228073120117" sim_time_ns="7436.0" ratio_time="929705.9213640564" />
+    <testcase name="pwm_encode_active_oscs/active_oscs=1" classname="test_pwm" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.001397848129272461" sim_time_ns="7722.0" ratio_time="5524205.268292683" />
+    <testcase name="pwm_encode_active_oscs/active_oscs=3" classname="test_pwm" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.0013535022735595703" sim_time_ns="7722.0" ratio_time="5705199.134754271" />
+  </testsuite>
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1761877511" />
+    <testcase name="test_project/voices=0" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.013325214385986328" sim_time_ns="1090000.0" ratio_time="81799809.62605117" />
+    <testcase name="test_project/voices=1" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008819103240966797" sim_time_ns="100000.0" ratio_time="113390213.57123546" />
+    <testcase name="test_project/voices=2" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0012269020080566406" sim_time_ns="100000.0" ratio_time="81506101.82666148" />
+    <testcase name="test_project/voices=3" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008075237274169922" sim_time_ns="100000.0" ratio_time="123835370.53439622" />
+    <testcase name="test_project/voices=4" classname="test" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="12" time="0.0008392333984375" sim_time_ns="100000.0" ratio_time="119156363.63636364" />
+  </testsuite>
+  <testsuite name="all" package="all">
+    <property name="random_seed" value="1761877508" />
+    <testcase name="parallelize_data/data_frame=single" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.2165999412536621" sim_time_ns="35940000.0" ratio_time="165928022.84239933" />
+    <testcase name="parallelize_data/data_frame=multi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.48803091049194336" sim_time_ns="103149999.99999999" ratio_time="211359563.05723146" />
+    <testcase name="parallelize_data/data_frame=midi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.5575246810913086" sim_time_ns="103150000.0" ratio_time="185014230.7567306" />
   </testsuite>
 </testsuites>
