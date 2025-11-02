@@ -1,8 +1,0 @@
-<testsuites name="results">
-  <testsuite name="all" package="all">
-    <property name="random_seed" value="1762096795" />
-    <testcase name="parallelize_data/data_frame=single" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.15458965301513672" sim_time_ns="968110.0" ratio_time="6262450.177730893" />
-    <testcase name="parallelize_data/data_frame=multi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.39053988456726074" sim_time_ns="2591446.0" ratio_time="6635547.616017406" />
-    <testcase name="parallelize_data/data_frame=midi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.3878347873687744" sim_time_ns="2591446.0000000005" ratio_time="6681829.697592116" />
-  </testsuite>
-</testsuites>

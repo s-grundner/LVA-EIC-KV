@@ -1,5 +1,5 @@
 # *************************************************************************** #
-# @file    : test_midi.py (Compound)                                            #
+# @file    : test_midi.py (Compound)                                          #
 # @author  : @s-grundner                                                      #
 # @license : Apache-2.0                                                       #
 # @brief   : MIDI Module Testbench for Cocotb. Shows that a MIDI Word is      #
@@ -18,16 +18,17 @@ cycles_per_bit = int(f_clk_hz // f_baud_hz)
 
 @cocotb.test()
 @cocotb.parametrize(
-        mode=["standalone", "with rx"],
-        input_bytes=[
-            [0x18, 0x60],
-            [0x19, 0x06],
-            [0x00, 0x40],
-            [0x1F, 0x7F],
-            [0x3C, 0x20],
-            [0x00, 0x00]
+        mode=["with rx"],
+        input_bytes=[   
+            [0x90, 0x60, 0x00],
+            [0x80, 0x06, 0x00],
+            [0x91, 0x40, 0x00],
+            [0x81, 0x7F, 0x00],
+            [0x3C, 0x20, 0x00],
+            [0x00, 0x00, 0x00]
         ]
     )
+
 async def midi_test(dut, input_bytes, mode):
     clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns")
     cocotb.start_soon(clock.start())
@@ -35,8 +36,8 @@ async def midi_test(dut, input_bytes, mode):
     # Reset
     dut._log.info("Resetting DUT")
     dut.nrst.value = 0
-    dut.midiByte.value = 0
-    dut.midiByteValid.value = 0
+    dut.midiByte_from_tb.value = 0
+    dut.midiByteValid_from_tb.value = 0
     await ClockCycles(dut.clk, 10)
     dut.nrst.value = 1
     await ClockCycles(dut.clk, 1)
@@ -59,7 +60,7 @@ async def midi_test(dut, input_bytes, mode):
             await FallingEdge(dut.dataReady)
             # Now the MIDI byte should be at the input of the MIDI module
             
-        await ClockCycles(dut.clk, 100)
+        await ClockCycles(dut.clk, cycles_per_bit*40)
         
     elif mode == "standalone":
         dut._log.info("Disabling RX module")

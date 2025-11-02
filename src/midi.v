@@ -15,11 +15,11 @@ module midi (
     input wire clk_i,
     input wire nrst_i,
     input wire midiByteValid_i,
-    input wire [7:0] midiByte_i,
+    input wire [`MIDI_PAYLOAD_BITS-1:0] midiByte_i,
     output reg [`OSC_VOICES_BW-1:0] ch_o,
     output reg [`MIDI_PAYLOAD_BITS-1:0] note_o,
-    output wire noteOnStrb_o,
-    output wire noteOffStrb_o
+    output reg noteOnStrb_o,
+    output reg noteOffStrb_o
 );
     // ----------------------- Internal Parameters -------------------------- //
 
@@ -29,65 +29,73 @@ module midi (
 
     localparam FSM_IDLE = 0;
     localparam FSM_CMD = 1;
-    localparam FSM_VAL = 2;
+    localparam FSM_NOTE = 2;
     localparam FSM_VEL = 3;
 
     // ------------------------ Internal Register --------------------------- //
 
-    reg [CMD_BW-1:0] cmd;
-
+    reg [`MIDI_PAYLOAD_BITS-1:0] midiByteReg;
     reg [2:0] fsmState;
     reg [2:0] nextFsmState;
 
-    assign noteOnStrb_o = (fsmState == FSM_VEL) && (cmd == CMD_NOTE_ON) && midiByteValid_i;
-    assign noteOffStrb_o = (fsmState == FSM_VEL) && (cmd == CMD_NOTE_OFF) && midiByteValid_i;
+    reg [CMD_BW-1:0] cmd;
 
     // --------------------- Combinatorial Processes ------------------------ //
-
-    always @(*) begin : nextFsmState_p
+        
+    always @(*) begin : nextFSM_p
         case (fsmState)
-            FSM_IDLE: nextFsmState = midiByteValid_i ? FSM_CMD : FSM_IDLE;
-            FSM_CMD: nextFsmState = midiByteValid_i ? FSM_VAL : FSM_CMD;
-            FSM_VAL: nextFsmState = midiByteValid_i ? FSM_VEL : FSM_VAL;
-            FSM_VEL: nextFsmState = midiByteValid_i ? FSM_IDLE : FSM_VEL;
+            FSM_IDLE: nextFsmState = FSM_CMD;
+            FSM_CMD: nextFsmState = FSM_NOTE;
+            FSM_NOTE: nextFsmState = FSM_VEL;
+            FSM_VEL: nextFsmState = FSM_IDLE;
             default: nextFsmState = FSM_IDLE;
         endcase
     end
 
-    // ---------------------- Register Processes --------------------------- //
-
-    always @(posedge clk_i or negedge nrst_i) begin : fsmState_p
+    // ------------------------ Register Processes -------------------------- //
+        
+    always @(posedge clk_i or negedge nrst_i) begin : statusEval_p
         if (!nrst_i) begin
-            fsmState <= FSM_IDLE;
-        end else begin
-            fsmState <= nextFsmState;
-        end
-    end	
-
-    // Evaulate Status Byte 
-    always @(posedge clk_i or negedge nrst_i) begin : midiCmd_p
-        if (!nrst_i) begin
-            ch_o <= {`OSC_VOICES_BW{1'b0}};
             cmd <= {CMD_BW{1'b0}};
+            ch_o <= {`OSC_VOICES_BW{1'b0}};
         end else if (fsmState == FSM_CMD) begin
-            ch_o <= midiByte_i[`OSC_VOICES_BW-1:0]; // max allowed channel: 7 (0b111) 
-            cmd <= midiByte_i[7:4];
-        end else begin
-            cmd <= cmd;
-            ch_o <= ch_o;
+            cmd <= midiByteReg[7:4];
+            ch_o <= midiByteReg[`OSC_VOICES_BW-1:0];
         end
     end
     
-    // Evaluate Note Byte
-    always @(posedge clk_i or negedge nrst_i) begin : midiNote_p
+    always @(posedge clk_i or negedge nrst_i) begin
         if (!nrst_i) begin
-            note_o <= `MIDI_PAYLOAD_BITS'b0;
-        end else if (fsmState == FSM_VAL) begin
-            note_o <= midiByte_i;
+            noteOnStrb_o <= 1'b0;
+            noteOffStrb_o <= 1'b0;
+        end else if (fsmState == FSM_NOTE && midiByteValid_i) begin
+            noteOnStrb_o <= (cmd == CMD_NOTE_ON) ? 1'b1 : 1'b0;
+            noteOffStrb_o <= (cmd == CMD_NOTE_OFF) ? 1'b1 : 1'b0;
         end else begin
-            note_o <= note_o;
+            noteOnStrb_o <= 1'b0;
+            noteOffStrb_o <= 1'b0;
         end
     end
+
+    always @(posedge clk_i or negedge nrst_i) begin
+        if (!nrst_i) begin
+            note_o <= {`MIDI_PAYLOAD_BITS{1'b0}};
+        end else if (fsmState == FSM_NOTE) begin
+            note_o <= midiByteReg;
+        end
+    end
+
+    always @(posedge clk_i or negedge nrst_i) begin : midiByteReg_p
+        if (!nrst_i) begin
+            midiByteReg <= {`MIDI_PAYLOAD_BITS{1'b0}};
+            fsmState <= FSM_IDLE;
+        end else if (midiByteValid_i) begin
+            midiByteReg <= midiByte_i;
+            fsmState <= nextFsmState;
+        end
+    end
+    
+
 
 endmodule // midi
 `endif // __MIDI
