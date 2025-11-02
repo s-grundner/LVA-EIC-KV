@@ -19,8 +19,6 @@ module synth (
     output wire activeOscPwm_o
 );
 
-    localparam PWM_BW = $clog2(`OSC_VOICES + 1);
-
     wire noteOnStrb;
     wire noteOffStrb;
     wire [`MIDI_PAYLOAD_BITS-1:0] note;
@@ -29,9 +27,9 @@ module synth (
     wire [`MIDI_PAYLOAD_BITS-1:0] midiByte;
     
     wire [`OSC_VOICES-1:0] activeOscs; // one bit per oscillator
-    wire [PWM_BW-1:0] nActiveOscs; 
+    wire [`OSC_VOICES_BW-1:0] nActiveOscs; 
     wire [`OSC_CNT_BW-1:0] oscCmp;
-    wire [PWM_BW-1:0] channel;
+    wire [`OSC_VOICES_BW-1:0] channel;
 
     // ---------------------------- Modules --------------------------------- //
 
@@ -67,7 +65,9 @@ module synth (
     genvar i;
     generate
         for (i = 0; i < `OSC_VOICES; i = i + 1) begin : oscStack_gen
-            localparam OSC_CH = i[PWM_BW-1:0]; // Truncate to reduce operation width
+            localparam OSC_CH = i[`OSC_VOICES_BW-1:0]; // Truncate to reduce operation bitwidth of channel comparison
+            /* verilator lint_off WIDTHTRUNC */
+            // OK: Warning only occurs if OSC_VOICES is a power of 2
             osc osc_inst (
                 .clk_i(clk_i),
                 .nrst_i(nrst_i),
@@ -78,6 +78,7 @@ module synth (
                 .noteOffStrb_i(noteOffStrb), 
                 .wave_o(oscOut_o[OSC_CH])
             );
+            /* verilator lint_off WIDTHTRUNC */
         end
     endgenerate
     
@@ -89,12 +90,12 @@ module synth (
     );
 
     pwm #(
-        .PWM_BW(PWM_BW)
+        .PWM_BW(`OSC_VOICES_BW)
     ) pwm_inst (
         .clk_i(clk_i),
         .nrst_i(nrst_i),
         .onCnt_i(nActiveOscs), // max 7 active oscillators
-        .periodCnt_i(PWM_BW'(`OSC_VOICES)), // cnt from 0 to 6 (7 steps)
+        .periodCnt_i(`OSC_VOICES_BW'(`OSC_VOICES)), // cnt from 0 to 6 (7 steps)
         .pwm_o(activeOscPwm_o)
     );
 

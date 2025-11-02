@@ -16,15 +16,14 @@ module midi (
     input wire nrst_i,
     input wire midiByteValid_i,
     input wire [7:0] midiByte_i,
-    output wire [2:0] ch_o,
-    output wire [`MIDI_PAYLOAD_BITS-1:0] note_o,
+    output reg [`OSC_VOICES_BW-1:0] ch_o,
+    output reg [`MIDI_PAYLOAD_BITS-1:0] note_o,
     output wire noteOnStrb_o,
     output wire noteOffStrb_o
 );
     // ----------------------- Internal Parameters -------------------------- //
 
     localparam CMD_BW = 4;
-    localparam CH_BW  = 3;
     localparam CMD_NOTE_ON  = 4'b1001;
     localparam CMD_NOTE_OFF = 4'b1000;
 
@@ -36,14 +35,10 @@ module midi (
     // ------------------------ Internal Register --------------------------- //
 
     reg [CMD_BW-1:0] cmd;
-    reg [CH_BW-1:0] ch;
-    reg [`MIDI_PAYLOAD_BITS-1:0] note;
 
     reg [2:0] fsmState;
     reg [2:0] nextFsmState;
 
-    assign note_o = note;
-    assign ch_o = ch;
     assign noteOnStrb_o = (fsmState == FSM_VEL) && (cmd == CMD_NOTE_ON) && midiByteValid_i;
     assign noteOffStrb_o = (fsmState == FSM_VEL) && (cmd == CMD_NOTE_OFF) && midiByteValid_i;
 
@@ -72,20 +67,25 @@ module midi (
     // Evaulate Status Byte 
     always @(posedge clk_i or negedge nrst_i) begin : midiCmd_p
         if (!nrst_i) begin
-            ch <= {CH_BW{1'b0}};
+            ch_o <= {`OSC_VOICES_BW{1'b0}};
             cmd <= {CMD_BW{1'b0}};
         end else if (fsmState == FSM_CMD) begin
-            ch <= midiByte_i[2:0]; // max allowed channel: 7 (0b111) 
+            ch_o <= midiByte_i[`OSC_VOICES_BW-1:0]; // max allowed channel: 7 (0b111) 
             cmd <= midiByte_i[7:4];
+        end else begin
+            cmd <= cmd;
+            ch_o <= ch_o;
         end
     end
     
     // Evaluate Note Byte
     always @(posedge clk_i or negedge nrst_i) begin : midiNote_p
         if (!nrst_i) begin
-            note <= `MIDI_PAYLOAD_BITS'b0;
+            note_o <= `MIDI_PAYLOAD_BITS'b0;
         end else if (fsmState == FSM_VAL) begin
-            note <= midiByte_i;
+            note_o <= midiByte_i;
+        end else begin
+            note_o <= note_o;
         end
     end
 

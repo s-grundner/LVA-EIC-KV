@@ -1,8 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1762096025" />
-    <testcase name="pwm_encode_active_oscs/active_oscs=0" classname="test_pwm_encoding" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.008518218994140625" sim_time_ns="14586.0" ratio_time="1712329.7733990147" />
-    <testcase name="pwm_encode_active_oscs/active_oscs=1" classname="test_pwm_encoding" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.0022318363189697266" sim_time_ns="14872.0" ratio_time="6663571.102232668" />
-    <testcase name="pwm_encode_active_oscs/active_oscs=3" classname="test_pwm_encoding" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.0023682117462158203" sim_time_ns="14872.0" ratio_time="6279843.862679956" />
+    <property name="random_seed" value="1762096788" />
+    <testcase name="pwm_encode_active_oscs/active_oscs=0" classname="test_pwm_encoding" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.009318351745605469" sim_time_ns="14586.0" ratio_time="1565298.2843107153" />
+    <testcase name="pwm_encode_active_oscs/active_oscs=1" classname="test_pwm_encoding" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.0023283958435058594" sim_time_ns="14872.0" ratio_time="6387230.0929756295" />
+    <testcase name="pwm_encode_active_oscs/active_oscs=3" classname="test_pwm_encoding" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="16" time="0.0022916793823242188" sim_time_ns="14872.0" ratio_time="6489563.99167707" />
   </testsuite>
 </testsuites>

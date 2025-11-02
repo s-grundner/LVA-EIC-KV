@@ -1,17 +1,17 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1762096034" />
-    <testcase name="midi_test/mode=0/input_bytes=0" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.014606475830078125" sim_time_ns="43472.0" ratio_time="2976214.1467746147" />
-    <testcase name="midi_test/mode=0/input_bytes=1" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.00796651840209961" sim_time_ns="43758.00000000001" ratio_time="5492738.20650027" />
-    <testcase name="midi_test/mode=0/input_bytes=2" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.007312297821044922" sim_time_ns="43758.0" ratio_time="5984165.452624715" />
-    <testcase name="midi_test/mode=0/input_bytes=3" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.007452726364135742" sim_time_ns="43758.0" ratio_time="5871408.376211651" />
-    <testcase name="midi_test/mode=0/input_bytes=4" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.007215261459350586" sim_time_ns="43758.0" ratio_time="6064645.092423091" />
-    <testcase name="midi_test/mode=0/input_bytes=5" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.007259845733642578" sim_time_ns="43758.0" ratio_time="6027400.802364532" />
-    <testcase name="midi_test/mode=1/input_bytes=0" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.1001133918762207" sim_time_ns="632060.0" ratio_time="6313441.070715827" />
-    <testcase name="midi_test/mode=1/input_bytes=1" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.0992741584777832" sim_time_ns="631774.0" ratio_time="6363932.061346923" />
-    <testcase name="midi_test/mode=1/input_bytes=2" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.10033392906188965" sim_time_ns="631774.0" ratio_time="6296713.443867016" />
-    <testcase name="midi_test/mode=1/input_bytes=3" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.09920835494995117" sim_time_ns="631774.0" ratio_time="6368153.169344644" />
-    <testcase name="midi_test/mode=1/input_bytes=4" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.0984947681427002" sim_time_ns="631774.0" ratio_time="6414289.93552916" />
-    <testcase name="midi_test/mode=1/input_bytes=5" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.10460233688354492" sim_time_ns="631774.0" ratio_time="6039769.462353043" />
+    <property name="random_seed" value="1762096797" />
+    <testcase name="midi_test/mode=0/input_bytes=0" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.015438079833984375" sim_time_ns="43472.0" ratio_time="2815894.234741784" />
+    <testcase name="midi_test/mode=0/input_bytes=1" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.007883548736572266" sim_time_ns="43758.00000000001" ratio_time="5550546.011976049" />
+    <testcase name="midi_test/mode=0/input_bytes=2" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.008116960525512695" sim_time_ns="43758.0" ratio_time="5390934.188045234" />
+    <testcase name="midi_test/mode=0/input_bytes=3" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.008219003677368164" sim_time_ns="43758.0" ratio_time="5324002.971368898" />
+    <testcase name="midi_test/mode=0/input_bytes=4" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.007504701614379883" sim_time_ns="43758.0" ratio_time="5830744.811513169" />
+    <testcase name="midi_test/mode=0/input_bytes=5" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.0075609683990478516" sim_time_ns="43758.0" ratio_time="5787353.906347554" />
+    <testcase name="midi_test/mode=1/input_bytes=0" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.10081934928894043" sim_time_ns="632060.0" ratio_time="6269233.083309882" />
+    <testcase name="midi_test/mode=1/input_bytes=1" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.09968972206115723" sim_time_ns="631774.0" ratio_time="6337403.565158121" />
+    <testcase name="midi_test/mode=1/input_bytes=2" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.1002206802368164" sim_time_ns="631774.0" ratio_time="6303828.695905375" />
+    <testcase name="midi_test/mode=1/input_bytes=3" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.09673070907592773" sim_time_ns="631774.0" ratio_time="6531266.08949073" />
+    <testcase name="midi_test/mode=1/input_bytes=4" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.09769058227539062" sim_time_ns="631774.0" ratio_time="6467092.172907962" />
+    <testcase name="midi_test/mode=1/input_bytes=5" classname="test_midi" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="19" time="0.10308241844177246" sim_time_ns="631774.0" ratio_time="6128823.998797296" />
   </testsuite>
 </testsuites>
