@@ -1,9 +1,9 @@
 /*******************************************************************************
-* @file    : midi.v                                                            *
+* @file    : midi.v (Atomic)                                                   *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
-* @brief   : MIDI command parser. Extracts note on/off commands for selected   *
-*            channel. Only feed Channel Voice Messages (0x8n, 0x9n)            *
+* @brief   : MIDI command parser. Extracts note on/off commands and channel.   *
+             Only feed Channel Voice Messages (0x8n, 0x9n)                     *
 *******************************************************************************/
 
 `default_nettype none

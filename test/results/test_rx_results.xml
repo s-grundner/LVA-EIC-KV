@@ -1,8 +1,8 @@
 <testsuites name="results">
   <testsuite name="all" package="all">
-    <property name="random_seed" value="1761914915" />
-    <testcase name="parallelize_data/data_frame=single" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.1552867889404297" sim_time_ns="1027884.0" ratio_time="6619262.379070196" />
-    <testcase name="parallelize_data/data_frame=multi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.44124674797058105" sim_time_ns="2950090.0" ratio_time="6685805.648581662" />
-    <testcase name="parallelize_data/data_frame=midi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.4287879467010498" sim_time_ns="2950090.0000000005" ratio_time="6880067.461543638" />
+    <property name="random_seed" value="1762096031" />
+    <testcase name="parallelize_data/data_frame=single" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.1475827693939209" sim_time_ns="968110.0" ratio_time="6559776.61874583" />
+    <testcase name="parallelize_data/data_frame=multi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.3802509307861328" sim_time_ns="2591446.0" ratio_time="6815094.428940465" />
+    <testcase name="parallelize_data/data_frame=midi" classname="test_rx" file="/usr/local/lib/python3.12/dist-packages/cocotb/_decorators.py" lineno="21" time="0.3813180923461914" sim_time_ns="2591446.0000000005" ratio_time="6796021.620834283" />
   </testsuite>
 </testsuites>

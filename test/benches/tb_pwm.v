@@ -1,5 +1,5 @@
 /*******************************************************************************
-* @file    : tb_pwm.v                                                          *
+* @file    : tb_pwm.v (Compound Test)                                          *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Testbench for PWM module.                                         *

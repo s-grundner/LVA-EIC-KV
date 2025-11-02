@@ -1,5 +1,5 @@
 /*******************************************************************************
-* @file    : tb_counter.v                                                      *
+* @file    : tb_counter.v (Atomic)                                             *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Counter Module Testbench                                          *

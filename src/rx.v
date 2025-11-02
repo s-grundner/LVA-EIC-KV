@@ -15,7 +15,7 @@ module rx (
     input wire clk_i,
     input wire nrst_i,
     input wire rxData_i,
-    output wire dataReady_o,
+    output reg dataReady_o,
     output reg [`MIDI_PAYLOAD_BITS-1:0] midiData_o
 );
 
@@ -57,7 +57,6 @@ module rx (
                         (fsmState == FSM_STOP) &&
                         (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT/2));
     wire payloadDone = (bitCounter == `MIDI_PAYLOAD_BITS);
-    assign dataReady_o = payloadDone;
 
     // Select Next State
     always @(*) begin : nextFsmState_p
@@ -78,6 +77,17 @@ module rx (
             midiData_o <= 8'b0;
         end else if (fsmState == FSM_STOP) begin
             midiData_o <= midiData;
+        end
+    end
+    
+    // Dataready Strobe
+    always @(posedge clk_i or negedge nrst_i) begin : dataReady_p
+        if (!nrst_i) begin
+            dataReady_o <= 1'b0;
+        end else if (fsmState == FSM_STOP) begin
+            dataReady_o <= payloadDone;
+        end else begin
+            dataReady_o <= 1'b0;
         end
     end
 

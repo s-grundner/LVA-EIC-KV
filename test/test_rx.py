@@ -7,7 +7,7 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
+from cocotb.triggers import ClockCycles, FallingEdge
 import numpy as np
 
 # -------------------------------- Varaibles -------------------------------- #
@@ -38,7 +38,7 @@ async def parallelize_data(dut, data_frame):
         case "single":
             test_data = [(0xCC, 8)]
         case "multi":
-            test_data = [(0x90, 8), (0x45, 8), (0x60, 8), (0x80, 8), (0x45, 8), (0x40, 8)]
+            test_data = [(0x90, 8), (0x45, 8), (0x60, 8), (0x80, 8), (0x40, 8), (0x41, 8)]
         case "corrupt":
             # As the MIDI protocol does not implement any parity or checksum.
             # A single dataframe of corrupted data could be detected, but following
@@ -59,12 +59,14 @@ async def parallelize_data(dut, data_frame):
 
         # Stop Bit
         dut.rxData.value = 1
-        await ClockCycles(dut.clk, cycles_per_bit)
-
-        # Wait for DUT to process data
-        await ClockCycles(dut.clk, cycles_per_bit * 2)
+        await FallingEdge(dut.dataReady)    
 
         # Check received data
-        assert dut.payload.value.to_unsigned() == byte[0], f"Expected {byte[0]:#04x}, got {dut.payload.value.to_unsigned():#04x}"
+        p = dut.payload.value.to_unsigned()
+        assert p == byte[0], f"Expected {byte[0]:#04x}, got {p:#04x}"
+        
+        # Wait before sending next byte
+        await ClockCycles(dut.clk, cycles_per_bit)
 
+    # Wait to observe Waveform
     await ClockCycles(dut.clk, cycles_per_bit*20)

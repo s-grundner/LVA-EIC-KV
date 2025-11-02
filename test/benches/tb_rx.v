@@ -1,5 +1,5 @@
 /*******************************************************************************
-* @file    : tb_rx.v                                                           *
+* @file    : tb_rx.v (Atomic)                                                  *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Reciever Module Testbench                                         *
@@ -19,6 +19,7 @@ module tb_rx;
 	reg clk;
 	reg nrst;
 	reg rxData;
+	wire dataReady;
 	wire [7:0] payload;
 
 	// DUT instantiation
@@ -26,6 +27,7 @@ module tb_rx;
 		.clk_i(clk),
 		.nrst_i(nrst),
 		.rxData_i(rxData),
+		.dataReady_o(dataReady),
 		.midiData_o(payload)
 	);
 endmodule

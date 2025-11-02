@@ -1,5 +1,5 @@
 /*******************************************************************************
-* @file    : tb_bitcount.v                                                     *
+* @file    : (Atomic) tb_bitcount.v                                                     *
 * @author  : @s-grundner                                                       *
 * @license : Apache-2.0                                                        *
 * @brief   : Bitcount Module Testbench                                         *
