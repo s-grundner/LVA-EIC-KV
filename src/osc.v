@@ -27,44 +27,32 @@ module osc (
 	reg enabled;
 	reg [`OSC_CNT_BW-1:0] halfCntPeriod;
 
-	reg nrstSync;
-	reg cntReached;
-
 	wire [`OSC_CNT_BW-1:0] oscCounter;
+	wire start = noteOnStrb_i & ch_i; // Osc start condition
+	wire stop = noteOffStrb_i & ch_i; // Osc stop condition
+	wire cntReached = (oscCounter == halfCntPeriod);
+	wire reset_active = cntReached & enabled; // strobe signal when counter hits period
+	wire nrstSync = ~reset_active; 
 
 	assign active_o = enabled;
 	assign wave_o = wave;
 
 	// -------------------- Logic Implementations --------------------------- //
 	
-	always @(*) begin
-		cntReached = oscCounter == halfCntPeriod;
-		nrstSync = !(cntReached & enabled);	
-	end
-	
+	// Update enable and halfCntPeriod with minimal logic (no branching cascade)
 	always @(posedge clk_i or negedge nrst_i) begin
 		if (!nrst_i) begin
 			enabled <= 1'b0;
-		end else if (noteOnStrb_i && ch_i) begin
-			enabled <= 1'b1;
-		end else if (noteOffStrb_i && ch_i) begin
-			enabled <= 1'b0;
-		end
-	end	
-	
-	always @(posedge clk_i or negedge nrst_i) begin
-		if (!nrst_i) begin
-			wave <= 1'b0;
-		end else if (!nrstSync) begin
-			wave <= ~wave;
-		end
-	end
-	
-	always @(posedge clk_i or negedge nrst_i) begin
-		if (!nrst_i) begin
 			halfCntPeriod <= `OSC_CNT_BW'b0;
-		end else if (noteOnStrb_i && ch_i) begin 
-			halfCntPeriod <= halfCntPeriod_i;
+			wave <= 1'b0;
+		end else begin
+			enabled <= (enabled | start) & ~stop;
+			// load-on-start
+			if (start) begin
+				halfCntPeriod <= halfCntPeriod_i;
+			end
+			// toggle wave with XOR
+			wave <= wave ^ reset_active;
 		end
 	end
 
