@@ -30,7 +30,7 @@ librelane --manual-pdk config.json
 librelane --manual-pdk config.json --last-run --flow OpenInOpenROAD
 ```
 
-# Tiny Tapeout Verilog Project Template
+# Tiny Tapeout TT-SKY25b Submission
 
 - [Read the documentation for project](docs/info.md)  
 
