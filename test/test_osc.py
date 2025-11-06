@@ -15,7 +15,7 @@ import sg_utils as sg
 @cocotb.test()
 @cocotb.parametrize(
     note=[21, 40, 69, 88, 108, 127],
-    view_waveform=False
+    view_waveform=[False]
     )
 async def counting_test(dut, note, view_waveform):
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")

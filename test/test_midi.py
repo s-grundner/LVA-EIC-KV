@@ -54,7 +54,6 @@ async def midi_test(dut, input_bytes, mode):
 
             dut.rxData.value = 1  # Stop bit
             await ClockCycles(dut.clk, sg.cycles_per_bit)
-            await FallingEdge(dut.dataReady)
             # Now the MIDI byte should be at the input of the MIDI module
             
         await ClockCycles(dut.clk, sg.cycles_per_bit*40)
