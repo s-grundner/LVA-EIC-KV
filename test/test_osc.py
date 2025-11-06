@@ -13,8 +13,11 @@ from cocotb.types import LogicArray
 import sg_utils as sg
 
 @cocotb.test()
-@cocotb.parametrize(note=[21, 40, 69, 88, 108, 127])
-async def counting_test(dut, note):
+@cocotb.parametrize(
+    note=[21, 40, 69, 88, 108, 127],
+    view_waveform=False
+    )
+async def counting_test(dut, note, view_waveform):
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
@@ -47,14 +50,14 @@ async def counting_test(dut, note):
     f_meas = 1_000_000_000 / (2 * (toc - tic))
     error_percent = abs(f_meas - f_ideal) / f_ideal * 100
 
-
     dut._log.info(f"Ideal freq: {f_ideal:.2f} Hz, Measured freq: {f_meas:.2f} Hz, Error: {error_percent:.4f} %")
-
     assert error_percent < 5.0, f"Frequency error too high: {error_percent:.4f} %"
-    # Wait to observe Waveform
-    await ValueChange(dut.wave)
-    await ValueChange(dut.wave)
-    await ValueChange(dut.wave)
+
+    if view_waveform:
+        # Wait to observe Waveform (This is optional and requires long simulation time)
+        await ValueChange(dut.wave)
+        await ValueChange(dut.wave)
+        await ValueChange(dut.wave)
 
     # Turn note off
     dut.noteOffStrb.value = 1
