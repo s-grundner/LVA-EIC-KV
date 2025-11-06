@@ -7,7 +7,7 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles, ValueChange
+from cocotb.triggers import ClockCycles, ValueChange, Timer, First
 from cocotb.types import LogicArray
 
 import sg_utils as sg
@@ -47,6 +47,22 @@ async def counting_test(dut, note):
     f_meas = 1_000_000_000 / (2 * (toc - tic))
     error_percent = abs(f_meas - f_ideal) / f_ideal * 100
 
+
     dut._log.info(f"Ideal freq: {f_ideal:.2f} Hz, Measured freq: {f_meas:.2f} Hz, Error: {error_percent:.4f} %")
 
     assert error_percent < 5.0, f"Frequency error too high: {error_percent:.4f} %"
+    # Wait to observe Waveform
+    await ValueChange(dut.wave)
+    await ValueChange(dut.wave)
+    await ValueChange(dut.wave)
+
+    # Turn note off
+    dut.noteOffStrb.value = 1
+    await ClockCycles(dut.clk, 1)
+    dut.noteOffStrb.value = 0
+    # check if waveform does not change anymore
+    t_wait_ns = int(1_000_000_000*2/f_ideal) # 2 periods
+    timeout = Timer(t_wait_ns, 'ns')
+    change = ValueChange(dut.wave)
+    result = await First(timeout, change)
+    assert result is timeout, "Waveform changed after note off!"
