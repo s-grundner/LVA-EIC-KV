@@ -30,7 +30,6 @@ module midi (
     localparam FSM_IDLE = 0;
     localparam FSM_CMD = 1;
     localparam FSM_NOTE = 2;
-    localparam FSM_VEL = 3;
 
     // ------------------------ Internal Register --------------------------- //
 
