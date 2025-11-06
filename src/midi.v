@@ -46,8 +46,7 @@ module midi (
         case (fsmState)
             FSM_IDLE: nextFsmState = FSM_CMD;
             FSM_CMD: nextFsmState = FSM_NOTE;
-            FSM_NOTE: nextFsmState = FSM_VEL;
-            FSM_VEL: nextFsmState = FSM_IDLE;
+            FSM_NOTE: nextFsmState = FSM_IDLE;
             default: nextFsmState = FSM_IDLE;
         endcase
     end

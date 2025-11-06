@@ -10,7 +10,6 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, FallingEdge
 
-import numpy as np
 import sg_utils as sg
 
 @cocotb.test()
@@ -21,8 +20,8 @@ import sg_utils as sg
             [0x80, 0x06, 0x00],
             [0x91, 0x40, 0x00],
             [0x81, 0x7F, 0x00],
-            [0x3C, 0x20, 0x00],
-            [0x00, 0x00, 0x00]
+            [0x90, 0x60, 0x00, 0x80, 0x60, 0x00],
+            [0x91, 0x40, 0x00, 0x81, 0x7F, 0x00]
         ]
     )
 
@@ -54,6 +53,7 @@ async def midi_test(dut, input_bytes, mode):
                 await ClockCycles(dut.clk, sg.cycles_per_bit)
 
             dut.rxData.value = 1  # Stop bit
+            await ClockCycles(dut.clk, sg.cycles_per_bit)
             await FallingEdge(dut.dataReady)
             # Now the MIDI byte should be at the input of the MIDI module
             
@@ -70,5 +70,4 @@ async def midi_test(dut, input_bytes, mode):
             dut.midiByteValid_from_tb.value = 0
             await ClockCycles(dut.clk, 20)
 
-    
         await ClockCycles(dut.clk, 100)
