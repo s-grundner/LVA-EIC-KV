@@ -8,15 +8,13 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles, RisingEdge, Timer
-import numpy as np
-
-f_clk_hz = 3_500_000
+from cocotb.triggers import ClockCycles
+from sg_utils import t_clk_ns
 
 @cocotb.test()
 @cocotb.parametrize(reset_type=["sync", "overflow"])
 async def counting_test(dut, reset_type):
-    clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns")
+    clock = Clock(dut.clk, t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
     # Reset

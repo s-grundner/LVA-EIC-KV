@@ -8,20 +8,14 @@
 import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, FallingEdge
-import numpy as np
-
-# -------------------------------- Varaibles -------------------------------- #
-
-baud_rate = 31250
-f_clk_hz = 3_500_000
-cycles_per_bit = f_clk_hz // baud_rate
+import sg_utils as sg
 
 # ------------------------------- Test Cases -------------------------------- #
 
 @cocotb.test()
 @cocotb.parametrize(data_frame=["single", "multi", "midi"])
 async def parallelize_data(dut, data_frame):
-    clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns") 
+    clock = Clock(dut.clk, sg.t_clk_ns, unit="ns") 
     cocotb.start_soon(clock.start())
 
     # Reset
@@ -51,11 +45,11 @@ async def parallelize_data(dut, data_frame):
     for byte in test_data:
         # Start Bit
         dut.rxData.value = 0
-        await ClockCycles(dut.clk, cycles_per_bit)
+        await ClockCycles(dut.clk, sg.cycles_per_bit)
 
         for i in range(byte[1]):
             dut.rxData.value = (byte[0] >> i) & 0x1
-            await ClockCycles(dut.clk, cycles_per_bit)
+            await ClockCycles(dut.clk, sg.cycles_per_bit)
 
         # Stop Bit
         dut.rxData.value = 1
@@ -66,7 +60,7 @@ async def parallelize_data(dut, data_frame):
         assert p == byte[0], f"Expected {byte[0]:#04x}, got {p:#04x}"
         
         # Wait before sending next byte
-        await ClockCycles(dut.clk, cycles_per_bit)
+        await ClockCycles(dut.clk, sg.cycles_per_bit)
 
     # Wait to observe Waveform
-    await ClockCycles(dut.clk, cycles_per_bit*20)
+    await ClockCycles(dut.clk, sg.cycles_per_bit*20)

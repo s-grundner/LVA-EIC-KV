@@ -20,6 +20,17 @@ module tb ();
   wire [7:0] uo_out;
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
+
+  // Create wires for displaying individual signals:
+  wire rxDataIn;
+  wire ch0;
+  wire ch1;
+  wire pwm;
+  assign ui_in[3] = rxDataIn; 
+  assign ch0 = uo_out[0];
+  assign ch1 = uo_out[1];
+  assign pwm = uo_out[7];
+
 `ifdef GL_TEST
   wire VPWR = 1'b1;
   wire VGND = 1'b0;

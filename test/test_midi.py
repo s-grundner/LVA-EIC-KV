@@ -11,10 +11,7 @@ from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles, FallingEdge
 
 import numpy as np
-
-f_clk_hz = 3_500_000
-f_baud_hz = 31250
-cycles_per_bit = int(f_clk_hz // f_baud_hz)
+import sg_utils as sg
 
 @cocotb.test()
 @cocotb.parametrize(
@@ -30,7 +27,7 @@ cycles_per_bit = int(f_clk_hz // f_baud_hz)
     )
 
 async def midi_test(dut, input_bytes, mode):
-    clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns")
+    clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
     # Reset
@@ -50,17 +47,17 @@ async def midi_test(dut, input_bytes, mode):
 
         for byte in input_bytes:
             dut.rxData.value = 0  # Start bit
-            await ClockCycles(dut.clk, cycles_per_bit)  # MIDI baud rate: 31250 bps
+            await ClockCycles(dut.clk, sg.cycles_per_bit)  # MIDI baud rate: 31250 bps
 
             for i in range(8):
                 dut.rxData.value = (byte >> i) & 0x1
-                await ClockCycles(dut.clk, cycles_per_bit)
+                await ClockCycles(dut.clk, sg.cycles_per_bit)
 
             dut.rxData.value = 1  # Stop bit
             await FallingEdge(dut.dataReady)
             # Now the MIDI byte should be at the input of the MIDI module
             
-        await ClockCycles(dut.clk, cycles_per_bit*40)
+        await ClockCycles(dut.clk, sg.cycles_per_bit*40)
         
     elif mode == "standalone":
         dut._log.info("Disabling RX module")

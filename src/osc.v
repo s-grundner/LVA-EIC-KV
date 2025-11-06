@@ -56,7 +56,6 @@ module osc (
 		end
 	end
 
-
 	// ----------------------- Module Instances ----------------------------- //
 
 	counter #(

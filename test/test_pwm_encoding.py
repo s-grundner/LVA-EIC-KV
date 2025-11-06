@@ -9,14 +9,12 @@ import cocotb
 from cocotb.clock import Clock
 from cocotb.triggers import ClockCycles
 
-import numpy as np
-
-f_clk_hz = 3_500_000
+import sg_utils as sg
 
 @cocotb.test()
 @cocotb.parametrize(active_oscs=[0b0, 0b1, 0b11])
 async def pwm_encode_active_oscs(dut, active_oscs):
-    clock = Clock(dut.clk, int(np.round(1_000_000_000/f_clk_hz)), unit="ns")
+    clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
     # Reset
