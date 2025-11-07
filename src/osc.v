@@ -28,14 +28,14 @@ module osc (
 	reg [`OSC_CNT_BW-1:0] halfCntPeriod;
 
 	wire [`OSC_CNT_BW-1:0] oscCounter;
-	wire start = noteOnStrb_i & ch_i; // Osc start condition
-	wire stop = noteOffStrb_i & ch_i; // Osc stop condition
-	wire cntReached = !(oscCounter < halfCntPeriod);
+	wire start        = noteOnStrb_i & ch_i; // Osc start condition
+	wire stop         = noteOffStrb_i & ch_i; // Osc stop condition
+	wire cntReached   = !(oscCounter < halfCntPeriod);
 	wire reset_active = cntReached & enabled; // strobe signal when counter hits period
-	wire nrstSync = ~reset_active; 
+	wire nrstSync     = ~reset_active; 
 
-	assign active_o = enabled;
-	assign wave_o = wave;
+	assign active_o   = enabled;
+	assign wave_o     = wave;
 
 	// -------------------- Logic Implementations --------------------------- //
 	
