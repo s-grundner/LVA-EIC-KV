@@ -15,9 +15,9 @@ import sg_utils as sg
 @cocotb.test()
 @cocotb.parametrize(
     note=[21, 40, 69, 88, 108, 127],
-    view_waveform=[False]
+    viewable=[False]
     )
-async def counting_test(dut, note, view_waveform):
+async def counting_test(dut, note, viewable):
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
@@ -53,7 +53,7 @@ async def counting_test(dut, note, view_waveform):
     dut._log.info(f"Ideal freq: {f_ideal:.2f} Hz, Measured freq: {f_meas:.2f} Hz, Error: {error_percent:.4f} %")
     assert error_percent < 5.0, f"Frequency error too high: {error_percent:.4f} %"
 
-    if view_waveform:
+    if viewable:
         # Wait to observe Waveform (This is optional and requires long simulation time)
         await ValueChange(dut.wave)
         await ValueChange(dut.wave)
@@ -69,3 +69,8 @@ async def counting_test(dut, note, view_waveform):
     change = ValueChange(dut.wave)
     result = await First(timeout, change)
     assert result is timeout, "Waveform changed after note off!"
+    
+    # Turn note off again to check idempotency
+    dut.noteOffStrb.value = 1
+    await ClockCycles(dut.clk, 1)
+    dut.noteOffStrb.value = 0

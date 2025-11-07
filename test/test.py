@@ -29,6 +29,12 @@ async def rx(dut, bytes):
         dut.rxDataIn.value = 1
         await ClockCycles(dut.clk, sg.cycles_per_bit)
 
+async def wave_off(signal, timeout_ns):
+    timeout = Timer(timeout_ns, 'ns')
+    change = ValueChange(signal)
+    result = await First(timeout, change)
+    return (result is timeout)
+
 async def meas_t_period(signal):
     await ValueChange(signal)
     tic = cocotb.utils.get_sim_time('ns')
@@ -37,8 +43,11 @@ async def meas_t_period(signal):
     return 2*(toc - tic)
 
 @cocotb.test()
-@cocotb.parametrize(voices=["monophonic", "polyphonic", "arpeggiator", "voice overflow", "voice override"])
-async def test_project(dut, voices):
+@cocotb.parametrize(
+    voice_setting=["monophonic", "polyphonic", "arpeggiator", "voice overflow", "voice override"],
+    viewable=[False] # Set to True to make the waveform more easily observable in a waveform viewer
+    )
+async def test_project(dut, voice_setting, viewable):
     dut._log.info("Start")
 
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns") 
@@ -55,9 +64,11 @@ async def test_project(dut, voices):
     dut.rst_n.value = 1
 
     dut._log.info("Test project behavior")
+    channel_signals = [dut.ch0, dut.ch1, dut.ch2, dut.ch3, dut.ch4, dut.ch5, dut.ch6]
 
-    match voices:
+    match voice_setting:
         case "monophonic":
+            dut.testcase_indicator.value = 0
             dut._log.info("Testing monophonic midi input - single note")
 
             # Construct MIDI Note On message and send it
@@ -69,11 +80,15 @@ async def test_project(dut, voices):
 
             # Measure frequency of the output waveform
             dt = await meas_t_period(dut.ch0)
-            
-            # Calculate and log frequency error
             (f_meas, err_percent) = sg.freq_error(midi_note, dt)
             dut._log.info(f"Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
             assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+            
+            if viewable:
+                # Wait to observe Waveform (This is optional and requires long simulation time)
+                await ValueChange(dut.ch0)
+                await ValueChange(dut.ch0)
+                await ValueChange(dut.ch0)
             
             # Turn Note Off
             dut._log.info("Turn Note Off and verify waveform stops")
@@ -81,38 +96,119 @@ async def test_project(dut, voices):
             await rx(dut, rx_data)
             
             # Verify that waveform stops changing
-            t_wait_ns = int(1_000_000_000*2/f_meas) # 2 periods
-            timeout = Timer(t_wait_ns, 'ns')
-            change = ValueChange(dut.ch0)
-            result = await First(timeout, change)
-            assert result is timeout, "Waveform changed after note off!"
+            timeout_ns = int(1_000_000_000*2/f_meas) # 2 periods
+            assert await wave_off(dut.ch0, timeout_ns), "Waveform did not stop after Note Off"
 
         case "polyphonic":
+            dut.testcase_indicator.value = 1
             dut._log.info("Testing polyphonic midi input - multiple notes at once")
-            (key1, key2) = ('A', 'E')
-            (midi1, midi2) = (sg.get_midi_from_key(key1), sg.get_midi_from_key(key2))
+            keys = ['A', 'E', 'C']
+            midis = [sg.get_midi_from_key(k) for k in keys]
+            n_voices = len(midis)
 
-            rx_data1 = sg.construct_midi_bytes(0, midi1)
-            rx_data2 = sg.construct_midi_bytes(1, midi2)
-            rx_data = rx_data1 + rx_data2
+            rx_data = []
+            for i in range(n_voices):
+                rx_data = rx_data + sg.construct_midi_bytes(i, midis[i], 'on')
+
             await rx(dut, rx_data)
             
-            dt0 = await meas_t_period(dut.ch0)
-            (f_meas, err_percent) = sg.freq_error(midi1, dt0)
-            dut._log.info(f"Key: Middle {key1}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
-            assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+            for i in range(n_voices):
+                # Check if the correct frequency is output
+                dt = await meas_t_period(channel_signals[i])
+                (f_meas, err_percent) = sg.freq_error(midis[i], dt)
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
 
-            dt1 = await meas_t_period(dut.ch1)
-            (f_meas, err_percent) = sg.freq_error(midi2, dt1)
-            dut._log.info(f"Key: Middle {key2}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
-            assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+                if viewable:
+                    await ValueChange(channel_signals[i])
+                    await ValueChange(channel_signals[i])
+                    await ValueChange(channel_signals[i])
+
+            # Turn only one note off and check others still play
+            rx_data = sg.construct_midi_bytes(0, midis[0], 'off')
+            await rx(dut, rx_data)
+
+            for i in range(1, n_voices):
+                # Check if the correct frequency is output
+                dt = await meas_t_period(channel_signals[i])
+                (f_meas, err_percent) = sg.freq_error(midis[i], dt)
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+
+                if viewable:
+                    await ValueChange(channel_signals[i])
+                    await ValueChange(channel_signals[i])
+                    await ValueChange(channel_signals[i])
+            
+            timeout_ns = int(1_000_000_000*2/sg.get_freq_from_note(midis[0]))
+            assert await wave_off(channel_signals[0], timeout_ns), "Waveform did not stop after Note Off"
 
         case "arpeggiator":
+            dut.testcase_indicator.value = 2
             dut._log.info("Testing arpeggiator mode - multiple notes in sequence")
+            keys = ['C', 'E', 'G', 'B', 'D']
+            midis = [sg.get_midi_from_key(k) for k in keys]
+            n_notes = len(midis)
+            
+            # Send On message, wait a few periods, send off message
+            for i in range(n_notes):
+                rx_data = sg.construct_midi_bytes(0, midis[i], 'on')
+                await rx(dut, rx_data)
+
+                # Check if the correct frequency is output
+                dt = await meas_t_period(dut.ch0) 
+                (f_meas, err_percent) = sg.freq_error(midis[i], dt)
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+
+                if viewable:
+                    await ValueChange(dut.ch0)
+                    await ValueChange(dut.ch0)
+                    await ValueChange(dut.ch0)
+
+                rx_data = sg.construct_midi_bytes(0, midis[i], 'off')
+                await rx(dut, rx_data)
+                
+                timeout_ns = int(1_000_000_000*2/f_meas) # 2 periods
+                assert await wave_off(dut.ch0, timeout_ns), "Waveform did not stop after Note Off"
 
         case "voice overflow":
+            dut.testcase_indicator.value = 3
             dut._log.info("Testing voice overflow - more notes than available voices")
+            keys = ['A', 'E', 'C', 'G', 'B', 'D', 'F#']
+            midis = [sg.get_midi_from_key(k) for k in keys]
+            n_voices = len(midis)
+
+            rx_data = []
+            for i in range(n_voices):
+                rx_data = rx_data + sg.construct_midi_bytes(i, midis[i], 'on')
+
+            await rx(dut, rx_data)
+
+            await ValueChange(dut.ch0)
+            await ValueChange(dut.ch0)
+            await ValueChange(dut.ch0)
+            await ValueChange(dut.ch0)
 
         case "voice override":
+            dut.testcase_indicator.value = 4
             dut._log.info("Testing voice override - a second note on occurs on the same channel without turning the previous note off")
+            keys = ['C', 'E', 'G', 'B', 'D']
+            midis = [sg.get_midi_from_key(k) for k in keys]
+            n_notes = len(midis)
+            
+            # Send On message, wait a few periods, send off message
+            for i in range(n_notes):
+                rx_data = sg.construct_midi_bytes(0, midis[i], 'on')
+                await rx(dut, rx_data)
 
+                # Check if the correct frequency is output
+                dt = await meas_t_period(dut.ch0) 
+                (f_meas, err_percent) = sg.freq_error(midis[i], dt)
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+
+                if viewable:
+                    await ValueChange(dut.ch0)
+                    await ValueChange(dut.ch0)
+                    await ValueChange(dut.ch0)

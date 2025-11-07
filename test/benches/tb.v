@@ -8,7 +8,7 @@ module tb ();
 
 	initial begin
 		$dumpfile("./waves/tb.vcd");
-		$dumpvars(0, tb);
+		$dumpvars(0, tb, tb.testcase_indicator);
 	end
 
   // Wire up the inputs and outputs:
@@ -21,15 +21,27 @@ module tb ();
   wire [7:0] uio_out;
   wire [7:0] uio_oe;
 
-  // Create wires for displaying individual signals:
+  // Needed for convenient access in cocotb:
   wire rxDataIn;
   wire ch0;
   wire ch1;
+  wire ch2;
+  wire ch3;
+  wire ch4;
+  wire ch5;
+  wire ch6;
   wire pwm;
   assign ui_in[3] = rxDataIn; 
   assign ch0 = uo_out[0];
   assign ch1 = uo_out[1];
+  assign ch2 = uo_out[2];
+  assign ch3 = uo_out[3];
+  assign ch4 = uo_out[4];
+  assign ch5 = uo_out[5];
+  assign ch6 = uo_out[6];
   assign pwm = uo_out[7];
+  
+  reg[3:0] testcase_indicator;
 
 `ifdef GL_TEST
   wire VPWR = 1'b1;
