@@ -22,6 +22,7 @@ module rx (
     // ----------------------- Internal Parameters ---------------------------- //
 
     localparam CYCLES_PER_BIT = `F_CLK_HZ / `F_BAUD;
+    localparam CYCLES_PER_BIT_HALF = CYCLES_PER_BIT / 2;
     localparam COUNT_REG_LEN = 1 + $clog2(CYCLES_PER_BIT);
 
     // FSM States
@@ -55,7 +56,7 @@ module rx (
     // Next State Conditions
     wire nextBitReady = (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT)) ||
                         (fsmState == FSM_STOP) &&
-                        (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT/2));
+                        (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT_HALF));
     wire payloadDone = (bitCounter == `MIDI_PAYLOAD_BITS);
 
     // Select Next State
@@ -95,7 +96,7 @@ module rx (
     always @(posedge clk_i or negedge nrst_i) begin : sampleBit_p
         if (!nrst_i) begin
             sampledBit <= 1'b0;
-        end else if (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT / 2)) begin
+        end else if (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT_HALF)) begin
             // Take sample in the middle of a bit
             sampledBit <= rxDataReg0;
         end

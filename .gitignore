@@ -12,3 +12,4 @@ test/gate_level_netlist.v
 quartus
 *.bak
 test/results/*
+*.hier

@@ -21,14 +21,15 @@ module synth (
 
     wire noteOnStrb;
     wire noteOffStrb;
-    wire [`MIDI_PAYLOAD_BITS-1:0] note;
+    wire [`MIDI_NOTE_BW-1:0] note;
     
     wire midiByteValid;
     wire [`MIDI_PAYLOAD_BITS-1:0] midiByte;
     
     wire [`OSC_VOICES-1:0] activeOscs; // one bit per oscillator
     wire [`OSC_VOICES_BW-1:0] nActiveOscs; 
-    wire [`OSC_CNT_BW-1:0] oscCmp;
+    wire [`OSC_ROM_BW-1:0] oscCmp;
+    wire [3:0] oscShift;
     wire [`OSC_VOICES_BW-1:0] channel;
 
     // ---------------------------- Modules --------------------------------- //
@@ -52,13 +53,12 @@ module synth (
         .noteOffStrb_o(noteOffStrb)
     );
 
-	note2cnt #(
-		.BW(`OSC_CNT_BW)
-	) note2cnt_inst (
+	note2cnt note2cnt_inst (
 		.clk_i(clk_i),
 		.nrst_i(nrst_i),
 		.note_i(note),
-		.halfCntPeriod_o(oscCmp)
+		.baseCntPeriod_o(oscCmp),
+        .shift_o(oscShift)
 	);
 
     // Generate Oscillator stack
@@ -71,7 +71,8 @@ module synth (
             osc osc_inst (
                 .clk_i(clk_i),
                 .nrst_i(nrst_i),
-                .halfCntPeriod_i(oscCmp),
+                .baseCntPeriod_i(oscCmp),
+                .shift_i(oscShift),
                 .ch_i(channel == OSC_CH),
                 .active_o(activeOscs[OSC_CH]),
                 .noteOnStrb_i(noteOnStrb),
@@ -94,8 +95,8 @@ module synth (
     ) pwm_inst (
         .clk_i(clk_i),
         .nrst_i(nrst_i),
-        .onCnt_i(nActiveOscs), // max 7 active oscillators
-        .periodCnt_i(`OSC_VOICES_BW'(`OSC_VOICES)), // cnt from 0 to 6 (7 steps)
+        .onCnt_i(nActiveOscs),
+        .periodCnt_i(`OSC_VOICES_BW'(`OSC_VOICES)),
         .pwm_o(activeOscPwm_o)
     );
 

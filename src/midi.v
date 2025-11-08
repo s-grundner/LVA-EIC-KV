@@ -17,7 +17,7 @@ module midi (
     input wire midiByteValid_i,
     input wire [`MIDI_PAYLOAD_BITS-1:0] midiByte_i,
     output reg [`OSC_VOICES_BW-1:0] ch_o,
-    output reg [`MIDI_PAYLOAD_BITS-1:0] note_o,
+    output reg [`MIDI_NOTE_BW-1:0] note_o,
     output reg noteOnStrb_o,
     output reg noteOffStrb_o
 );
@@ -77,9 +77,9 @@ module midi (
 
     always @(posedge clk_i or negedge nrst_i) begin
         if (!nrst_i) begin
-            note_o <= {`MIDI_PAYLOAD_BITS{1'b0}};
+            note_o <= {`OSC_ROM_BW{1'b0}};
         end else if (fsmState == FSM_NOTE) begin
-            note_o <= midiByteReg;
+            note_o <= midiByteReg[`MIDI_NOTE_BW-1:0];
         end
     end
 

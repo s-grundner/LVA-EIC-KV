@@ -15,22 +15,19 @@ module tb_note2cnt;
 		$dumpvars(0, tb_note2cnt);
 	end
 
-	// Parameters
-	localparam BW = 16;
-
 	// Signals
 	reg clk;
 	reg nrst;
-	reg [7:0] note;
-	wire [BW-1:0] halfCntPeriod;
+	reg [6:0] note;
+	wire [6:0] baseCntPeriod;
+	wire [3:0] shift;
 
 	// DUT instantiation
-	note2cnt #(
-		.BW(BW)
-	) dut (
+	note2cnt dut (
 		.clk_i(clk),
 		.nrst_i(nrst),
 		.note_i(note),
-		.halfCntPeriod_o(halfCntPeriod)
+		.baseCntPeriod_o(baseCntPeriod),
+		.shift_o(shift)
 	);
 endmodule

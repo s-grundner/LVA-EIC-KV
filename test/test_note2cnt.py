@@ -30,4 +30,7 @@ async def lookup_test(dut, test_note):
     dut._log.info(f"Testing MIDI note {test_note}, expects cnt {expected_cnt}")
     
     await ClockCycles(dut.clk, 10)
-    assert int(dut.halfCntPeriod.value) == expected_cnt, f"actual value {dut.halfCntPeriod.value}"
+    base = dut.baseCntPeriod.value.to_unsigned() | 0b10000000
+    shift = dut.shift.value.to_unsigned()
+    recreated_cnt = base << shift
+    assert recreated_cnt == expected_cnt, f"actual value {recreated_cnt}"
