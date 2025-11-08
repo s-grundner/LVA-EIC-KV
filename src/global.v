@@ -11,7 +11,7 @@
 `define MIDI_NOTE_BW 7
 
 // Oscillator settings
-`define OSC_VOICES 4 // MAX 7
+`define OSC_VOICES 3 // MAX 7
 `define OSC_VOICES_BW $clog2(`OSC_VOICES+1)
 `define OSC_CNT_BW 16 // Counter bit width
 `define OSC_ROM_BW 7 // Note ROM bit width
