@@ -65,3 +65,19 @@ def freq_error(midi_note, delta_t_ns):
     f_meas = 1_000_000_000 / delta_t_ns
     error_percent = abs(f_meas - f_ideal) / f_ideal * 100
     return (f_meas, error_percent)
+
+import cocotb
+from cocotb.triggers import Timer, ValueChange, First
+
+async def wave_off(signal, timeout_ns):
+    timeout = Timer(timeout_ns, 'ns')
+    change = ValueChange(signal)
+    result = await First(timeout, change)
+    return (result is timeout)
+
+async def meas_t_period(signal):
+    await ValueChange(signal)
+    tic = cocotb.utils.get_sim_time('ns')
+    await ValueChange(signal)
+    toc = cocotb.utils.get_sim_time('ns')   
+    return 2*(toc - tic)

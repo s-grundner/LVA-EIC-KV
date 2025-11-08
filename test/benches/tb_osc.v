@@ -19,8 +19,9 @@ module tb_osc;
 	reg nrst;
 	reg noteOnStrb;
 	reg noteOffStrb;
-	reg[15:0] oscHalfCntPeriod;
+	reg[6:0] oscBaseCntPeriod;
 	reg ch;
+	reg[3:0] shift;
 
 	wire wave;
 	wire active;
@@ -30,7 +31,8 @@ module tb_osc;
 		.nrst_i(nrst),
 		.noteOnStrb_i(noteOnStrb),
 		.noteOffStrb_i(noteOffStrb),
-		.halfCntPeriod_i(oscHalfCntPeriod),
+		.baseCntPeriod_i(oscBaseCntPeriod),
+		.shift_i(shift),
 		.ch_i(ch),
 		.active_o(active),
 		.wave_o(wave)
