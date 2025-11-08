@@ -6,9 +6,11 @@
 
 In the current state of the design for a single tile, the ASIC supports 3 voices (Channels 0-2) on pins 0-2 respectively. Pin 7 outputs a PWM signal representing the number of active voices.
 
+In essence the project implements a monophonic synthesizer per midi channel.
+
 ### How the ASIC responds to Edge Cases
 
-If a second note ON command is received for a voice that is already active, the ASIC will output the new frequency on the same output pin, effectively overriding the previous note. Releasing the previous note will not stop the sound, as the voice is still active with the new frequency. Only when the note OFF command of the currently active note is received, the oscillator will stop.
+If a second note ON command is received for a voice that is already active, the ASIC will output the new frequency on the same output pin, effectively overriding the previous note. Releasing the previous note will not stop the sound, as the voice is still active with the new frequency. Only when the note OFF command of the currently active note is received, the oscillator will stop. This behaviour is called voice stealing.
 
 If a channel is recieved outside of the voice range the behavior is as follows: Overflowing channels will eventually loop around when surpassing the size of the channel register. all inputs inbetween the max number of voices and the register size will be ignored.
 
