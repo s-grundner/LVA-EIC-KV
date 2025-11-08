@@ -68,6 +68,7 @@ module note2cnt #(
 	end
 
 	always @(*) begin
+		// noteIndex = actualNote % 12
 		noteIndex = (actualNote - 8'd96 + shift * 12);
 		baseNoteCnt = noteRom[noteIndex[3:0]];	
 	end
