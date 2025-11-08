@@ -21,6 +21,11 @@ async def counting_test(dut, note, viewable):
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
+    rom_emulation = sg.octave_to_cnts(sg.get_octave_freqs(8))
+    base_note = (note - sg.midi_note_min) % sg.keys_per_octave
+    back_shift = 8 - (note - sg.midi_note_min) // sg.keys_per_octave
+    base_cnt = rom_emulation[base_note]
+
     # Reset
     dut._log.info("Resetting DUT")
     dut.nrst.value = 0
@@ -36,7 +41,8 @@ async def counting_test(dut, note, viewable):
     dut.ch.value = 1
     cnt = int(sg.cnt_from_note(note, stored_octave=8))
     dut._log.info(f"Setting note {note} with cnt {cnt}")
-    dut.oscBaseCntPeriod.value = LogicArray.from_unsigned(cnt, 16)
+    dut.oscBaseCntPeriod.value = base_cnt & 0x7F
+    dut.shift.value = back_shift
 
     # generate strobe and start timing
     dut.noteOnStrb.value = 1
@@ -60,6 +66,6 @@ async def counting_test(dut, note, viewable):
     await ClockCycles(dut.clk, 1)
     dut.noteOffStrb.value = 0
     # check if waveform does not change anymore
-    timeout_ns = 2/f_ideal * 1_000_000_000 
+    timeout_ns = int(1_000_000_000*2/f_ideal)
     assert await sg.wave_off(dut.wave, timeout_ns), "Waveform did not stop after note off"
     
