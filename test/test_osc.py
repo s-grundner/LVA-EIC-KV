@@ -15,7 +15,7 @@ import sg_utils as sg
 @cocotb.test()
 @cocotb.parametrize(
     note=[21, 40, 69, 88, 108, 127],
-    viewable=[False]
+    viewable=[True]
     )
 async def counting_test(dut, note, viewable):
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
@@ -52,7 +52,7 @@ async def counting_test(dut, note, viewable):
     
     (f_meas, error_percent) = sg.freq_error(note, dt)
     f_ideal = sg.get_freq_from_note(note)
-    dut._log.info(f"Ideal freq: {f_ideal:.2f} Hz, Measured freq: {f_meas:.2f} Hz, Error: {error_percent:.4f} %")
+    dut._log.info(f"Ideal freq: {f_ideal:.2f} Hz, Measured freq: {f_meas:.2f} Hz, Deviation: {error_percent:.4f} %")
     assert error_percent < 5.0, f"Frequency error too high: {error_percent:.4f} %"
 
     if viewable:

@@ -32,7 +32,7 @@ async def rx(dut, bytes):
 @cocotb.test()
 @cocotb.parametrize(
     voice_setting=["monophonic", "polyphonic", "arpeggiator", "voice overflow", "voice override"],
-    viewable=[False] # Set to True to make the waveform more easily observable in a waveform viewer
+    viewable=[True] # Set to True to make the waveform more easily observable in a waveform viewer
     )
 async def test_project(dut, voice_setting, viewable):
     dut._log.info("Start")
@@ -68,7 +68,7 @@ async def test_project(dut, voice_setting, viewable):
             # Measure frequency of the output waveform
             dt = await sg.meas_t_period(dut.ch0)
             (f_meas, err_percent) = sg.freq_error(midi_note, dt)
-            dut._log.info(f"Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+            dut._log.info(f"Measured Frequency: {f_meas:.2f} Hz, Deviation: {err_percent:.4f} %")
             assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
             
             if viewable:
@@ -103,7 +103,7 @@ async def test_project(dut, voice_setting, viewable):
                 # Check if the correct frequency is output
                 dt = await sg.meas_t_period(channel_signals[i])
                 (f_meas, err_percent) = sg.freq_error(midis[i], dt)
-                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Deviation: {err_percent:.4f} %")
                 assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
 
                 if viewable:
@@ -119,7 +119,7 @@ async def test_project(dut, voice_setting, viewable):
                 # Check if the correct frequency is output
                 dt = await sg.meas_t_period(channel_signals[i])
                 (f_meas, err_percent) = sg.freq_error(midis[i], dt)
-                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Deviation: {err_percent:.4f} %")
                 assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
 
                 if viewable:
@@ -145,7 +145,7 @@ async def test_project(dut, voice_setting, viewable):
                 # Check if the correct frequency is output
                 dt = await sg.meas_t_period(dut.ch0) 
                 (f_meas, err_percent) = sg.freq_error(midis[i], dt)
-                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Deviation: {err_percent:.4f} %")
                 assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
 
                 if viewable:
@@ -164,18 +164,20 @@ async def test_project(dut, voice_setting, viewable):
             dut._log.info("Testing voice overflow - more notes than available voices")
             keys = ['A', 'E', 'C', 'G', 'B', 'D', 'F#']
             midis = [sg.get_midi_from_key(k) for k in keys]
-            n_voices = len(midis)
+            n_voices = 3 # Number of available voices in the design. Change accordingly.
 
             rx_data = []
-            for i in range(n_voices):
+            for i in range(len(midis)):
                 rx_data = rx_data + sg.construct_midi_bytes(i, midis[i], 'on')
 
             await rx(dut, rx_data)
-
-            await ValueChange(dut.ch0)
-            await ValueChange(dut.ch0)
-            await ValueChange(dut.ch0)
-            await ValueChange(dut.ch0)
+            # Observe Channel behaviour.
+            # Overflowing channels will eventually loop around when surpassing the size of the channel register.
+            # all inputs inbetween the max number of voices and the register size will be ignored.
+            if viewable:
+                await ValueChange(dut.ch0)
+                await ValueChange(dut.ch0)
+                await ValueChange(dut.ch0)
 
         case "voice override":
             dut.testcase_indicator.value = 4
@@ -192,10 +194,27 @@ async def test_project(dut, voice_setting, viewable):
                 # Check if the correct frequency is output
                 dt = await sg.meas_t_period(dut.ch0) 
                 (f_meas, err_percent) = sg.freq_error(midis[i], dt)
-                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Error: {err_percent:.4f} %")
+                dut._log.info(f"Key: Middle {keys[i]}, Measured Frequency: {f_meas:.2f} Hz, Deviation: {err_percent:.4f} %")
                 assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
 
                 if viewable:
                     await ValueChange(dut.ch0)
                     await ValueChange(dut.ch0)
                     await ValueChange(dut.ch0)
+            
+            for i in range(n_notes):
+                # Turning off all previous notes should have no effect, only the last note off matters
+                if i != n_notes - 1:
+                    rx_data = sg.construct_midi_bytes(0, midis[i], 'off')
+                    await rx(dut, rx_data)
+                    # Check if the correct frequency is output
+                    dt = await sg.meas_t_period(dut.ch0) 
+                    (f_meas, err_percent) = sg.freq_error(midis[-1], dt)
+                    dut._log.info(f"Key: Middle {keys[-1]}, Measured Frequency: {f_meas:.2f} Hz, Deviation: {err_percent:.4f} %")
+                    assert err_percent < 5.0, f"Output frequency deviated too far from expected value"
+                else: 
+                    # Finally turn last note off
+                    rx_data = sg.construct_midi_bytes(0, midis[i], 'off')
+                    await rx(dut, rx_data)
+                    timeout_ns = int(1_000_000_000*2/f_meas) # 2 periods
+                    assert await sg.wave_off(dut.ch0, timeout_ns), "Waveform did not stop after Note Off"

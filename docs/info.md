@@ -2,22 +2,15 @@
 
 ## How it works
 
-**Square Waves** based on note ON and note OFF commands. The Oscillator stack
-is capable of synthesizing up to 3 voices simultaneously. Each voice is routed
-to a different output pin, allowing for external mixing of the signals. Each
-Oscillator responds to a **different MIDI-Channel** (1, 2, 3), which was
-necessary to simplify the voice allocation logic inside the ASIC. Additionally,
-a PWM signal is provided on a separate output pin, which encodes the number of
-currently active voices. This PWM signal can be used to control the gain of the
-mixed output through lowpass filtering. The ASIC receives MIDI messages via a
-simple UART reciever and synthesizes.
+**Square Waves** based on note ON and note OFF commands. The Oscillator stack is capable of synthesizing up to 3 voices simultaneously. Each voice is routed to a different output pin, allowing for external mixing of the signals. Each Oscillator responds to a **different MIDI-Channel** (1, 2, 3), which was necessary to simplify the voice allocation logic inside the ASIC. Additionally, a PWM signal is provided on a separate output pin, which encodes the number of currently active voices. This PWM signal can be used to control the gain of the mixed output through lowpass filtering. The ASIC receives MIDI messages via a simple UART reciever and synthesizes.
 
-### How the AISC responds to Edge Cases
+In the current state of the design for a single tile, the ASIC supports 3 voices (Channels 0-2) on pins 0-2 respectively. Pin 7 outputs a PWM signal representing the number of active voices.
 
-TODO
+### How the ASIC responds to Edge Cases
 
-- If a second note ON command is received for a voice that is already active...
+If a second note ON command is received for a voice that is already active, the ASIC will output the new frequency on the same output pin, effectively overriding the previous note. Releasing the previous note will not stop the sound, as the voice is still active with the new frequency. Only when the note OFF command of the currently active note is received, the oscillator will stop.
 
+If a channel is recieved outside of the voice range the behavior is as follows: Overflowing channels will eventually loop around when surpassing the size of the channel register. all inputs inbetween the max number of voices and the register size will be ignored.
 
 ### Where do I get the MIDI messages from?
 
@@ -38,9 +31,11 @@ Here are some software recommendations for option 4:
 
 ## How to test
 
-Connect a MIDI device. Press a key and Measure output pin 0 with an oscilloscope for the correct frequency. Press multiple keys simultaneously, and check each pin for the expected output.
+To test the ASIC, feed it with Note-On-MIDI messages with one of the methods above. Observe the output signals of pins 0-2 with an oscilloscope or logic analyzer. You should see square waves on the output pins corresponding to the notes played on the MIDI controller or sent from the DAW. Additionally, you can monitor the PWM output on pin 3 to see the number of active voices.
 
 ## External hardware
+
+In the simplest setup, no actual external hardware is required.
 
 - MIDI Controller (Piano, Pads)
 - MIDI DIN connector PMOD as a physical layer for the differential midi signal
