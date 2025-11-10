@@ -30,6 +30,7 @@ async def lookup_test(dut, test_note):
     dut._log.info(f"Testing MIDI note {test_note}, expects cnt {expected_cnt}")
     
     await ClockCycles(dut.clk, 10)
+    # Re add the Always 1 MSB to restore the original cnt value
     base = dut.baseCntPeriod.value.to_unsigned() | 0b10000000
     shift = dut.shift.value.to_unsigned()
     recreated_cnt = base << shift

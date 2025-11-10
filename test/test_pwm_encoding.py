@@ -7,13 +7,16 @@
 
 import cocotb
 from cocotb.clock import Clock
-from cocotb.triggers import ClockCycles
+from cocotb.triggers import ClockCycles, ValueChange
 
 import sg_utils as sg
 
 @cocotb.test()
-@cocotb.parametrize(active_oscs=[0b0, 0b1, 0b11])
-async def pwm_encode_active_oscs(dut, active_oscs):
+@cocotb.parametrize(
+    active_oscs=[0b0, 0b1, 0b11], #Osc On Mask
+    viewable=[True]
+)
+async def pwm_encode_active_oscs(dut, active_oscs, viewable):
     clock = Clock(dut.clk, sg.t_clk_ns, unit="ns")
     cocotb.start_soon(clock.start())
 
