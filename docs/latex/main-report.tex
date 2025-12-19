@@ -193,12 +193,13 @@
 \subtitle{Technical Report\\%
     \usekomafont{subtitlesmall}%
     \hfill\\%
-    KV Entwurf Integrierter Schaltungen - WiSe25\\
+    KV Integrated Circuits Design - WiSe25\\
     \hfill\\%
 }
 
 \author{%
-	Simon Grundner (k12136610)%
+	Simon Grundner \\ k12136610%
+    \authornewline
     \affiliation{Institute for Integrated Circuits and Quantum Computing}%
     \authornewline
     \authormail{k12136610@students.jku.at}
@@ -214,42 +215,144 @@
 
 \tableofcontents
 
+\newpage
+
+\null\vspace{\fill}
+
+\addsec{Abstract}
+
+This project implements a polyphonic audio square wave synthesizer in Verilog, which can be controlled via the musical instrument digital interface (MIDI) protocol. The project is allocated on the TTSKY25b shuttle of the TinyTapeout project and is to be manufactured under the SkyWater \SI{130}{\nano\meter} process. This report documents functionality as well as implementation and discusses design constraints, imposed by the limited physical space on the shuttle.
+
+\vspace{\fill}
+
+\newpage
 \section{Introduction}
 
-\section{Notes}
+Design in Verilog but not for Running on an FPGA but on CMOS Logic.
 
-TODO:
+What is the Tiny Tapeout Project
 
-\begin{enumerate}
-    \item Link with Markdown documentation.
-    \item Synthesizer Oscillator stack routing
-    \item rx Testbench
-    \item midi Testbench
-\end{enumerate}
-
-Oscillators store the MIDI note number (0-127) in a register.
-
-Incoming Note ON:
-
-\begin{itemize}
-    \item Find first free oscillator (enabled = 0 -> unlocked)
-    \item and write note number to register
-    \item set enabled = 1 (locked).
-\end{itemize}
-
-Incoming Note OFF:
-
-\begin{itemize}
-    \item Find matching note number in all oscillators
-    \item set enabled = 0 (unlocked)
-    \item Disable flag: midi\_note == stored\_note AND note\_off
-\end{itemize}
+The Skywater 130nm Process and the PDK
 
 \section{System Overview}
 
+Block Diagram
 
+For this and following sections, no code but logic diagrams from quartus. Preferrably stick to Abstract Block Diagrams made with tikz
+
+\section{The MIDI Protocol}
+
+Dataframe
+
+\subsection{Twelve Tone Equal Temperament}
+
+How do Digital Notes Correlate with the Base Freqeuncy. 
+
+\subsection{Polyphony}
+
+Overlapping Squarewave in Time and Frequency Domain. Goal is to show, why each voice is output on a individual Pin.
+
+\subsection{Physical Layer of the MIDI-Protocol}
+
+DIN Connector or USB with Differential Pair. No Clock Signal leading to asynchronous Transmission.
+
+Universal Asynchronous Reciever Transmitter
 
 \section{Oscillator Design}
+
+How is the Frequency of the Square Generated?
+
+Count up a defined Number of steps
+
+For each Count, a time interval of 1/fclk elapses.
+
+The Lowest Frequency requires the highest number of counts
+
+The Task is to (space) efficiently determine the Counter Period from the MIDI-Note number
+
+\subsection{Waveform: Squarewave}
+
+Why? No Wavetable and DAC required. Simple Digital Output
+
+Spectrum:
+
+- For infinite Time: Base Frequency and Harmonics
+
+- For Finite Time: Sincs and Spectral Leakage. Simulation in Ableton or Matlab
+
+- Note Durations can be random. because they are dependent on the user input.
+
+\subsection{Frequency Calculation and Generation}
+
+Limitations:
+
+- Frequency Resolution determined by Clock Frequency
+- Divisions and Modulo operations are Expensive. 
+
+Choosing a Clock Frequency
+
+- See reasoning in Py Notebook
+
+Externalize Calculation Logic from the Oscillator Stack
+
+Compare optimisations
+
+- Performing an actual Twelvetone Temparament Calculation on Hardware
+
+- Lookup Table: Save the Countervalues of the Twelve Notes on the Octave to achieve Most precise Counterperiod. What Calculations are required by the oscillators
+
+- Lookup Table: Reduce Bitwitdth and therefor required LUT Size. Compare Size Reduction
+
+Impact of Frequency Deviation
+
+- Systematic error of frequencies from reducing counter resolution. Deviations and calculations from Py-Notebook.
+
+- Spectrum and Harmonics
+
+Are the Deviations Audible?
+
+- Heavily Dependent on the individual Person (Hearing Curve)
+
+- Document Experiment in Ableton Live
+
+\subsection{Oscillatorstack}
+
+Routing a MIDI a Channel to a fixed Oscillator.
+
+Modularity by a Generating Function: Option to increase number of voices for larger space or future Design optimisations.
+
+\section{System Testing}
+
+Edge Cases
+
+Limitations
+
+CocoTB Testresults, Design Simulation+validation, Measurements, Waveforms
+
+\section{External Hardware}
+
+\subsection{MIDI-Source}
+
+Example of a USB-MIDI controller. 
+
+In Principle Direct connection is Possible but a Powersupply is required.
+
+\subsection{Input Side}
+
+Digital Frontend converting simultaneous Notes into individual Channel
+
+\subsection{Output Side}
+
+Audio Mixing Circuit, Gain Control, Speaker Driver
+
+
+Option for mild subtractive Sound-Synthesis
+
+- Squarewaves provide all odd harmonics which can be filtered by an external system to create different Sounddesigns
+
+- optimal Would be a Sawtooth as it contains all harmonics but violated the digitality of the ASIC Output. 
+
+
 
 \end{document}
 \endinput
