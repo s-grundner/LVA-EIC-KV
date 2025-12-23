@@ -162,6 +162,8 @@
 \usepackage{tabularx}
 \usepackage{pgfplotstable}
 \usepackage{enumitem}
+\usepackage{lettrine}
+\usepackage{acronym}
 
 \graphicspath{images/}
 
@@ -199,13 +201,13 @@
 
 \author{%
 	Simon Grundner \\ k12136610%
-    \authornewline
+    \authornewline%
     \affiliation{Institute for Integrated Circuits and Quantum Computing}%
-    \authornewline
+    \authornewline%
     \authormail{k12136610@students.jku.at}
-    \authornewline
+    \authornewline%
     \authorweb{https://github.com/s-grundner/LVA-EIC-KV}
-    \authornewline
+    \authornewline%
 }
 
 \partnerlogo{logos/iic.png}
@@ -215,30 +217,40 @@
 
 \tableofcontents
 
-\newpage
+\renewcommand*{\thesection}{\Roman{section}}
+\pagenumbering{roman}
 
-\null\vspace{\fill}
-
-\addsec{Abstract}
-
-This project implements a polyphonic audio square wave synthesizer in Verilog, which can be controlled via the musical instrument digital interface (MIDI) protocol. The project is allocated on the TTSKY25b shuttle of the TinyTapeout project and is to be manufactured under the SkyWater \SI{130}{\nano\meter} process. This report documents functionality as well as implementation and discusses design constraints, imposed by the limited physical space on the shuttle.
-
-\vspace{\fill}
+\cleardoubleoddpage
+\input{00_abstract}
+\input{acronyms}
 
 \newpage
+\setcounter{section}{0}
+\renewcommand*{\thesection}{\arabic{section}}
+\pagenumbering{arabic}
+
 \section{Introduction}
 
-Design in Verilog but not for Running on an FPGA but on CMOS Logic.
+\lettrine[lines=2]{M}{\textnormal{IDI}} is a versatile digital interface, which packs note expressions into a simple protocol. The note expression often origins from a \acs{MIDI}-controller (source) and contains information about which key on the pianoroll is affected and how it is affected. A key thing to notice is, that the note expression does not contain any information about how the audiosignal itself sounds. The synthesis of the waveform is handled by a \acs{MIDI}-instrument (sink) and translates the note expression into a audio timesignal. \autoref{fig:midi-ctrl-inst} shows how a MIDI-keyboard might interface with a MIDI compatible synthesizer.
 
-What is the Tiny Tapeout Project
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{images/fig1.png}
+    \caption{Setup of a controller-instrument-pair communicating via the MIDI-protocol.}\label{fig:midi-ctrl-inst}
+\end{figure}
 
-The Skywater 130nm Process and the PDK
+The project implements such a \acs{MIDI}-instrument and converts incoming \acs{MIDI}-signals into audible squarewaves. The project is written in the \ac{HDL} Verilog specifically to be built as a digital \ac{ASIC} design by the opensource LibreLane toolchain. The resulting chip will be taped out in collaboration with the Tiny-Tapeout project.
+
+The Tiny-Tapeout project makes manufacturing \acs{ASIC}-designs for individuals feasable by combining multiple smaller designs on a single chip under the usage of an open source \ac{PDK}. The chip space is sectioned in tiles, where each tile has around \si{160}\si{\times}\SI{100}{\micro\meter} of available space. The project on hand occupies one tile. The active run at this time, TTSKY25b, manufactures the chip under SkyWater \SI{130}{\nano\meter} \acs{PDK} ruleset. 
 
 \section{System Overview}
 
 Block Diagram
 
-For this and following sections, no code but logic diagrams from quartus. Preferrably stick to Abstract Block Diagrams made with tikz
+For this and following sections, backup code with logic diagrams from quartus. Preferrably stick to Abstract Block Diagrams made with tikz
+
+Pinout
+
 
 \section{The MIDI Protocol}
 
@@ -258,9 +270,9 @@ DIN Connector or USB with Differential Pair. No Clock Signal leading to asynchro
 
 Universal Asynchronous Reciever Transmitter
 
-\section{Oscillator Design}
+\section{Synthesizer}
 
-How is the Frequency of the Square Generated?
+How is the Frequency Generated?
 
 Count up a defined Number of steps
 
@@ -270,7 +282,7 @@ The Lowest Frequency requires the highest number of counts
 
 The Task is to (space) efficiently determine the Counter Period from the MIDI-Note number
 
-\subsection{Waveform: Squarewave}
+\subsection{Square-Waveform}
 
 Why? No Wavetable and DAC required. Simple Digital Output
 
@@ -325,7 +337,7 @@ Modularity by a Generating Function: Option to increase number of voices for lar
 
 Edge Cases
 
-Limitations
+Limitations. Which tests are omitted. Correctness of the midi Input Bytoe Order for example.
 
 CocoTB Testresults, Design Simulation+validation, Measurements, Waveforms
 
@@ -336,6 +348,10 @@ CocoTB Testresults, Design Simulation+validation, Measurements, Waveforms
 Example of a USB-MIDI controller. 
 
 In Principle Direct connection is Possible but a Powersupply is required.
+
+Setting up a Virtual MIDI-Source with a DAW, Hairless MIDI and 
+
+PMOD as a PHY for the native Differential midi connection.
 
 \subsection{Input Side}
 
@@ -352,7 +368,7 @@ Option for mild subtractive Sound-Synthesis
 
 - optimal Would be a Sawtooth as it contains all harmonics but violated the digitality of the ASIC Output. 
 
-
+\section{Used Software}
 
 \end{document}
 \endinput

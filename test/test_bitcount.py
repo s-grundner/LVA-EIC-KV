@@ -3,6 +3,7 @@
 # @author  : @s-grundner                                                      #
 # @license : Apache-2.0                                                       #
 # @brief   : Bitcount Module Testbench for Cocotb.                            #
+# @copyright (c) 2025 Simon Grundner                                          #
 # *************************************************************************** #
 
 import cocotb
