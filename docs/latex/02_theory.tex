@@ -1,0 +1,68 @@
+\section{Digital Instruments and Music Theory}
+
+Before discussing the design, a few fundamentals of music theory have to be considered and how implementing a digital instrument in silicon is sensible.
+
+\subsection{The MIDI-Protocol}
+
+The \acs{MIDI}-protocol is based on a serial asynchronous data transmission, where at most three bytes are sent in succession with a dataformat as shown in \autoref{tab:midi-frame}.
+
+\begin{table}[htbp]
+\caption{MIDI Dataframe}\label{tab:midi-frame}
+\begin{tabularx}{\textwidth}{
+    >{\centering\arraybackslash} p{.143\textwidth}
+    >{\centering\arraybackslash} p{.143\textwidth}
+    YY
+}
+    \toprule
+    \multicolumn{2}{c}{Byte 1} & Byte 2 & Byte 3 \\ \midrule
+    \multicolumn{2}{c}{Statusbyte} & \multirow{2}{*}{Databyte 1} & \multirow{2}{*}{[Databyte 2]} \\
+    Command & Channel & & \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+The first byte combines two four bit values representing a command and a channel number. Depending on the command code, the following databytes can be interpreted accordingly by a MIDI-sink listening on a pre-set channel. The most important and only command codes used in this project are listed in \autoref{tab:midi-spec}. 
+
+\begin{table}[t]
+    \caption{
+        Excerpt from the MIDI 1.0 specification message summary for channel voice messages \cite{midi_summary_2025}.\\
+        \texttt{nnnn = 0-15} maps to a MIDI channel number 1-16. \\
+        \texttt{kkkkkkk} is the note number.\\ 
+        \texttt{vvvvvvv} is the velocity (how fast a note is released)
+    }\label{tab:midi-spec}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+Status & Databytes & Description \\ \midrule
+\texttt{1000nnnn} & \makecell{\texttt{0kkkkkkk} \\ \texttt{0vvvvvvv}} & Note Off event. This message is sent when a note is released (ended). \\ \midrule
+\texttt{1001nnnn} & \makecell{\texttt{0kkkkkkk} \\ \texttt{0vvvvvvv}} & Note On event. This message is sent when a note is pressed (started). \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+It is noted, that not all commands require a second data byte which is why it is specified in brackets as an optional byte in \autoref{tab:midi-frame}. In this report all required commands provide a second data byte, therefor a length of three bytes will be assumed from now on.
+
+A simple example on how a simple MIDI-transmission might look.
+
+Physical Layer of a MIDI-Device
+
+DIN Connector with Diff Pair
+
+USB with Diff Pair and FTDI chip
+
+\subsection{Twelve Tone Equal Temperament}
+
+How do Digital Notes Correlate with the Base Freqeuncy. 
+
+\subsection{Polyphony}
+
+Overlapping Squarewave in Time and Frequency Domain. Goal is to show, why each voice is output on a individual Pin.
+
+\subsection{Square-Waveform}
+
+Why? No Wavetable and DAC required. Simple Digital Output
+
+Spectrum:
+
+- For infinite Time: Base Frequency and Harmonics
+
+- For Finite Time: Sincs and Spectral Leakage. Simulation in Ableton or Matlab
+
+- Note Durations can be random. because they are dependent on the user input.

@@ -164,14 +164,18 @@
 \usepackage{enumitem}
 \usepackage{lettrine}
 \usepackage{acronym}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage{makecell}
 
-\graphicspath{images/}
+%%c
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Settings
+
+\graphicspath{{images/}}
 
 \setcounter{tocdepth}{2}
-
-\tikzset{vmeter/.style={rmeterwa, t=V}}
-\tikzset{ameter/.style={rmeterwa, t=A}}
-\tikzset{ometer/.style={rmeterwa, t=$\Omega$}}
 
 \captionsetup{font=small}
 
@@ -222,53 +226,55 @@
 
 \cleardoubleoddpage
 \input{00_abstract}
-\input{acronyms}
+\input{00_acronyms}
 
 \newpage
 \setcounter{section}{0}
 \renewcommand*{\thesection}{\arabic{section}}
 \pagenumbering{arabic}
 
-\section{Introduction}
-
-\lettrine[lines=2]{M}{\textnormal{IDI}} is a versatile digital interface, which packs note expressions into a simple protocol. The note expression often origins from a \acs{MIDI}-controller (source) and contains information about which key on the pianoroll is affected and how it is affected. A key thing to notice is, that the note expression does not contain any information about how the audiosignal itself sounds. The synthesis of the waveform is handled by a \acs{MIDI}-instrument (sink) and translates the note expression into a audio timesignal. \autoref{fig:midi-ctrl-inst} shows how a MIDI-keyboard might interface with a MIDI compatible synthesizer.
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=.5\textwidth]{images/fig1.png}
-    \caption{Setup of a controller-instrument-pair communicating via the MIDI-protocol.}\label{fig:midi-ctrl-inst}
-\end{figure}
-
-The project implements such a \acs{MIDI}-instrument and converts incoming \acs{MIDI}-signals into audible squarewaves. The project is written in the \ac{HDL} Verilog specifically to be built as a digital \ac{ASIC} design by the opensource LibreLane toolchain. The resulting chip will be taped out in collaboration with the Tiny-Tapeout project.
-
-The Tiny-Tapeout project makes manufacturing \acs{ASIC}-designs for individuals feasable by combining multiple smaller designs on a single chip under the usage of an open source \ac{PDK}. The chip space is sectioned in tiles, where each tile has around \si{160}\si{\times}\SI{100}{\micro\meter} of available space. The project on hand occupies one tile. The active run at this time, TTSKY25b, manufactures the chip under SkyWater \SI{130}{\nano\meter} \acs{PDK} ruleset. 
+\input{01_introduction}
+\input{02_theory}
 
 \section{System Overview}
 
-Block Diagram
+\subsection{Pinout}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{bsb-abstract.png}
+    \caption{Input and output visualisation and description}\label{} 
+\end{figure}
+
+\subsection{Block Diagram}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{bsb-detailed.png}
+    \caption{}\label{}
+\end{figure}
 
 For this and following sections, backup code with logic diagrams from quartus. Preferrably stick to Abstract Block Diagrams made with tikz
 
-Pinout
+\subsection{Layout}
 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{layout.png}
+    \caption{Layout of the Tile}
+\end{figure}
 
-\section{The MIDI Protocol}
+\input{tables/gds.tex}
 
-Dataframe
+\section{Reciever and MIDI-Decoder}
 
-\subsection{Twelve Tone Equal Temperament}
+uart
 
-How do Digital Notes Correlate with the Base Freqeuncy. 
+Voice Stealing
 
-\subsection{Polyphony}
+MIDI Channel routing
 
-Overlapping Squarewave in Time and Frequency Domain. Goal is to show, why each voice is output on a individual Pin.
-
-\subsection{Physical Layer of the MIDI-Protocol}
-
-DIN Connector or USB with Differential Pair. No Clock Signal leading to asynchronous Transmission.
-
-Universal Asynchronous Reciever Transmitter
+Limitations: According to the General MIDI-System Level 1 (GM-1) Specifications, a Sound Generating Instrument must implement a set of features to ensure compatibility with various controller outputs / midi-sequences~\cite{gm1_specification_online}. This Project does not comply with GM-1 as even the smallest feature-set requires a much more complex midi statemachine which is beyond the goals of this project.
 
 \section{Synthesizer}
 
@@ -282,17 +288,6 @@ The Lowest Frequency requires the highest number of counts
 
 The Task is to (space) efficiently determine the Counter Period from the MIDI-Note number
 
-\subsection{Square-Waveform}
-
-Why? No Wavetable and DAC required. Simple Digital Output
-
-Spectrum:
-
-- For infinite Time: Base Frequency and Harmonics
-
-- For Finite Time: Sincs and Spectral Leakage. Simulation in Ableton or Matlab
-
-- Note Durations can be random. because they are dependent on the user input.
 
 \subsection{Frequency Calculation and Generation}
 
@@ -345,6 +340,8 @@ CocoTB Testresults, Design Simulation+validation, Measurements, Waveforms
 
 \subsection{MIDI-Source}
 
+As the device does not fully comply to the GM-1 specs, it is best to provide MIDI inputs from a controlled environment. Pluggin in a full-fledged midi controller directly might lead to unwanted behaviour.
+
 Example of a USB-MIDI controller. 
 
 In Principle Direct connection is Possible but a Powersupply is required.
@@ -369,6 +366,19 @@ Option for mild subtractive Sound-Synthesis
 - optimal Would be a Sawtooth as it contains all harmonics but violated the digitality of the ASIC Output. 
 
 \section{Used Software}
+
+\begin{table}[h]
+\caption{List of used software for development and comissioning this project}
+\begin{tabularx}{\textwidth}{llXX}
+\toprule
+Name & Version & Description & Usage \\ \midrule
+Ableton Live 11 Suite & 11.3.43 & \ac{DAW} & \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+appendix: Setting up a development env.
+
+\input{literature}
 
 \end{document}
 \endinput

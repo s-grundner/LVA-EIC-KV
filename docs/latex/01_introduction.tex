@@ -1,0 +1,14 @@
+
+\section{Introduction}
+
+\lettrine[lines=2]{M}{\textnormal{IDI}} is a versatile digital interface, which packs note expressions into a simple protocol. The note expression often origins from a \acs{MIDI}-controller (source) and contains information about which key on the pianoroll is affected and how it is affected. A key thing to notice is, that the note expression itself does not contain any information about how the audiosignal sounds. The synthesis of the waveform is handled by a \acs{MIDI}-instrument (sink) and translates the note expression into a audio timesignal. \autoref{fig:midi-ctrl-inst} shows how a MIDI-keyboard might interface with a MIDI compatible synthesizer.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=.5\textwidth]{fig1.png}
+    \caption{Setup of a controller-instrument-pair communicating via the MIDI-protocol.}\label{fig:midi-ctrl-inst}
+\end{figure}
+
+The project implements such a \acs{MIDI}-instrument and converts incoming \acs{MIDI}-signals into audible squarewaves. The project is written in the \ac{HDL} Verilog specifically to be built as a digital \ac{ASIC} design by the opensource LibreLane toolchain. The resulting chip will be taped out in collaboration with the Tiny-Tapeout project.
+
+The Tiny-Tapeout project makes manufacturing \acs{ASIC}-designs for individuals feasable by combining multiple smaller designs on a single chip under the usage of an open source \ac{PDK}. The chip space is sectioned in tiles, where each tile has around \si{160}\si{\times}\SI{100}{\micro\meter} of available space. The project on hand occupies one tile. The active run at this time, TTSKY25b, manufactures the chip under SkyWater \SI{130}{\nano\meter} \acs{PDK} ruleset. 
