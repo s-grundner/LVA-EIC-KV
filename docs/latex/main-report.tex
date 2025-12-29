@@ -168,21 +168,15 @@
 \usepackage{multirow}
 \usepackage{url}
 \usepackage{makecell}
+\usepackage{wasysym}
 
 %%c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Settings
 
 \graphicspath{{images/}}
-
 \setcounter{tocdepth}{2}
-
 \captionsetup{font=small}
-
-\newcommand{\marginref}[1]{%
-\reversemarginpar\marginnote{\textbf{(#1)}}[7pt]
-}
-
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 %% 
@@ -220,8 +214,6 @@
 \maketitle
 
 \tableofcontents
-
-\renewcommand*{\thesection}{\Roman{section}}
 \pagenumbering{roman}
 
 \cleardoubleoddpage
@@ -229,8 +221,6 @@
 \input{00_acronyms}
 
 \newpage
-\setcounter{section}{0}
-\renewcommand*{\thesection}{\arabic{section}}
 \pagenumbering{arabic}
 
 \input{01_introduction}
@@ -269,6 +259,8 @@ For this and following sections, backup code with logic diagrams from quartus. P
 \section{Reciever and MIDI-Decoder}
 
 uart
+
+MIDI Statemachine. has four states. Switches states on new byte ready. Velocity byte is required for the statemachine to switch states correctly, but the value is ignored. A way to interpret velocity, would be to reduce the volume of the output. As the Synthesizer only has one digital amplitude, this is obsolete.
 
 Voice Stealing
 
@@ -370,7 +362,7 @@ Option for mild subtractive Sound-Synthesis
 \begin{table}[h]
 \caption{List of used software for development and comissioning this project}
 \begin{tabularx}{\textwidth}{llXX}
-\toprule
+\toprule 
 Name & Version & Description & Usage \\ \midrule
 Ableton Live 11 Suite & 11.3.43 & \ac{DAW} & \\ \bottomrule
 \end{tabularx}
@@ -379,6 +371,15 @@ Ableton Live 11 Suite & 11.3.43 & \ac{DAW} & \\ \bottomrule
 appendix: Setting up a development env.
 
 \input{literature}
+
+\section*{Wikipedia References}
+
+\begin{itemize}[label=\faWikipediaW]
+    \item \href{https://en.wikipedia.org/wiki/MIDI_tuning_standard}{MIDI tuning standard - Wikipedia}
+    \item \href{https://en.wikipedia.org/wiki/Scientific_pitch_notation}{Scientific pitch notation - Wikipedia}
+    \item \href{https://en.wikipedia.org/wiki/12_equal_temperament}{12 equal temperament - Wikipedia}
+    \item \href{https://en.wikipedia.org/wiki/A440_(pitch_standard)}{A440 (pitch standard) - Wikipedia}
+\end{itemize}
 
 \end{document}
 \endinput

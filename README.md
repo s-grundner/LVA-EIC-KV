@@ -22,6 +22,19 @@ yosys -p "read_verilog "$name".v; proc; opt; flatten; techmap; stat"
 make
 ```
 
+- Or run specific testbenches:
+
+```bash
+make test_counter
+make test_bitcount
+make test_pwm_encoding
+make test_note2cnt
+make test_osc
+make test_rx
+make test_midi
+make test
+```
+
 - Testing GDS generation
 
 ```bash
