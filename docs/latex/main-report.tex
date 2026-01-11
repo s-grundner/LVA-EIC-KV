@@ -88,7 +88,7 @@
 \usepackage[
 	TNF,
 	techreport,
-	fancyfonts,
+	nofancyfonts,
 	equalmargins
 ]{jkureport}
 %% 
@@ -168,7 +168,11 @@
 \usepackage{multirow}
 \usepackage{url}
 \usepackage{makecell}
+
 \usepackage{wasysym}
+\usepackage{typicons}
+\usepackage{trfsigns}
+\usepackage{hieroglf}
 
 %%c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -225,36 +229,7 @@
 
 \input{01_introduction}
 \input{02_theory}
-
-\section{System Overview}
-
-\subsection{Pinout}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{bsb-abstract.png}
-    \caption{Input and output visualisation and description}\label{} 
-\end{figure}
-
-\subsection{Block Diagram}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth]{bsb-detailed.png}
-    \caption{}\label{}
-\end{figure}
-
-For this and following sections, backup code with logic diagrams from quartus. Preferrably stick to Abstract Block Diagrams made with tikz
-
-\subsection{Layout}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.9\textwidth]{layout.png}
-    \caption{Layout of the Tile}
-\end{figure}
-
-\input{tables/gds.tex}
+\input{03_summary.tex}
 
 \section{Reciever and MIDI-Decoder}
 
@@ -346,21 +321,21 @@ PMOD as a PHY for the native Differential midi connection.
 
 Digital Frontend converting simultaneous Notes into individual Channel
 
-\subsection{Output Side}
+\subsection{Output Side}\label{sec:external-output-circuitry}
 
 Audio Mixing Circuit, Gain Control, Speaker Driver
 
 
-Option for mild subtractive Sound-Synthesis
+Option for mild subtractive Sound-Design
 
-- Squarewaves provide all odd harmonics which can be filtered by an external system to create different Sounddesigns
+- Squarewaves provide all odd harmonics of the fundamental frequencies, which can be filtered by an external system to create different Sounddesigns
 
 - optimal Would be a Sawtooth as it contains all harmonics but violated the digitality of the ASIC Output. 
 
-\section{Used Software}
+\section{Used Software}\label{sec:sw}
 
 \begin{table}[h]
-\caption{List of used software for development and comissioning this project}
+\caption{List of used software for development and comissioning this project}\label{tab:sw}
 \begin{tabularx}{\textwidth}{llXX}
 \toprule 
 Name & Version & Description & Usage \\ \midrule
