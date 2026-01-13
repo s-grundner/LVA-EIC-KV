@@ -65,7 +65,8 @@ module synth (
     genvar i;
     generate
         for (i = 0; i < `OSC_VOICES; i = i + 1) begin : oscStack_gen
-            localparam OSC_CH = i[`OSC_VOICES_BW-1:0]; // Truncate to reduce operation bitwidth of channel comparison
+            // Truncate to reduce operation bitwidth of channel comparison
+            localparam OSC_CH = i[`OSC_VOICES_BW-1:0]; 
             /* verilator lint_off WIDTHTRUNC */
             // OK: Warning only occurs if OSC_VOICES is a power of 2
             osc osc_inst (

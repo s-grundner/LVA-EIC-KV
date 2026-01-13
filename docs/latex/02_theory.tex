@@ -125,4 +125,26 @@ The audiosignal is directly sent to a digital pin. However, overlapping squarewa
 
 \subsection{MIDI Physical Layer}
 
-The \acs{MIDI} protocol was originally transmitted asynchronously over a differential pair, which was daisychained between MIDI-controllers and connected with 5 pole DIN connectors. With rising popularity of the \ac{USB}, MIDI controllers adapted to this standard. Nowadays most MIDI controllers communicate via \acs{USB} to a host device. Therefor MIDI instruments can also be controlled via USB under the usage of a USB to UART serial interface as it is intended with this design.
+The \acs{MIDI} protocol was originally transmitted asynchronously over a differential pair, which was daisychained between MIDI devices using 5 pole DIN connectors. With rising popularity of the \ac{USB}, MIDI devices adapted to this standard. Nowadays most MIDI devices are able to communicate via \acs{USB} to a host device. Therefor MIDI instruments can also be controlled via USB under the usage of a USB to UART serial interface as it is intended with this design.
+
+\subsubsection{UART}
+
+\begin{wrapfigure}[7]{r}{6cm}
+    \centering
+    \includegraphics[width=6cm]{uart.drawio.png}
+    \caption{Wiring of two devices communicating via a UART connection}\label{fig:uart}
+\end{wrapfigure}
+
+The \acl{UART} or \acs{UART} is a simple interface which allows two devices to communicate over a serial connection. The devices are connected as shown in \autoref{fig:uart}. Each device can initiate a communication on its own behalf, without the acknowledgement of the other device, allowing for simultaneously sending and receiving data. The connection does not feature a clock line, which indicates an asynchronous communication. The timing for the period of individual bits is determined by a baudrate, which has to be specified in both devices. For \acs{MIDI} devices, the standard baudrate is \si{31250} \cite{m1_detailed_specification_online}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{uart-frame.drawio.png}
+    \caption{Dataframe of a UART communication}\label{fig:uart-comm}
+\end{figure}
+
+On idle, the dataline is normally set to a logic level \emph{High} by the \texttt{TX} output. To initiate a data transfer, the trasmitter pulls the communication line low for one bit-period ($\frac{1}{\text{baudrate}}$). Then, eight bits are sent with the specified baudrate followed by a stop bit, which pulls the communication line high again. A complete datatransmission is shown in \autoref{fig:uart-comm}.
+
+It is also possible to introduce a parity bit for error correction and/or specify a payload with sizes other than 8 bit. This is not relevant in this project and will therefor not be explained in further detail.
+
+Using a \acs{UART} connection is very practical for transmitting \acs{MIDI} signals between a controller and an instrument, as the serial MIDI-Data is compatible with the \acs{UART}-payload size and does not require additional wires for e.g. clock or select signals.

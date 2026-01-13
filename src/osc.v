@@ -29,19 +29,19 @@ module osc (
 	reg [`OSC_ROM_BW-1:0] baseCntPeriod;
 	reg [3:0] shift;
 
-	wire start = noteOnStrb_i & ch_i; // Osc start condition
-
 	assign active_o = enabled;
 	assign wave_o = wave;
 
 	// -------------------- Logic Implementations --------------------------- //
 		
 	// Only stop if currently playing note is present in the input
-	// Smart indexing to ignore redundant bits
+	// Smart indexing to only compare unique bitpatterns
 	// Calculations in noteROM-f-deviation.ipynb
 	wire[3:0] rmRedundancy_i = {baseCntPeriod_i[6], baseCntPeriod_i[4:2]};
 	wire[3:0] rmRedundancy = {baseCntPeriod[6], baseCntPeriod[4:2]};
 	wire inputsMatch = (rmRedundancy_i == rmRedundancy);
+	
+	wire start = noteOnStrb_i & ch_i;
 	wire stop = noteOffStrb_i & ch_i & inputsMatch;
 
 	wire [`OSC_CNT_BW-1:0] oscCounter;
@@ -51,9 +51,12 @@ module osc (
 	wire [`OSC_CNT_BW-1:0] oscCmp = oscCounter >> shift;
 	/* verilator lint_on UNUSEDSIGNAL */
 
+	// prepend 1 to add the redundant bit again which is omitted in the LUT
 	wire cntReached = oscCmp[7:0] == {1'b1, baseCntPeriod};
-	wire reset_active = cntReached & enabled; // strobe signal when counter hits period
-	wire nrstSync = ~reset_active; 
+	
+	// strobe signal when counter hits period
+	wire resetActive = cntReached & enabled; 
+	wire nrstSync = ~resetActive; 
 	
 	// Update enable and baseCntPeriod with minimal logic
 	always @(posedge clk_i or negedge nrst_i) begin
@@ -70,7 +73,7 @@ module osc (
 				shift <= shift_i;
 			end
 			// toggle wave with XOR
-			wave <= wave ^ reset_active;
+			wave <= wave ^ resetActive;
 		end
 	end
 

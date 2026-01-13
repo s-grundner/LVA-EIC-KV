@@ -19,7 +19,7 @@ module rx (
     output reg [`MIDI_PAYLOAD_BITS-1:0] midiData_o
 );
 
-    // ----------------------- Internal Parameters ---------------------------- //
+    // ----------------------- Internal Parameters -------------------------- //
 
     localparam CYCLES_PER_BIT = `F_CLK_HZ / `F_BAUD;
     localparam CYCLES_PER_BIT_HALF = CYCLES_PER_BIT / 2;
@@ -31,7 +31,7 @@ module rx (
     localparam FSM_RECV = 2;
     localparam FSM_STOP = 3;
 
-    // ------------------------ Internal Register ----------------------------- //
+    // ------------------------ Internal Register --------------------------- //
 
     reg [2:0] fsmState;
     reg [2:0] nextFsmState;
@@ -51,7 +51,7 @@ module rx (
     // Sampling of the midi input line
     reg sampledBit;
 
-    // --------------------- Combinatorial Processes -------------------------- //
+    // --------------------- Combinatorial Processes ------------------------ //
 
     // Next State Conditions
     wire nextBitReady = (cycleCounter == COUNT_REG_LEN'(CYCLES_PER_BIT)) ||
@@ -70,7 +70,7 @@ module rx (
         endcase
     end
 
-    // ------------------------ Register Processes ---------------------------- //
+    // ------------------------ Register Processes -------------------------- //
 
     // Register Output
     always @(posedge clk_i or negedge nrst_i) begin : output_p

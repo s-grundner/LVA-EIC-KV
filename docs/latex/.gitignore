@@ -5,3 +5,6 @@
 *.toc
 *.bbl
 *.blg
+*.png.bkp
+*.fls
+*.fdb_latexmk

@@ -6,7 +6,6 @@
 `define F_BAUD 31250
 `define F_BAUD_PERIOD_NS (1_000_000_000 / `F_BAUD)
 
-`define MIDI_CHANNEL 0  // MIDI channel 1
 `define MIDI_PAYLOAD_BITS 8
 `define MIDI_NOTE_BW 7
 

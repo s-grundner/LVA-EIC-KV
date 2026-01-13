@@ -30,6 +30,6 @@ module counter #(
             count_r <= count_r + {{(BW - 1) {1'b0}}, 1'b1};
         end
     end
-endmodule  // counter
+endmodule // counter
 `endif // __COUNTER
 `default_nettype wire

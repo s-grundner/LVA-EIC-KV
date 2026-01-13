@@ -1,4 +1,4 @@
-% !TeX program = xelatex
+% !TeX program = lualatex
 % !TeX encoding = UTF-8
 % !TeX spellcheck = en_US
 % !BIB program = biber
@@ -188,6 +188,12 @@
 
 \begin{document}
 
+\lstset{
+    language=verilog,
+    inputpath=../../src,
+    captionpos=t
+}
+
 \title{Tiny Tapeout - MIDI Polyphonic Synthesizer}
 
 %% Command \titleshort{short title}: sets an abbreviated version of the report title for page heads
@@ -229,11 +235,85 @@
 
 \input{01_introduction}
 \input{02_theory}
-\input{03_summary.tex}
+\input{03_summary}
 
-\section{Reciever and MIDI-Decoder}
+\newpage
+\section{Reciever}
 
-uart
+As \acs{UART} is a common interface, there are already several implementations available in Verilog. For this project, an open source implementation \cite{ben_marshall_uart_verilog} under the MIT license was used as a starting point and has then been adjusted to the project. As the project only recieves data and does not sent any, only the \acs{UART}-receiver has to be implemented. 
+
+\lstinputlisting[
+    firstline=14,
+    lastline=20,
+    caption={Receiver module ports}
+]{rx.v}
+
+\subsection{Statemachine}
+
+At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}) with the four states a UART transmission can assume: \texttt{IDLE}, \texttt{START}, \texttt{RECV} and \texttt{STOP}. A combiatorial process decides, which state is registered with the next clock cycle as shown in \autoref{lst:rx-nextFsmState_p}.
+
+(TODO: FSM Figure from the quartus rtl viewer)
+
+\lstinputlisting[
+    firstline=56,
+    lastline=71,
+    label={lst:rx-nextFsmState_p},
+    caption={Combinatorics to select next FSM state}
+]{rx.v}
+
+\paragraph{IDLE} With each clock cycle, the input is latched in \lstinline!rxDataReg! (\autoref{lst:rx-rxBuffer_p}). The data register is normally high in the idle state. When a startbit is detected, the next state is set to \lstinline!START!.
+\paragraph{START} The counter \lstinline!cycleCounter! divides the frequency into the baudrate defined in \texttt{global.v} (\autoref{lst:rx-countCycles_p}). After a bit-period has elapsed, the next state is set to \lstinline!RECV!, as the period of the start bit has now elapsed.
+\paragraph{RECV} A second counter \lstinline!bitCounter! counts the number of sampled databits at the input (\autoref{lst:rx-countBit_p}). When the expected payload is recieved, the next state is set to \lstinline!STOP!.
+\paragraph{STOP} The cycle counter counts the remaining half bit period and sets the next state to \lstinline!IDLE!.
+
+\subsection{Register Processes}
+
+\lstinputlisting[
+    firstline=141,
+    lastline=149,
+    label={lst:rx-countCycles_p},
+    caption={Increment the cycle counter}
+]{rx.v}
+
+\lstinputlisting[
+    firstline=152,
+    lastline=160,
+    label={lst:rx-countBit_p},
+    caption={Increment the bit counter}
+]{rx.v}
+
+\lstinputlisting[
+    firstline=96,
+    lastline=103,
+    caption={Sample a bit in the middle of a bit period}
+]{rx.v}
+
+\lstinputlisting[
+    firstline=126,
+    lastline=138,
+    caption={Shift the sampled bit into the midi data buffer}
+]{rx.v}
+
+\lstinputlisting[
+    firstline=85,
+    lastline=93,
+    caption={Output a data ready strobe whenever a transmission is complete}
+]{rx.v}
+
+\lstinputlisting[
+    firstline=115,
+    lastline=123,
+    label={lst:rx-rxBuffer_p},
+    caption={Register the RX buffer from the input}
+]{rx.v}
+
+\lstinputlisting[
+    firstline=106,
+    lastline=112,
+    caption={Update the current FSM state from the combinatorically determined next state}
+]{rx.v}
+
+\section{MIDI-Decoder}
 
 MIDI Statemachine. has four states. Switches states on new byte ready. Velocity byte is required for the statemachine to switch states correctly, but the value is ignored. A way to interpret velocity, would be to reduce the volume of the output. As the Synthesizer only has one digital amplitude, this is obsolete.
 
@@ -350,6 +430,7 @@ appendix: Setting up a development env.
 \section*{Wikipedia References}
 
 \begin{itemize}[label=\faWikipediaW]
+    \item \href{https://en.wikipedia.org/wiki/MIDI}{MIDI - Wikipedia}
     \item \href{https://en.wikipedia.org/wiki/MIDI_tuning_standard}{MIDI tuning standard - Wikipedia}
     \item \href{https://en.wikipedia.org/wiki/Scientific_pitch_notation}{Scientific pitch notation - Wikipedia}
     \item \href{https://en.wikipedia.org/wiki/12_equal_temperament}{12 equal temperament - Wikipedia}
