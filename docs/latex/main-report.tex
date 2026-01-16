@@ -182,6 +182,7 @@
 \setcounter{tocdepth}{2}
 \captionsetup{font=small}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
+% \setlength{\parskip}{11pt}
 
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -237,98 +238,11 @@
 \input{02_theory}
 \input{03_summary}
 \input{04_receiver}
+\input{05_midi-decoder}
+\input{06_synth}
 
 
-\section{MIDI-Decoder}
-
-The \acs{MIDI} decoder is responsible for extracting \acs{MIDI} command aswell as channel and number from the received bytes. The in and outputs of this module can be seen in \autoref{lst:midi-module}.
-
-\lstinputlisting[
-    firstline=14,
-    lastline=23,
-    label={lst:midi-module},
-    caption={\acs{MIDI} module ports.}
-]{midi.v}
-
-Here again, a \acl{FSM} underlies the MIDI decoder. The decoder has four states, representing which type of byte is currently received. \lstinline!IDLE!, \lstinline!CMD! and \lstinline!NOTE! (\autoref{lst:midi-nextFSM_p}). The \acs{FSM} state switches states upon receiving a data ready strobe (\lstinline!midiByteValid_i!) from the \acs{UART} reciever. The input byte is also latched on this event (\autoref{lst:midi-midiByteReg_p}) and is then being processed according to the state.
-
-\lstinputlisting[
-    firstline=44,
-    lastline=51,
-    label={lst:midi-nextFSM_p},
-    caption={States of the \acl{FSM}. The next state will be immediately set, only the assignment of the next state to the current state is eventful.}
-]{midi.v}
-
-\lstinputlisting[
-    firstline=86,
-    lastline=94,
-    label={lst:midi-midiByteReg_p},
-    caption={Register the next \acs{FSM} state aswell as the input byte, when the input byte is valid.}
-]{midi.v}
-
-The velocity data itself is ignored, however, it still needs to be present at the input, because the data ready strobe of the last byte is needed to switch into the idle state. For most instruments, the velocity is interpreted as the loudness of the tone. As the digital output only has one amplitude level, this value is obsolete.
-
-Voice Stealing
-
-MIDI Channel routing
-
-\subsection{Limitations}
-
-According to the General MIDI-System Level 1 (GM-1) Specifications, a Sound Generating Instrument must implement a set of features to ensure compatibility with various controller outputs / midi-sequences~\cite{gm1_specification_online}. This Project does not comply with GM-1 as even the smallest feature-set requires a much more complex midi statemachine which is beyond the goals of this project.
-
-\section{Synthesizer}
-
-How is the Frequency Generated?
-
-Count up a defined Number of steps
-
-For each Count, a time interval of 1/fclk elapses.
-
-The Lowest Frequency requires the highest number of counts
-
-The Task is to (space) efficiently determine the Counter Period from the MIDI-Note number
-
-
-\subsection{Frequency Calculation and Generation}
-
-Limitations:
-
-- Frequency Resolution determined by Clock Frequency
-- Divisions and Modulo operations are Expensive. 
-
-Choosing a Clock Frequency
-
-- See reasoning in Py Notebook
-
-Externalize Calculation Logic from the Oscillator Stack
-
-Compare optimisations
-
-- Performing an actual Twelvetone Temparament Calculation on Hardware
-
-- Lookup Table: Save the Countervalues of the Twelve Notes on the Octave to achieve Most precise Counterperiod. What Calculations are required by the oscillators
-
-- Lookup Table: Reduce Bitwitdth and therefor required LUT Size. Compare Size Reduction
-
-Impact of Frequency Deviation
-
-- Systematic error of frequencies from reducing counter resolution. Deviations and calculations from Py-Notebook.
-
-- Spectrum and Harmonics
-
-Are the Deviations Audible?
-
-- Heavily Dependent on the individual Person (Hearing Curve)
-
-- Document Experiment in Ableton Live
-
-\subsection{Oscillatorstack}
-
-Routing a MIDI a Channel to a fixed Oscillator.
-
-Modularity by a Generating Function: Option to increase number of voices for larger space or future Design optimisations.
-
-\section{System Testing}
+\section{System Testing}\label{sec:test}
 
 Edge Cases
 

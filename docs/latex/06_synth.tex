@@ -1,0 +1,52 @@
+\newpage
+\section{Synthesizer}
+
+How is the Frequency Generated?
+
+Count up a defined Number of steps
+
+For each Count, a time interval of 1/fclk elapses.
+
+The Lowest Frequency requires the highest number of counts
+
+The Task is to (space) efficiently determine the Counter Period from the MIDI-Note number
+
+
+\subsection{Frequency Calculation and Generation}
+
+Limitations:
+
+- Frequency Resolution determined by Clock Frequency
+- Divisions and Modulo operations are Expensive. 
+
+Choosing a Clock Frequency
+
+- See reasoning in Py Notebook
+
+Externalize Calculation Logic from the Oscillator Stack
+
+Compare optimisations
+
+- Performing an actual Twelvetone Temparament Calculation on Hardware
+
+- Lookup Table: Save the Countervalues of the Twelve Notes on the Octave to achieve Most precise Counterperiod. What Calculations are required by the oscillators
+
+- Lookup Table: Reduce Bitwitdth and therefor required LUT Size. Compare Size Reduction
+
+Impact of Frequency Deviation
+
+- Systematic error of frequencies from reducing counter resolution. Deviations and calculations from Py-Notebook.
+
+- Spectrum and Harmonics
+
+Are the Deviations Audible?
+
+- Heavily Dependent on the individual Person (Hearing Curve)
+
+- Document Experiment in Ableton Live
+
+\subsection{Oscillatorstack}
+
+Routing a MIDI a Channel to a fixed Oscillator.
+
+Modularity by a Generating Function: Option to increase number of voices for larger space or future Design optimisations.

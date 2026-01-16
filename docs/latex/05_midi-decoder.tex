@@ -1,0 +1,78 @@
+\newpage
+\section{MIDI-Decoder}
+
+The \acs{MIDI} decoder is responsible for extracting \acs{MIDI} command and channel aswell as the note number from the received bytes. The in- and outputs of this module can be seen in \autoref{lst:midi-module}.
+
+\lstinputlisting[
+    firstline=14,
+    lastline=23,
+    label={lst:midi-module},
+    caption={\acs{MIDI} module ports.}
+]{midi.v}
+
+\subsection{Statemachine}
+
+\begin{wrapfigure}[8]{r}{6cm}
+    \vspace*{-21pt}
+    \includegraphics[width=0.4\textwidth]{MIDI-fsm.drawio.png}
+    \caption{MIDI decoder statemachine}\label{fig:midi-fsm}
+\end{wrapfigure}
+
+Here again, a \acl{FSM} shown in \autoref{fig:midi-fsm} underlies the \acs{MIDI} decoder. The decoder has four states, representing which type of byte is currently received. \lstinline!IDLE!, \lstinline!CMD! and \lstinline!NOTE! (\autoref{lst:midi-nextFSM_p}). The \acs{FSM} state switches states upon receiving a data ready strobe (\lstinline!midiByteValid_i!) from the \acs{UART} reciever. The input byte is also latched on this event (\autoref{lst:midi-midiByteReg_p}) and is then being processed according to the state.
+
+\lstinputlisting[
+    firstline=44,
+    lastline=51,
+    label={lst:midi-nextFSM_p},
+    caption={States of the \acl{FSM}. The next state will be immediately set, the assignment condition of the next state to the current state is handled in a register process.}
+]{midi.v}
+
+The velocity data itself is ignored, however, it still needs to be present at the input, because the data ready strobe of the last byte is needed to switch into the \lstinline!IDLE! state. For most instruments, the velocity is interpreted as the loudness of the tone. As the digital output only has one amplitude level, this value is obsolete.
+
+\newpage
+\lstinputlisting[
+    firstline=86,
+    lastline=94,
+    label={lst:midi-midiByteReg_p},
+    caption={Register the next \acs{FSM} state aswell as the input byte, when the input byte is valid.}
+]{midi.v}
+
+\begin{enumerate}[noitemsep]
+	\item \textbf{IDLE}: The \acs{FSM} resides in the idle state until the first byte is ready. On this event, the state is switched to \lstinline!CMD!.
+	\item \textbf{CMD}: The received byte is split into the channel number and the command in \autoref{lst:midi-statusEval_p} according to \autoref{tab:midi-frame}. When the next byte is available, the state switches to \lstinline!NOTE!.
+	\item \textbf{NOTE}: The previously received command is now available for evaluation. The output strobes \lstinline!noteOnStrb_o! and \lstinline!noteOffStrb_o! are assigned accoring to the command in \autoref{lst:noteOnOffStrb_p} and will notify the oscillatorstack, if the current channel output needs to be turned on or off. The received byte is assigned to the note output in \autoref{lst:note_p}.
+\end{enumerate}
+
+\lstinputlisting[
+    firstline=55,
+    lastline=63,
+    label={lst:midi-statusEval_p},
+    caption={Deconstruct the status byte into channel number (upper 4 bits) and command (lower 4 bits). Forwards the channel to the output and latches the command internally to be used by the next state.}
+]{midi.v}
+
+\lstinputlisting[
+    firstline=65,
+    lastline=76,
+    label={lst:noteOnOffStrb_p},
+    caption={Forwards the MIDI byte ready strobe to either the note-on or note-off strobe, according to the received command.}
+]{midi.v}
+
+\lstinputlisting[
+    firstline=78,
+    lastline=84,
+    label={lst:note_p},
+    caption={The received byte is forwarded to the note output of the module.}
+]{midi.v}
+
+\subsection{Limitations}
+
+According to the \ac{GM1} specifications, a sound generating instrument must implement a set of features to ensure compatibility with various controller outputs / \acs{MIDI}-sequences~\cite{gm1_specification_online}. This project does not fulle comply with \acs{GM1} as even the smallest feature set requires a much more complex \acs{MIDI} statemachine, which is beyond the goals of this project. Because of this, directly connecting a \acs{MIDI}-controller to the \acs{IC} might lead to an invalid state of the \acs{MIDI}-state machine, as not all \acs{MIDI}-Messages are guaranteed to be 3 bytes long. Edge cases which are required to be handled by the device are evaluated in \autoref{sec:test}
+
+A particular feature of the \acs{MIDI} decoder, which is normally not found in typical applications, is that polyphony is only achieved by sending parallel inputs onto different \acs{MIDI} channels. To clarify this, an example for two input cases is given:
+
+\begin{enumerate}
+    \item[\textbf{A}:] A key is held down, sending a note-on command on channel 1. The key is synthesized by the IC, outputting a squarewave on pin \texttt{uo[0]}. Upon pressing another key, which is also sent on channel 1, the \acs{IC} overrides the output 1, playing the most recent note on the channel. This is even the case when the remaining oscillators are in the idle state.
+    \item[\textbf{B}:] A key is held down, [...]. Upon pressing a key which is sent onto a different channel than 1, e.g. channel 2, the output \texttt{uo[0]} continues to play the old note and the newly pressed note is being sent onto \texttt{uo[1]}. This is the way in which polyphony is achieved.
+\end{enumerate}
+
+This behaviour is called Voice-Stealing. Voice-Stealing is implemented by instruments, so that if the number of keys pressed by the controller exceeds the polyphonic count of the instrument, the instrument switches the earliest played note off and allows the newly pressed key to play a note. This static channel routing approach was necessary to reduce the logic of the \acs{MIDI}-decoder.

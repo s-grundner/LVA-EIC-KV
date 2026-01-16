@@ -57,7 +57,7 @@ Certain parameters are reused throughout the entire project. These parameters ar
     \begin{tabularx}{\textwidth}{llX}
         \toprule
         Variable & Value & Description \\ \midrule
-        \lstinline!F_CLK_HZ! & \lstinline!3_496_503! & \\
+        \lstinline!F_CLK_HZ! & \lstinline!3_496_503! & Global Clock Speed which has to be supplied to the IC\\
         \lstinline!F_CLK_PERIOD_NS! & \lstinline!1_000_000_000 / `F_CLK_HZ! & \\
         \lstinline!F_BAUD! & \lstinline!31250! & \\
         \lstinline!F_BAUD_PERIOD_NS! & \lstinline!1_000_000_000 / `F_BAUD! & \\
@@ -73,7 +73,7 @@ Certain parameters are reused throughout the entire project. These parameters ar
 
 \subsection{Modules}
 
-A quick overview and brief description on the Verilog modules is given in \autoref{tab:verilog-modules}. How the modules are connected can be seen in \autoref{fig:blockdiagram}
+A quick overview and brief description on the Verilog modules is given in \autoref{tab:verilog-modules}. How the modules are connected can be seen in \autoref{fig:blockdiagram}.
 
 \begin{table}[h!]
     \caption{Overview of Verilog modules}\label{tab:verilog-modules}
@@ -91,7 +91,7 @@ A quick overview and brief description on the Verilog modules is given in \autor
         \lstinline!note2cnt! & Convert note numbers to counter base via LUT \\
         \lstinline!counter! & Counts up on each clock cycle \\
         \lstinline!bitcount! & Returns the number of high bits in the input vector \\
-        \lstinline!pwm! & \\
+        \lstinline!pwm! & PWM output for encoding the number of active Oscillators. The Frequency of the PWM output is: $f = f_{\text{CLK}} / N_{\text{VOICES}}$ \\
         \bottomrule
     \end{tabularx}
 \end{table}

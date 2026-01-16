@@ -62,7 +62,7 @@ module midi (
         end
     end
     
-    always @(posedge clk_i or negedge nrst_i) begin
+    always @(posedge clk_i or negedge nrst_i) begin : noteOnOffStrb_p
         if (!nrst_i) begin
             noteOnStrb_o <= 1'b0;
             noteOffStrb_o <= 1'b0;
@@ -75,7 +75,7 @@ module midi (
         end
     end
 
-    always @(posedge clk_i or negedge nrst_i) begin
+    always @(posedge clk_i or negedge nrst_i) begin : note_p
         if (!nrst_i) begin
             note_o <= {`OSC_ROM_BW{1'b0}};
         end else if (fsmState == FSM_NOTE) begin
