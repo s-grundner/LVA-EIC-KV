@@ -40,7 +40,7 @@ module midi (
     reg [CMD_BW-1:0] cmd;
 
     // --------------------- Combinatorial Processes ------------------------ //
-        
+
     always @(*) begin : nextFSM_p
         case (fsmState)
             FSM_IDLE: nextFsmState = FSM_CMD;
@@ -51,7 +51,7 @@ module midi (
     end
 
     // ------------------------ Register Processes -------------------------- //
-        
+
     always @(posedge clk_i or negedge nrst_i) begin : statusEval_p
         if (!nrst_i) begin
             cmd <= {CMD_BW{1'b0}};

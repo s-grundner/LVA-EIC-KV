@@ -11,6 +11,7 @@
 
 \subsection{Pinout and Top Level Module}
 
+
 The project features four voices implemented as individual squarewaves oscillators. The output of each oscillator is routed to the outputpins \texttt{uo[0]}\dots\texttt{uo[3]}. Output \texttt{uo[7]} yields a PWM Signal, which encodes the number of actively running oscillators. This output may be used to control the gain of external circuitry when mixing the oscillator outputs together. The project has one input \texttt{ui[3]} to which the \acs{MIDI} signal has to be supplied to. This pin is also connected to the \acs{UART}-TX output of the RP2040 Microcrontroller, which is populated on the TinyTapeout test \acs{PCB}. The RP2040 may be used to emulate a \acs{MIDI} controller or to interface the instrument via \acs{USB}. \autoref{fig:pinout} summarises the in- and outputs of the ASIC.
 
 \begin{figure}[h]

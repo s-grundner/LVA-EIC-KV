@@ -172,7 +172,7 @@
 \usepackage{wasysym}
 \usepackage{typicons}
 \usepackage{trfsigns}
-\usepackage{hieroglf}
+\usepackage{euler}
 
 %%c
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -236,92 +236,45 @@
 \input{01_introduction}
 \input{02_theory}
 \input{03_summary}
+\input{04_receiver}
 
-\newpage
-\section{Reciever}
-
-As \acs{UART} is a common interface, there are already several implementations available in Verilog. For this project, an open source implementation \cite{ben_marshall_uart_verilog} under the MIT license was used as a starting point and has then been adjusted to the project. As the project only recieves data and does not sent any, only the \acs{UART}-receiver has to be implemented. 
-
-\lstinputlisting[
-    firstline=14,
-    lastline=20,
-    caption={Receiver module ports}
-]{rx.v}
-
-\subsection{Statemachine}
-
-At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}) with the four states a UART transmission can assume: \texttt{IDLE}, \texttt{START}, \texttt{RECV} and \texttt{STOP}. A combiatorial process decides, which state is registered with the next clock cycle as shown in \autoref{lst:rx-nextFsmState_p}.
-
-(TODO: FSM Figure from the quartus rtl viewer)
-
-\lstinputlisting[
-    firstline=56,
-    lastline=71,
-    label={lst:rx-nextFsmState_p},
-    caption={Combinatorics to select next FSM state}
-]{rx.v}
-
-\paragraph{IDLE} With each clock cycle, the input is latched in \lstinline!rxDataReg! (\autoref{lst:rx-rxBuffer_p}). The data register is normally high in the idle state. When a startbit is detected, the next state is set to \lstinline!START!.
-\paragraph{START} The counter \lstinline!cycleCounter! divides the frequency into the baudrate defined in \texttt{global.v} (\autoref{lst:rx-countCycles_p}). After a bit-period has elapsed, the next state is set to \lstinline!RECV!, as the period of the start bit has now elapsed.
-\paragraph{RECV} A second counter \lstinline!bitCounter! counts the number of sampled databits at the input (\autoref{lst:rx-countBit_p}). When the expected payload is recieved, the next state is set to \lstinline!STOP!.
-\paragraph{STOP} The cycle counter counts the remaining half bit period and sets the next state to \lstinline!IDLE!.
-
-\subsection{Register Processes}
-
-\lstinputlisting[
-    firstline=141,
-    lastline=149,
-    label={lst:rx-countCycles_p},
-    caption={Increment the cycle counter}
-]{rx.v}
-
-\lstinputlisting[
-    firstline=152,
-    lastline=160,
-    label={lst:rx-countBit_p},
-    caption={Increment the bit counter}
-]{rx.v}
-
-\lstinputlisting[
-    firstline=96,
-    lastline=103,
-    caption={Sample a bit in the middle of a bit period}
-]{rx.v}
-
-\lstinputlisting[
-    firstline=126,
-    lastline=138,
-    caption={Shift the sampled bit into the midi data buffer}
-]{rx.v}
-
-\lstinputlisting[
-    firstline=85,
-    lastline=93,
-    caption={Output a data ready strobe whenever a transmission is complete}
-]{rx.v}
-
-\lstinputlisting[
-    firstline=115,
-    lastline=123,
-    label={lst:rx-rxBuffer_p},
-    caption={Register the RX buffer from the input}
-]{rx.v}
-
-\lstinputlisting[
-    firstline=106,
-    lastline=112,
-    caption={Update the current FSM state from the combinatorically determined next state}
-]{rx.v}
 
 \section{MIDI-Decoder}
 
-MIDI Statemachine. has four states. Switches states on new byte ready. Velocity byte is required for the statemachine to switch states correctly, but the value is ignored. A way to interpret velocity, would be to reduce the volume of the output. As the Synthesizer only has one digital amplitude, this is obsolete.
+The \acs{MIDI} decoder is responsible for extracting \acs{MIDI} command aswell as channel and number from the received bytes. The in and outputs of this module can be seen in \autoref{lst:midi-module}.
+
+\lstinputlisting[
+    firstline=14,
+    lastline=23,
+    label={lst:midi-module},
+    caption={\acs{MIDI} module ports.}
+]{midi.v}
+
+Here again, a \acl{FSM} underlies the MIDI decoder. The decoder has four states, representing which type of byte is currently received. \lstinline!IDLE!, \lstinline!CMD! and \lstinline!NOTE! (\autoref{lst:midi-nextFSM_p}). The \acs{FSM} state switches states upon receiving a data ready strobe (\lstinline!midiByteValid_i!) from the \acs{UART} reciever. The input byte is also latched on this event (\autoref{lst:midi-midiByteReg_p}) and is then being processed according to the state.
+
+\lstinputlisting[
+    firstline=44,
+    lastline=51,
+    label={lst:midi-nextFSM_p},
+    caption={States of the \acl{FSM}. The next state will be immediately set, only the assignment of the next state to the current state is eventful.}
+]{midi.v}
+
+\lstinputlisting[
+    firstline=86,
+    lastline=94,
+    label={lst:midi-midiByteReg_p},
+    caption={Register the next \acs{FSM} state aswell as the input byte, when the input byte is valid.}
+]{midi.v}
+
+The velocity data itself is ignored, however, it still needs to be present at the input, because the data ready strobe of the last byte is needed to switch into the idle state. For most instruments, the velocity is interpreted as the loudness of the tone. As the digital output only has one amplitude level, this value is obsolete.
 
 Voice Stealing
 
 MIDI Channel routing
 
-Limitations: According to the General MIDI-System Level 1 (GM-1) Specifications, a Sound Generating Instrument must implement a set of features to ensure compatibility with various controller outputs / midi-sequences~\cite{gm1_specification_online}. This Project does not comply with GM-1 as even the smallest feature-set requires a much more complex midi statemachine which is beyond the goals of this project.
+\subsection{Limitations}
+
+According to the General MIDI-System Level 1 (GM-1) Specifications, a Sound Generating Instrument must implement a set of features to ensure compatibility with various controller outputs / midi-sequences~\cite{gm1_specification_online}. This Project does not comply with GM-1 as even the smallest feature-set requires a much more complex midi statemachine which is beyond the goals of this project.
 
 \section{Synthesizer}
 
