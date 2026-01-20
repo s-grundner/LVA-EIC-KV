@@ -1,7 +1,7 @@
 `ifndef __GLOBAL
 `define __GLOBAL
 
-`define F_CLK_HZ 3_496_503
+`define F_CLK_HZ 3_500_000
 `define F_CLK_PERIOD_NS (1_000_000_000 / `F_CLK_HZ)
 `define F_BAUD 31250
 `define F_BAUD_PERIOD_NS (1_000_000_000 / `F_BAUD)

@@ -168,7 +168,6 @@
 \usepackage{multirow}
 \usepackage{url}
 \usepackage{makecell}
-
 \usepackage{wasysym}
 \usepackage{typicons}
 \usepackage{trfsigns}
@@ -179,10 +178,9 @@
 %% Settings
 
 \graphicspath{{images/}}
-\setcounter{tocdepth}{2}
+\setcounter{tocdepth}{3}
 \captionsetup{font=small}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
-% \setlength{\parskip}{11pt}
 
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -190,9 +188,9 @@
 \begin{document}
 
 \lstset{
-    language=verilog,
-    inputpath=../../src,
-    captionpos=t
+	language=verilog,
+	inputpath=../../src,
+	captionpos=t
 }
 
 \title{Tiny Tapeout - MIDI Polyphonic Synthesizer}
@@ -202,21 +200,21 @@
 
 %% Command \subtitle{subtitle}: sets the subtitle for seminar/technical reports (not used for theses)
 \subtitle{Technical Report\\%
-    \usekomafont{subtitlesmall}%
-    \hfill\\%
-    KV Integrated Circuits Design - WiSe25\\
-    \hfill\\%
+	\usekomafont{subtitlesmall}%
+	\hfill\\%
+	KV Integrated Circuits Design - WiSe25\\
+	\hfill\\%
 }
 
 \author{%
 	Simon Grundner \\ k12136610%
-    \authornewline%
-    \affiliation{Institute for Integrated Circuits and Quantum Computing}%
-    \authornewline%
-    \authormail{k12136610@students.jku.at}
-    \authornewline%
-    \authorweb{https://github.com/s-grundner/LVA-EIC-KV}
-    \authornewline%
+	\authornewline%
+	\affiliation{Institute for Integrated Circuits and Quantum Computing}%
+	\authornewline%
+	\authormail{k12136610@students.jku.at}
+	\authornewline%
+	\authorweb{https://github.com/s-grundner/LVA-EIC-KV}
+	\authornewline%
 }
 
 \partnerlogo{logos/iic.png}
@@ -240,69 +238,36 @@
 \input{04_receiver}
 \input{05_midi-decoder}
 \input{06_synth}
+\input{07_test}
+\input{08_ext}
 
-
-\section{System Testing}\label{sec:test}
-
-Edge Cases
-
-Limitations. Which tests are omitted. Correctness of the midi Input Bytoe Order for example.
-
-CocoTB Testresults, Design Simulation+validation, Measurements, Waveforms
-
-\section{External Hardware}
-
-\subsection{MIDI-Source}
-
-As the device does not fully comply to the GM-1 specs, it is best to provide MIDI inputs from a controlled environment. Pluggin in a full-fledged midi controller directly might lead to unwanted behaviour.
-
-Example of a USB-MIDI controller. 
-
-In Principle Direct connection is Possible but a Powersupply is required.
-
-Setting up a Virtual MIDI-Source with a DAW, Hairless MIDI and 
-
-PMOD as a PHY for the native Differential midi connection.
-
-\subsection{Input Side}
-
-Digital Frontend converting simultaneous Notes into individual Channel
-
-\subsection{Output Side}\label{sec:external-output-circuitry}
-
-Audio Mixing Circuit, Gain Control, Speaker Driver
-
-
-Option for mild subtractive Sound-Design
-
-- Squarewaves provide all odd harmonics of the fundamental frequencies, which can be filtered by an external system to create different Sounddesigns
-
-- optimal Would be a Sawtooth as it contains all harmonics but violated the digitality of the ASIC Output. 
+\newpage
+\appendix
 
 \section{Used Software}\label{sec:sw}
 
 \begin{table}[h]
-\caption{List of used software for development and comissioning this project}\label{tab:sw}
-\begin{tabularx}{\textwidth}{llXX}
-\toprule 
-Name & Version & Description & Usage \\ \midrule
-Ableton Live 11 Suite & 11.3.43 & \ac{DAW} & \\ \bottomrule
-\end{tabularx}
+	\caption{List of used software for development and comissioning this project}\label{tab:sw}
+	\begin{tabularx}{\textwidth}{llXX}
+		\toprule
+		Name                  & Version & Description & Usage \\ \midrule
+		Ableton Live 11 Suite & 11.3.43 & \ac{DAW}    &       \\ \bottomrule
+	\end{tabularx}
 \end{table}
 
 appendix: Setting up a development env.
 
-\input{literature}
-
-\section*{Wikipedia References}
+\section{Wikipedia References}
 
 \begin{itemize}[label=\faWikipediaW]
-    \item \href{https://en.wikipedia.org/wiki/MIDI}{MIDI - Wikipedia}
-    \item \href{https://en.wikipedia.org/wiki/MIDI_tuning_standard}{MIDI tuning standard - Wikipedia}
-    \item \href{https://en.wikipedia.org/wiki/Scientific_pitch_notation}{Scientific pitch notation - Wikipedia}
-    \item \href{https://en.wikipedia.org/wiki/12_equal_temperament}{12 equal temperament - Wikipedia}
-    \item \href{https://en.wikipedia.org/wiki/A440_(pitch_standard)}{A440 (pitch standard) - Wikipedia}
+	\item \href{https://en.wikipedia.org/wiki/MIDI}{MIDI - Wikipedia}
+	\item \href{https://en.wikipedia.org/wiki/MIDI_tuning_standard}{MIDI tuning standard - Wikipedia}
+	\item \href{https://en.wikipedia.org/wiki/Scientific_pitch_notation}{Scientific pitch notation - Wikipedia}
+	\item \href{https://en.wikipedia.org/wiki/12_equal_temperament}{12 equal temperament - Wikipedia}
+	\item \href{https://en.wikipedia.org/wiki/A440_(pitch_standard)}{A440 (pitch standard) - Wikipedia}
 \end{itemize}
+
+\input{literature}
 
 \end{document}
 \endinput

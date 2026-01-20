@@ -1,0 +1,29 @@
+\newpage
+\section{External Hardware}
+
+\subsection{MIDI-Source}
+
+As the device does not fully comply to the GM-1 specs, it is best to provide MIDI inputs from a controlled environment. Pluggin in a full-fledged midi controller directly might lead to unwanted behaviour.
+
+Example of a USB-MIDI controller. 
+
+In Principle Direct connection is Possible but a Powersupply is required.
+
+Setting up a Virtual MIDI-Source with a DAW, Hairless MIDI and 
+
+PMOD as a PHY for the native Differential midi connection.
+
+\subsection{Input Side}
+
+Digital Frontend converting simultaneous Notes into individual Channel
+
+\subsection{Output Side}\label{sec:external-output-circuitry}
+
+Audio Mixing Circuit, Gain Control, Speaker Driver
+
+
+Option for mild subtractive Sound-Design
+
+- Squarewaves provide all odd harmonics of the fundamental frequencies, which can be filtered by an external system to create different Sounddesigns
+
+- optimal Would be a Sawtooth as it contains all harmonics but violated the digitality of the ASIC Output. 

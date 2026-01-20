@@ -11,7 +11,7 @@ As \acs{UART} is a common interface, there are already several implementations a
 
 \subsection{Statemachine}
 
-At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}) with the four states a UART transmission can assume: \texttt{IDLE}, \texttt{START}, \texttt{RECV} and \texttt{STOP}. A combiatorial process decides, which state is registered with the next clock cycle as shown in \autoref{lst:rx-nextFsmState_p}.
+At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}), with the four states a UART transmission can assume: \texttt{IDLE}, \texttt{START}, \texttt{RECV} and \texttt{STOP}. A combinatorial process decides, which state is registered with the next clock cycle as shown in \autoref{lst:rx-nextFsmState_p}.
 
 \begin{figure}[h]
     \centering
@@ -27,8 +27,8 @@ At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}) with the four s
 ]{rx.v}
 
 \begin{enumerate}[noitemsep]
-    \item \textbf{IDLE}: With each clock cycle, the input is latched in \lstinline!rxDataReg! (\autoref{lst:rx-rxBuffer_p}). The data register is normally high in the idle state. When a startbit is detected, so the \lstinline!rxDataReg! wire assumes a low state, the next state is set to \lstinline!START!.
-    \item \textbf{START}: The counter \lstinline!cycleCounter! divides the frequency into the baudrate defined in \texttt{global.v} (\autoref{lst:rx-countCycles_p}). After a bit-period has elapsed, the next state is set to \lstinline!RECV!, as the period of the start bit has now elapsed.
+    \item \textbf{IDLE}: With each clock cycle, the input is latched in \lstinline!rxDataReg! (\autoref{lst:rx-rxBuffer_p}). The data register is normally high in the idle state. When a startbit is detected - so the \lstinline!rxDataReg! wire assumes a low state - the next state is set to \lstinline!START!.
+    \item \textbf{START}: The counter \lstinline!cycleCounter! divides the frequency into the baudrate defined in \texttt{global.v} (\autoref{lst:rx-countCycles_p}). After the period of the start bit has elapsed, the next state is set to \lstinline!RECV!.
     \item \textbf{RECV}: A second counter \lstinline!bitCounter! counts the number of sampled databits at the input (\autoref{lst:rx-countBit_p}). When the expected payload is recieved, the next state is set to \lstinline!STOP!.
     \item \textbf{STOP}: The cycle counter counts the remaining half bit period and sets the next state to \lstinline!IDLE!.
 \end{enumerate}
@@ -44,14 +44,14 @@ At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}) with the four s
     firstline=141,
     lastline=149,
     label={lst:rx-countCycles_p},
-    caption={Increment the cycle counter. The counter is incremented in each clockcycle when not in the \lstinline!IDLE! state. The counter is reset after the counter reaches the maximum cycles per bit count. After the counter overflows, a bit period defined by the baudrate is elapsed.}
+    caption={Increments the cycle counter. The counter is incremented in each clockcycle, when not in the \lstinline!IDLE! state. The counter is reset after the counter reaches the maximum cycles per bit count. After the counter overflows, a bit period defined by the baudrate is elapsed.}
 ]{rx.v}
 
 \lstinputlisting[
     firstline=152,
     lastline=160,
     label={lst:rx-countBit_p},
-    caption={Increment the bit counter. The counter increments when the cycle counter reaches its maximum (a new bit is ready to be sampled) and the \acs{FSM} is in the \lstinline!RECV! state. The counter is reset when the \acs{FSM} leaves the \lstinline!RECV! state.}
+    caption={Increments the bit counter. The counter increments, when the cycle counter reaches its maximum (a new bit is ready to be sampled) and the \acs{FSM} is in the \lstinline!RECV! state. The counter is reset when the \acs{FSM} leaves the \lstinline!RECV! state.}
 ]{rx.v}
 
 

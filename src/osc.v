@@ -47,7 +47,7 @@ module osc (
 	wire [`OSC_CNT_BW-1:0] oscCounter;
 
 	/* verilator lint_off UNUSEDSIGNAL */
-	// truncate to 8 bits as only 8 bits used for comparison
+	// OK: truncate to 8 bits as only 8 bits used for comparison
 	wire [`OSC_CNT_BW-1:0] oscCmp = oscCounter >> shift;
 	/* verilator lint_on UNUSEDSIGNAL */
 

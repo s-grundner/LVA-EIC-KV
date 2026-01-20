@@ -1,52 +1,216 @@
 \newpage
 \section{Synthesizer}
 
-How is the Frequency Generated?
+The synthesizer is the top level module of the design which takes the note data, converts it into a time base and routes it to the oscillators. Other than connecting all the individual modules (see \autoref{fig:blockdiagram}), the synth module is responsible for automatically generating an array of oscillator instances (oscillator stack) via a \emph{generate-for} demonstrated in \autoref{fig:synth-for-generate}. This approach allows for adjusting the number of voices with a single parameter \lstinline!OSC_VOICES! in the \texttt{global.v} file. Should further optimizations be found, the parameter can be changed to increase polyphony count. This automatically opens up additional MIDI channels.
 
-Count up a defined Number of steps
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{osc-generate.drawio.png}
+	\caption{Generate multiple instances of a single module under the use of a the generate feature in Verilog.}\label{fig:synth-for-generate}
+\end{figure}
 
-For each Count, a time interval of 1/fclk elapses.
+All oscillators share the same inputs. Each oscillator decides internally, if the input is processed when the channel number matches. The generation and wiring of the oscillator stack can be seen in \autoref{lst:synth-gen-for}.
 
-The Lowest Frequency requires the highest number of counts
+\lstinputlisting[
+	firstline=65,
+	lastline=85,
+	label={lst:synth-gen-for},
+	caption={generate-for implementation to create an array of oscillators for the required polyphonic count.}
+]{synth.v}
 
-The Task is to (space) efficiently determine the Counter Period from the MIDI-Note number
+\subsection{Timebase Calculation}
+
+The MIDI decoder yields just the note number, which can not yet be interpreted as a frequency. For this, a \acl{LUT} is implemented serving, as an interface between note number and timebase.
+
+As seen in \autoref{eq:f-K}, the process to convert a note number to a frequency, let alone a counter value, is not a straight forward calculation to be implemented in \acs{CMOS} logic. Multiple challenges arise with this calculation, especially for divisions and modulo operations. The only convenience is, that the base of the exponential is two. For this, logical shift operations (<<,>>) will be leveraged.
+
+Instead of performing the calculation at all, a \acl{LUT} could be created and indexed with the note number directly, which returns a counter value. With this approach, the space which is occupied just by the \acl{LUT} has to be considered. Storing all the notes over the MIDI piano note range (21-108) would require a total of 88 entries, each with the bitwidth of the oscillators resolution.
+
+To efficiently calculate the note frequencies, a LUT is used to store the half\footnote{Only half the countervalue is needed, because the squarewave has a duty cycle of \SI{50}{\percent}. This allows to achieve one additional bit of resolution.} counter periods of only a single octave. The other notes can then be reached, by dividing (>>) or multiplying (<<) by $2$.
+
+\subsubsection{Choosing a Clock Frequency}
+
+To represent a time duration with a counter, a core frequency needs to be known. Only then a time resolution can be defined, which is represented by a counter increment.
+
+\begin{wrapfigure}[14]{r}{6cm}
+	\vspace*{-16pt}
+	\centering
+	\includegraphics[width=6cm]{DTO.drawio.png}
+	\caption{Generating custom time periods with a fixed clock cycle by defining a maximum countervalue}\label{fig:dto}
+\end{wrapfigure}
+
+From \autoref{fig:dto} can be derived, that the relation between the half period counter value $N$ and the clock frequency is given by
+\begin{equation}
+	N (K_\text{MIDI})= \left\lfloor\frac{f_\text{clk}}{2f_\text{note}(K_\text{MIDI})}\right\rfloor\label{eq:cnt-freq}
+\end{equation}
+
+For the lowest frequency, the largest counter value is needed. To optimally cover the whole counter range, the largest counter value is chosen as a power of two. The exponent resulting in the largest countervalue is defined as the Bitwidth of the counter. This value is chosen to be
+\[
+	BW = \SI{16}{\bit}
+\]
+With the lowest piano note being an $A_0\equiv \SI{27.5}{\hertz}$ with the note number $K=21$, the required clock frequency is calculated by
+\[
+	f_\text{clk} = 2f_{A_0} N_{\max} = 2\cdot \SI{27.5}{\hertz} \cdot 2^{16} \approx \SI{3.604}{\mega\hertz}
+\]
+
+To mitigate counter overflows, the clock frequency is reduced to a round value of
+\begin{equation}
+	f_\text{clk}=\SI{3.5}{\mega\hertz}, \quad t_{\text{clk}} = \frac{1}{f_\text{clk}} \approx \SI{285.7}{\nano\second} \label{eq:f-clk}
+\end{equation}
+
+\subsubsection{Precalculating the Octave}
+
+As stated, only the counter values of a single octave will be stored and are shifted left or right to double or half the frequency. With this approach, a common ground is found between calculating the counter value from the note number directly and looking it up from a \acs{LUT}. The task is now to decide on one of the $\lfloor 127/12\rfloor = 10$ possible octaves in the \acs{MIDI} range. The options are:
+
+\begin{itemize}[noitemsep]
+	\item Choosing the highest octave and shift up. The highest frequencies require the smallest counter values, so this option would be the most memory efficient. But it has to be analysed, if the frequencies are precise enough not to propagate a significant error down to the lower frequencies.
+	\item Choosing the lowest octave and shift down. This requires the most amount of space but eliminates the systematic error.
+	\item Choosing a middle octave and shift up or down, if neither of the options above are optimal.
+\end{itemize}
+
+% Compare optimisations
+% - Performing an actual Twelvetone Temparament Calculation on Hardware
+% - Lookup Table: Save the Countervalues of the Twelve Notes on the Octave to achieve Most precise Counterperiod. What Calculations are required by the oscillators
+% - Lookup Table: Reduce Bitwitdth and therefor required LUT Size. Compare Size Reduction
+
+A deviation from the optimal note frequency occurs, because the calculated counter period in \autoref{eq:cnt-freq} can only assume integer values while the decimal places are discarded. Higher frequencies are closer to the smallest time period to be resolved (\autoref{eq:f-clk}), which results in a higher relative error. Shifting from a smaller counter period upwards, ignores the lower significant bits (LSB), which could otherwise be used to store more precise values. As shifting is multiplicative, the same relative error applies to the resulting counter period directly. E.g. shifting $N_\text{CNT}=165_d\equiv 10101010_b$ by four octaves yields:
+\[
+	10101010 << 4 = 10101010{\color{red}0000}\quad (\text{introduced zeros})
+\]
+
+First, the highest MIDI octave is evaluated with \autoref{eq:cnt-freq} and \autoref{eq:f-K} using Python\footnote{\url{https://colab.research.google.com/drive/112KU6qkG-dn52oH6FUdRSUOJgx0EZzzK?usp=sharing}}. The results are shown in \autoref{tab:high-octave-dev}. For the synthesized $f_\text{synth}$, first the equivalent counter value is calculated, floored, and then re-evaluated back to the frequency:
+\begin{equation}
+	f_\text{synth}(K_\text{MIDI}) = \frac{f_\text{clk}}{N(K_\text{MIDI})}\cdot \frac{1}{2}\label{eq:f-synth-1}
+\end{equation}
+
+Shifting the count values from \autoref{tab:high-octave-dev} eight octaves down to the lowest piano octave (multiplying $N_\text{CNT}$ by $2^8=256$ and applying \autoref{eq:cnt-freq}), shows, that the relative error is preserved, with the results in \autoref{tab:high-to-low-octave-dev}. Here the synthesized frequency is calculated by
+\begin{equation}
+	f_{\text{synth}}(K_\text{MIDI}) = \frac{f_\text{clk}}{2^8 \cdot N(K_\text{MIDI}+12\cdot 8)}\cdot \frac{1}{2}
+\end{equation}
+
+If $f_\text{synth}$ for the lower frequency range is directly calculated in the same way as for the values in \autoref{tab:low-octave-dev} using \autoref{eq:f-synth-1}, it can be seen by the results in \autoref{tab:low-octave-dev}, that the relative error is reduced by factors up to $500$.
 
 
-\subsection{Frequency Calculation and Generation}
+% Impact of Frequency Deviation
+% - Systematic error of frequencies from reducing counter resolution. Deviations and calculations from Py-Notebook.
 
-Limitations:
+\begin{table}[htbp]
+	\caption{Half counter values of the highest octave (8) by direct calculation from the MIDI note number. The error is caused by the truncation of the counter period to an integer value.}\label{tab:high-octave-dev}
+	\input{tables/f-high.tex}
+\end{table}
 
-- Frequency Resolution determined by Clock Frequency
-- Divisions and Modulo operations are Expensive. 
+\begin{table}[htbp]
+	\caption{Half counter values of the lowest octave (0) by using the counter values from the eighth octave and logically shifting the counter period upwards. The error is caused by the shift operation omitting the LSB values.}\label{tab:high-to-low-octave-dev}
+	\input{tables/f-high-to-low.tex}
+\end{table}
 
-Choosing a Clock Frequency
+\begin{table}[htbp]
+	\caption{Half counter values of the lowest octave (0) by direct calculation from the MIDI note number. The error almost negligible, because the LSBs are used to determine the counter period up to the resolution of the clock period.}\label{tab:low-octave-dev}
+	\input{tables/f-low.tex}
+\end{table}
 
-- See reasoning in Py Notebook
+% Are the Deviations Audible?
+% - Heavily Dependent on the individual Person (Hearing Curve)
+% - Document Experiment in Ableton Live
 
-Externalize Calculation Logic from the Oscillator Stack
+\paragraph{Conclusion} Even though the error is larger on a relative scale, it has to be evaluated if the absolute frequency deviation is audible. Detecting such small deviations by ear is heavily dependent on the individual. The relative error can be applied to all the other octaves and tested, if there are audible differences. An analysis by the author was carried out in the \acs{DAW} Ableton Live using the arbitrary wave generator \emph{Operator}.
 
-Compare optimisations
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{live-operator.png}
+	\caption{In the Operator, the waveform is selected as a digital squarewave (\emph{SqD}). The frequnecy can be set precisely with the lower left \emph{Freq} dial.}
+\end{figure}
 
-- Performing an actual Twelvetone Temparament Calculation on Hardware
+The conclusion of this experiment is that only deviations in the middle octaves can be just slightly perceived. Due to this minor influence on the instrument quality, the option with the least amount of required memory is chosen.
 
-- Lookup Table: Save the Countervalues of the Twelve Notes on the Octave to achieve Most precise Counterperiod. What Calculations are required by the oscillators
+\subsubsection{Table Optimizations}
 
-- Lookup Table: Reduce Bitwitdth and therefor required LUT Size. Compare Size Reduction
+The candidates to be hardwired into the IC are now listed in \autoref{tab:candidates}. By analysing the bitpattern of the binary values, it can be seen, that the most significant bit is common to all values. Now, even one less bit needs to be stored for a total of \SI{7}{\bit}. The omitted bit is added again in the oscillators themselves. This optimization reduces routing costs, as now one less wire needs to be routed to each oscillator.
 
-Impact of Frequency Deviation
+\begin{table}[h]
+	\centering
+	\caption{Final values of the half counter periods to be stored in the \acs{LUT}. The values are stored with the removal of redundant bits.}\label{tab:candidates}
+	\input{tables/canditates.tex}
+\end{table}
 
-- Systematic error of frequencies from reducing counter resolution. Deviations and calculations from Py-Notebook.
+\subsubsection{Implementation}
 
-- Spectrum and Harmonics
+The \texttt{note2cnt} module contains the \acl{LUT} and mostly combinatorial logic for indexing the \acs{LUT}. The ports of the module are seen in \autoref{lst:note2cnt}. The \acl{LUT} is declared as a register array, which is initially set to the predefined values in \autoref{tab:candidates}. The indexing starts with the $A$ note. As the first $A_0$ note starts at $21$, the value is first subtracted as shown in \autoref{lst:note2cnt-sub}.
 
-Are the Deviations Audible?
+\lstinputlisting[
+	firstline=16,
+	lastline=22,
+	label={lst:note2cnt},
+	caption={Module ports of the \texttt{note2cnt} module}
+]{note2cnt.v}
 
-- Heavily Dependent on the individual Person (Hearing Curve)
+\lstinputlisting[
+	firstline=24,
+	lastline=38,
+	label={lst:note-rom},
+	caption={Implementation of the register, which stores the values of the \acs{LUT} listed in \autoref{tab:candidates}}
+]{note2cnt.v}
 
-- Document Experiment in Ableton Live
+\lstinputlisting[
+	firstline=48,
+	lastline=54,
+	label={lst:note2cnt-sub},
+	caption={Subtract the base note from the note present on the input, so that the new numbering of the notes starts at $0$. If the incoming note is somehow below the lowest piano note, the note is passed directly to prevent negative values.}
+]{note2cnt.v}
 
-\subsection{Oscillatorstack}
+To index the \acs{LUT}, it needs to be extracted which of the twelve notes in the octave is present at the input. To do this, one would classical use the modulo (\si{\percent}) operator. However, using it proved to instantly require more space. What also needs to be known, is the octave number to determine the amount to shift the counter register. For this, the note number has to be divided by $12$, which also leads to the issue, that divisions are costly to implement in hardware. For this the workarounds are shown in \autoref{lst:div} and \autoref{lst:mod}.
+
+\lstinputlisting[
+	firstline=56,
+	lastline=67,
+	label={lst:div},
+	caption={Determine the shift amount by applying thresholds of note range with a if-else structure, to work around the division.}
+]{note2cnt.v}
+
+\lstinputlisting[
+	firstline=69,
+	lastline=73,
+	label={lst:mod},
+	caption={Calculate the note index by subtracting the octave base.}
+]{note2cnt.v}
+
+At last, the time base value and the shift amount are registered to the output of the module in \autoref{lst:note-out}. It has to be noted, that \autoref{lst:div} and \autoref{lst:mod} infer a long combinatorial chain from the input to the register. Due to the propagation delay of the combinatorics, it is not guaranteed, that the output is present within one clock period. This is dependent on the gate implementations of the PDK.
+
+\lstinputlisting[
+	firstline=75,
+	lastline=83,
+	label={lst:note-out},
+	caption={Assigning the time base and the shift value. As the counter value needs to be shifted down \emph{to} the octave, the shift value is the maximum octave minus the current octave.}
+]{note2cnt.v}
+
+\subsection{Oscillator}
 
 Routing a MIDI a Channel to a fixed Oscillator.
 
 Modularity by a Generating Function: Option to increase number of voices for larger space or future Design optimisations.
+
+It is important to externalise as many calculations as necessary, as the oscillator is a module which is generated multiple times in hardware. Also, wiring up oscillators with a large number of inputs can use up a high amount of space.
+
+
+
+\section{Encoding the number of active oscillators}
+
+A feature of the design is, that the pin \texttt{uo[7]} outputs a PWM signal, which encodes the number of actively playing oscillator. The idea behind this, is that if the PWM signal is heavily lowpassed, the average DC-voltage can be used to control the gain of external mixing circuitry.
+
+The synth module registers, which oscillators are currently active in a register. The register stores a \lstinline!1! at the index of the associated channel if the oscillator is active and \lstinline!0! otherwise. To convert this logic into a PWM signal, the number of high bits are converted into a number and then fed into a PWM module which is based on a counter.
+
+Counting the bits in the active oscillator register is straight forward by summing each bit together shown in \autoref{lst:bitcnt}
+
+\lstinputlisting[
+	firstline=12,
+	lastline=26,
+	label={lst:bitcnt}
+]{bitcount.v}
+
+
+
+\lstinputlisting[
+	firstline=12,
+	lastline=37,
+	label={lst:pwm}
+]{pwm.v}

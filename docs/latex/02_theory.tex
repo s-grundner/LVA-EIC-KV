@@ -1,39 +1,39 @@
 \newpage
 \section{Digital Instruments and Music Theory}
 
-Before discussing the design, a few fundamentals of music theory have to be considered and how implementing a digital instrument in silicon is sensible. The MIDI Manufactures Association defines the \ac{GM1} and its extension the \ac{GM2} standard to provide guidelines for developing \acs{MIDI} compatible instruments. 
+Before discussing the design, a few fundamentals of music theory have to be considered and how implementing a digital instrument in silicon is sensible. The MIDI Manufactures Association defines the \ac{GM1} and its extension the \ac{GM2} standard to provide guidelines for developing \acs{MIDI} compatible instruments.
 
 \subsection{The MIDI-Protocol}
 
 The \acs{MIDI}-protocol is based on a serial asynchronous data transmission, where at most three bytes are sent in succession, with a dataformat as shown in \autoref{tab:midi-frame}. It is noted, that not all commands require a second data byte which is why it is specified in brackets as an optional byte. In this report all required commands provide a second data byte, therefor a length of three bytes will be assumed from now on.
 
 \begin{table}[htbp]
-\caption{Dataformat of a MIDI-protocol transmission}\label{tab:midi-frame}
-\begin{tabularx}{\textwidth}{
-    >{\centering\arraybackslash} p{.143\textwidth}
-    >{\centering\arraybackslash} p{.143\textwidth}
-    YY
-}
-    \toprule
-    \multicolumn{2}{c}{Byte 1} & Byte 2 & Byte 3 \\ \midrule
-    \multicolumn{2}{c}{Statusbyte} & \multirow{2}{*}{Databyte 1} & \multirow{2}{*}{[Databyte 2]} \\
-    Command & Channel & & \\ \bottomrule
-\end{tabularx}
+	\caption{Dataformat of a MIDI-protocol transmission}\label{tab:midi-frame}
+	\begin{tabularx}{\textwidth}{
+			>{\centering\arraybackslash} p{.143\textwidth}
+			>{\centering\arraybackslash} p{.143\textwidth}
+			YY
+		}
+		\toprule
+		\multicolumn{2}{c}{Byte 1}     & Byte 2                      & Byte 3                          \\ \midrule
+		\multicolumn{2}{c}{Statusbyte} & \multirow{2}{*}{Databyte 1} & \multirow{2}{*}{[Databyte 2]}   \\
+		Command                        & Channel                     &                               & \\ \bottomrule
+	\end{tabularx}
 \end{table}
 
 \begin{table}[htbp]
-    \caption{
-        Excerpt from the MIDI 1.0 specification message summary for channel voice messages \cite{midi_summary_2020}.\\
-        $N=nnnn \in [0;15]$ maps to a MIDI channel number 1-16. \\
-        $K=kkkkkkk \in [0;127]$ is the note number. (e.g. which key on a piano is pressed/released) \\ 
-        $V=vvvvvvv \in [0;127]$ is the velocity (how fast a note is pressed/released)
-    }\label{tab:midi-spec}
-\begin{tabularx}{\textwidth}{llX}
-\toprule
-Status & Databytes & Description \\ \midrule
-\texttt{1000nnnn} & \makecell{\texttt{0kkkkkkk} \\ \texttt{0vvvvvvv}} & Note Off event. This message is sent when a note is released (ended). \\ \midrule
-\texttt{1001nnnn} & \makecell{\texttt{0kkkkkkk} \\ \texttt{0vvvvvvv}} & Note On event. This message is sent when a note is pressed (started). \\ \bottomrule
-\end{tabularx}
+	\caption{
+		Excerpt from the MIDI 1.0 specification message summary for channel voice messages \cite{midi_summary_2020}.\\
+		$N=nnnn \in [0;15]$ maps to a MIDI channel number 1-16. \\
+		$K=kkkkkkk \in [0;127]$ is the note number. (e.g. which key on a piano is pressed/released) \\
+		$V=vvvvvvv \in [0;127]$ is the velocity (how fast a note is pressed/released)
+	}\label{tab:midi-spec}
+	\begin{tabularx}{\textwidth}{llX}
+		\toprule
+		Status            & Databytes                   & Description \\ \midrule
+		\texttt{1000nnnn} & \makecell{\texttt{0kkkkkkk}               \\ \texttt{0vvvvvvv}} & Note Off event. This message is sent when a note is released (ended). \\ \midrule
+		\texttt{1001nnnn} & \makecell{\texttt{0kkkkkkk}               \\ \texttt{0vvvvvvv}} & Note On event. This message is sent when a note is pressed (started). \\ \bottomrule
+	\end{tabularx}
 \end{table}
 
 The first byte combines two four-bit values representing a command and a channel number. Depending on the command code, the following databytes can be interpreted accordingly by a MIDI-sink listening on a pre-set channel. The most important and only command codes used in this project are listed in \autoref{tab:midi-spec}. A seven bit note number (denoted as \texttt{kkkkkkk} in \autoref{tab:midi-spec}) maps to the piano keys of a \ac{12ET}, where the middle C ($C_4$) is equivalent to a \acs{MIDI} note number of $60$ in decimal \cite[sec~2.7.1.1]{gm2_specification_online}.
@@ -43,70 +43,71 @@ The first byte combines two four-bit values representing a command and a channel
 A musical octave is an interval of two notes, where the frequency of the higher note is exactly twice as high as the lower note. The \acs{12ET} is a system which divides this octave into twelve notes, which are referred to in \ac{SPN} as letters from $A$ to $G$ with accidentals ($\flat$, $\sharp$) and an octave number $n$ as shown in \autoref{tab:octave}.
 
 \begin{table}[h]
-    \centering
-    \caption{\acs{SPN} Nomenclature for notes in a 12 tone tempered octave, where $n$ is the octave-number.}\label{tab:octave}
-\begin{tabular}{c|cccccccccccc|c}
-    \color{gray} $B_{n-1}$ & $C_n$ & $\dfrac{C\sharp_n}{D\flat_n}$ & $D_n$ & $\dfrac{D\sharp_n}{E\flat_n}$ & $E_n$ & $F_n$ & $\dfrac{F\sharp_n}{G\flat_n}$ & $G_n$ & $\dfrac{G\sharp_n}{A\flat_n}$ & $A_n$ & $\dfrac{A\sharp_n}{B\flat_n}$ & $B_n$ & \color{gray} $C_{n+1}$ 
-\end{tabular}
+	\centering
+	\caption{\acs{SPN} Nomenclature for notes in a 12 tone tempered octave, where $n$ is the octave-number.}\label{tab:octave}
+	\begin{tabular}{c|cccccccccccc|c}
+		\color{gray} $B_{n-1}$ & $C_n$ & $\dfrac{C\sharp_n}{D\flat_n}$ & $D_n$ & $\dfrac{D\sharp_n}{E\flat_n}$ & $E_n$ & $F_n$ & $\dfrac{F\sharp_n}{G\flat_n}$ & $G_n$ & $\dfrac{G\sharp_n}{A\flat_n}$ & $A_n$ & $\dfrac{A\sharp_n}{B\flat_n}$ & $B_n$ & \color{gray} $C_{n+1}$
+	\end{tabular}
 \end{table}
 
 These notes are equally tempered, meaning the frequency-ratio of two adjacent notes is constant for all musical notes. For an octave of 12 notes, this ratio equates to $\!\!\sqrt[12]{2}\approx 1.05946$, leading naturally to a logarithmic scale.
 
-To assert actual frequency values to the notes, a pitch standard has to be decided on. \acs{GM2} suggests the ISO-16 pitch standard, where note number $69$ in decimal ($A_4$) is tuned to $\SI{440}{\hertz}$ \cite[sec.~2.7.1.1]{gm2_specification_online}. With this reference frequency, the absolute frequency of all notes can be calculated by multiplying or dividing by the defined ratio, yielding \autoref{eq:f-K} for the note frequency $f(K)$ in dependence of the MIDI note number $K$.
+To assert actual frequency values to the notes, a pitch standard has to be decided on. \acs{GM2} suggests the ISO-16 pitch standard, where note number $69$ in decimal ($A_4$) is tuned to $\SI{440}{\hertz}$ \cite[sec.~2.7.1.1]{gm2_specification_online}. With this reference frequency, the absolute frequency of all notes can be calculated by multiplying or dividing by the defined ratio, yielding \autoref{eq:f-K} for the note frequency $f_{\text{note}}(K)$, where $K$ is the MIDI note number.
 \begin{equation}
-    f(K) = \SI{440}{\hertz} \cdot (\!\!\sqrt[12]{2}\,)^{(K-69)} = \SI{440}{\hertz} \cdot 2^{(K-69)/12}\label{eq:f-K}
+	f_{\text{note}}(K) = \SI{440}{\hertz} \cdot (\!\!\sqrt[12]{2}\,)^{(K-69)} = \SI{440}{\hertz} \cdot 2^{(K-69)/12}\label{eq:f-K}
 \end{equation}
+
+Theoretically, the MIDI note could use all 7 bits, so a note range from $[0;127]$. As MIDI is heavily used with piano style controllers, the maximum relevant range a \acs{MIDI} intrument must generate audio is that of a 88-key piano, ranging from note numbers $21$ to $108$ \cite[p.~10]{m1_detailed_specification_online}\cite[p.~25]{gm2_specification_online}. This yields a total of $108$ notes.
 
 \subsection{Instrument Characteristics}
 
-The frequency in \autoref{eq:f-K} yields the fundamental frequency of the sound oscillation generated by the instrument. However, the characteristic sound an instrument produces is caused by overtones relative to its fundamental. For example, the Grand Piano \cite{live_grandpiano} in the \ac{DAW} Ableton Live (see \nameref{sec:sw}) is characterised by overtones as seen in \autoref{fig:live-grandpiano-overtones}.
+The frequency in \autoref{eq:f-K} yields the fundamental frequency of the sound oscillation generated by the instrument. However, the characteristic sound an instrument produces is caused by overtones relative to its fundamental. For example, the Grand Piano \cite{live_grandpiano} in the \ac{DAW} Ableton Live (see \autoref{sec:sw}) is characterised by overtones as seen in \autoref{fig:live-grandpiano-overtones}.
 
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=.65\textwidth]{live-grandpiano-c3.png}
-    \caption{
-        Overtones of a grand piano instrument playing a middle C (C3 in Lives notation).\\
-        Abscissa: Audiolevel in \si{\decibel} relative to the fullscale range of the audio engine.\\
-        Ortinate: Frequency in \si{\hertz}.
-    }\label{fig:live-grandpiano-overtones}
+	\centering
+	\includegraphics[width=.55\textwidth]{live-grandpiano-c3.png}
+	\caption{
+		Overtones of a grand piano instrument playing a middle C (C3 in Lives notation).\\
+		Abscissa: Audiolevel in \si{\decibel} relative to the fullscale range of the audio engine.\\
+		Ortinate: Frequency in \si{\hertz}.
+	}\label{fig:live-grandpiano-overtones}
 \end{figure}
 
-A classical method to characterise the voice of a synthesizer is by using a wavetable. A wavetable is a discrete list of values representing the waveform amplitude over the span of one period (\autoref{fig:wt}). To synthesize the audio waveform, the table is being iterated at a certain speed, such that one loop spans over the period of the fundamental frequency. 
+A classical method to characterise the voice of a synthesizer is by using a wavetable. A wavetable is a discrete list of values representing the waveform amplitude over the span of one period (\autoref{fig:wt}). To synthesize the audio waveform, the table is being iterated at a certain speed, such that one loop spans over the period of the fundamental frequency.
 
 To implement this in the design, the output capabilites of the \acs{ASIC} have to be considered. As the design is purely digital, the output levels of the chip can only assume the logic levels high and low, which leaves following options:
 
 \begin{enumerate}[noitemsep]
-    \item Feed an audio stream to an external \acs{DAC} using serial connectivity such as \acs{I2S}. 
-    \item Use all output pins as a parallel interface to drive a parallel \acs{DAC} asynchronously. 
-    \item Have the digital output be the synthesized waveform.
+	\item Feed an audio stream to an external \acs{DAC} using serial connectivity such as \acs{I2S}.
+	\item Use all output pins as a parallel interface to drive a parallel \acs{DAC} asynchronously.
+	\item Have the digital output be the synthesized waveform.
 \end{enumerate}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\textwidth]{wavetable_example.png}
-    \caption{Wavetables for a 1-bit squarewave (left) and a 16-bit sinewave (right)}\label{fig:wt}
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.9\textwidth]{wavetable_example.png}
+	\caption{Wavetables for a 1-bit squarewave (left) and a 16-bit sinewave (right)}\label{fig:wt}
 \end{figure}
 
-For this design the latter option is chosen, which has several benefits. Using a single digital output directly as the audio waveform is equivalent to a 1-bit wavetable, resulting in a squarewave. For a 1-bit wavetable the output can simply be toggled every half period.
+For this design, the latter option is chosen, which has several benefits. Using a single digital output directly as the audio waveform is equivalent to a 1-bit wavetable, resulting in a squarewave. For a 1-bit wavetable the output can simply be toggled every half period.
 
 The spectrum of an ideal squarewave with infinite runtime is defined by a fourier series in \autoref{eq:square-fourier} containing odd multiples
 \[
-\omega_n = \frac{2\pi}{T}n, \qquad n=1,3,5,\dots
+	\omega_n = 2\pi nT^{-1}, \qquad n=1,3,5,\dots
 \]
-
 of the fundamental frequency $\omega_1$. The amplitude for harmonics of higher order declines hyperbolically \cite{square_fourier_series}, leading to a spectrum as shown in \autoref{fig:square-fourier}.
 \begin{equation}
-s(t) :=
-\sum_{n=1,3,5,\dots}^{\infty} \frac{4}{n\pi} \sin \left(\omega_n t\right)
-\quad\overset{\|\cdot\|}{\fourier}\quad
-\|S(\jmath\omega)\| :=
-\sum_{n=1,3,5,\dots}^{\infty} \frac{4}{n} \delta\left(\omega - \omega_n\right)\label{eq:square-fourier}
+	s(t) =
+	\sum_{n=1,3,5,\dots}^{\infty} \frac{4}{n\pi} \sin \left(\omega_n t\right)
+	\quad\overset{\|\cdot\|}{\fourier}\quad
+	\|S(\jmath\omega)\|_{\omega > 0} =
+	\sum_{n=1,3,5,\dots}^{\infty} \frac{4}{n} \delta\left(\omega - \omega_n\right)\label{eq:square-fourier}
 \end{equation}
 
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.9\textwidth]{square_wave_fourier_series.png}
-\caption{Approximation of a squarewave by adding odd harmonics one by one}\label{fig:square-fourier}
+	\centering
+	\includegraphics[width=0.8\textwidth]{square_wave_fourier_series.png}
+	\caption{Approximation of a squarewave by adding odd harmonics one by one}\label{fig:square-fourier}
 \end{figure}
 
 \subsection{Polyphony}
@@ -116,35 +117,37 @@ It is common for instruments to play two notes simultaneously, which is caused b
 The audiosignal is directly sent to a digital pin. However, overlapping squarewaves of differing phase and frequency, again produce an analog signal (shown in \autoref{fig:multiple_squarewaves}), which cannot be output by a single pin. Therefor, each voice has its own output pin. The individual voices are to be summed together by external circuitry, for example by an operational amplifier circuit (see \autoref{sec:external-output-circuitry}).
 
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=.9\textwidth]{multiple_squarewaves.png}
-    \includegraphics[width=.9\textwidth]{sum_of_squarewaves.png}
-    \caption{Individual Squarewaves summed up to an analog signal}\label{fig:multiple_squarewaves}
+	\centering
+	\includegraphics[width=.9\textwidth]{multiple_squarewaves.png}
+	\includegraphics[width=.9\textwidth]{sum_of_squarewaves.png}
+	\caption{Individual Squarewaves summed up to an analog signal}\label{fig:multiple_squarewaves}
 \end{figure}
 
 
 \subsection{MIDI Physical Layer}
 
-The \acs{MIDI} protocol was originally transmitted asynchronously over a differential pair, which was daisychained between MIDI devices using 5 pole DIN connectors. With rising popularity of the \ac{USB}, MIDI devices adapted to this standard. Nowadays most MIDI devices are able to communicate via \acs{USB} to a host device. Therefor MIDI instruments can also be controlled via USB under the usage of a USB to UART serial interface as it is intended with this design.
+The \acs{MIDI} protocol was originally transmitted asynchronously over a differential pair, which was daisychained between MIDI devices using 5 pole DIN connectors. This interface required additional hardware before the connection to a UART line driver \cite[p.~2]{m1_detailed_specification_online}. With rising popularity of the \ac{USB}, MIDI devices adapted to this standard. Nowadays most MIDI devices are able to communicate via \acs{USB} to a host device. Therefor MIDI instruments can also be controlled via USB under the usage of a USB to UART serial interface as it is intended with this design.
 
+\newpage
 \subsubsection{UART}
 
 \begin{wrapfigure}[7]{r}{6cm}
-    \centering
-    \includegraphics[width=6cm]{uart.drawio.png}
-    \caption{Wiring of two devices communicating via a UART connection}\label{fig:uart}
+	\vspace*{-12pt}
+	\centering
+	\includegraphics[width=6cm]{uart.drawio.png}
+	\caption{Wiring of two devices communicating via a UART connection}\label{fig:uart}
 \end{wrapfigure}
 
-The \acl{UART} or \acs{UART} is a simple interface which allows two devices to communicate over a serial connection. The devices are connected as shown in \autoref{fig:uart}. Each device can initiate a communication on its own behalf, without the acknowledgement of the other device, allowing for simultaneously sending and receiving data. The connection does not feature a clock line, which indicates an asynchronous communication. The timing for the period of individual bits is determined by a baudrate, which has to be specified in both devices. For \acs{MIDI} devices, the standard baudrate is \si{31250} \cite{m1_detailed_specification_online}.
+The \acl{UART} or \acs{UART} is a simple interface which allows two devices to communicate over a serial connection. The devices are connected as shown in \autoref{fig:uart}. Each device can initiate a communication on its own behalf, without the acknowledgement of the other device, allowing for simultaneously sending and receiving data. The connection does not feature a clock line, which indicates an asynchronous communication. The timing for the period of individual bits is determined by a baudrate, which has to be specified in both devices. For \acs{MIDI} devices, the standard baudrate is \SI{31250}{\bit\per\second} \cite{m1_detailed_specification_online}.
 
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{uart-frame.drawio.png}
-    \caption{Dataframe of a UART communication}\label{fig:uart-comm}
+	\centering
+	\includegraphics[width=0.7\textwidth]{uart-frame.drawio.png}
+	\caption{Dataframe of a UART communication}\label{fig:uart-comm}
 \end{figure}
 
-On idle, the dataline is normally set to a logic level \emph{High} by the \texttt{TX} output. To initiate a data transfer, the trasmitter pulls the communication line low for one bit-period ($\frac{1}{\text{baudrate}}$). Then, eight bits are sent with the specified baudrate followed by a stop bit, which pulls the communication line high again. A complete datatransmission is shown in \autoref{fig:uart-comm}.
+In an idle state, the dataline is normally set to a logic level \emph{high} by the \texttt{TX} output. To initiate a data transfer, the transmitter pulls the communication line low for one bit-period ($\frac{1}{\text{baudrate}}$). Then, eight bits are sent with the specified baudrate followed by a stop bit, which pulls the communication line high again. A complete datatransmission is shown in \autoref{fig:uart-comm}.
 
-It is also possible to introduce a parity bit for error correction and/or specify a payload with sizes other than 8 bit. This is not relevant in this project and will therefor not be explained in further detail.
+% It is also possible to introduce a parity bit for error correction and/or specify a payload with sizes other than 8 bit. This is not relevant in this project and will therefor not be explained in further detail.
 
 Using a \acs{UART} connection is very practical for transmitting \acs{MIDI} signals between a controller and an instrument, as the serial MIDI-Data is compatible with the \acs{UART}-payload size and does not require additional wires for e.g. clock or select signals.
