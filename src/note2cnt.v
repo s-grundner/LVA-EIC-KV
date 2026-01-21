@@ -55,14 +55,14 @@ module note2cnt (
 	
 	always @(*) begin
 		// shift = actualNote / 12
-		if (actualNote < 12) octave = 4'h0;
-		else if (actualNote < 24) octave = 4'h1;
-		else if (actualNote < 36) octave = 4'h2;
-		else if (actualNote < 48) octave = 4'h3;
-		else if (actualNote < 60) octave = 4'h4;
-		else if (actualNote < 72) octave = 4'h5;
-		else if (actualNote < 84) octave = 4'h6;
-		else if (actualNote < 96) octave = 4'h7;
+		if (actualNote[`OSC_ROM_BW-1:2] < 5'h3) octave = 4'h0;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'h6) octave = 4'h1;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'h9) octave = 4'h2;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'hC) octave = 4'h3;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'hF) octave = 4'h4;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'hF) octave = 4'h5;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'h12) octave = 4'h6;
+		else if (actualNote[`OSC_ROM_BW-1:2] < 5'h15) octave = 4'h7;
 		else octave = 4'h8; 
 	end
 
