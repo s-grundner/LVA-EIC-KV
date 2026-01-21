@@ -185,32 +185,20 @@ At last, the time base value and the shift amount are registered to the output o
 
 \subsection{Oscillator}
 
-Routing a MIDI a Channel to a fixed Oscillator.
+Each oscillator in the oscillator stack now receives the channel number and control strobes from the \acs{MIDI} decoder and the time base and shift value from the \acs{LUT} logic. The inputs of the oscillator only take effect, if the MIDI channel match, the ID generated with the \emph{generate-for} (compare \autoref{lst:synth-gen-for}, line 13).
 
-Modularity by a Generating Function: Option to increase number of voices for larger space or future Design optimisations.
+The oscillator uses combinatorial signal to control its state:
 
-It is important to externalise as many calculations as necessary, as the oscillator is a module which is generated multiple times in hardware. Also, wiring up oscillators with a large number of inputs can use up a high amount of space.
+\begin{itemize}
+	\item \texttt{start}: High, if the channels match and an \emph{on} strobe is received.
+	\item \texttt{stop}: High, if the channels match and an \emph{off} strobe is received. An additional contition is, that the counter value at the input must match the currently playing note. This is needed, that if a second note overrides the currently playing note, releasing the old key does not turn off the oscillator. Only releasing the key playing the note should turn off the output.
+	\item \texttt{cntReached}: The free running counter is shifted right by the shift amount and compared with the timebase. If the signals match, this signal is high. Also, the previously omitted bit from the LUT is added in this comparison.
+	\item \texttt{enabled}: While start and stop are strobe signals, this signal is high all the time while the oscillator is playing.
+\end{itemize}
 
+When the oscillator starts, the time base and the shift values are latched. With the oscillator enabled, whenever the counter reaches its limit, the counter is reset and the output wave is toggled with an XOR operation.
 
-
-\section{Encoding the number of active oscillators}
-
-A feature of the design is, that the pin \texttt{uo[7]} outputs a PWM signal, which encodes the number of actively playing oscillator. The idea behind this, is that if the PWM signal is heavily lowpassed, the average DC-voltage can be used to control the gain of external mixing circuitry.
-
-The synth module registers, which oscillators are currently active in a register. The register stores a \lstinline!1! at the index of the associated channel if the oscillator is active and \lstinline!0! otherwise. To convert this logic into a PWM signal, the number of high bits are converted into a number and then fed into a PWM module which is based on a counter.
-
-Counting the bits in the active oscillator register is straight forward by summing each bit together shown in \autoref{lst:bitcnt}
-
-\lstinputlisting[
-	firstline=12,
-	lastline=26,
-	label={lst:bitcnt}
-]{bitcount.v}
+The oscillator module was optimized to route as few wide signals as possible and reducing the size for logic operation.
 
 
 
-\lstinputlisting[
-	firstline=12,
-	lastline=37,
-	label={lst:pwm}
-]{pwm.v}

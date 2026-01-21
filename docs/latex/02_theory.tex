@@ -114,7 +114,7 @@ of the fundamental frequency $\omega_1$. The amplitude for harmonics of higher o
 
 It is common for instruments to play two notes simultaneously, which is caused by receiving multiple note-on commands without turning already active \acs{MIDI} notes off. An important parameter is the number of voices the instrument can produce. An instrument is considered polyphonic, if the number of voices is at least two. In this case, each voice is represented by a individual squarewave oscillators. One of the main challenges in this design is to reduce the area for the implementation of a voice oscillator to achieve a high polyphony count.
 
-The audiosignal is directly sent to a digital pin. However, overlapping squarewaves of differing phase and frequency, again produce an analog signal (shown in \autoref{fig:multiple_squarewaves}), which cannot be output by a single pin. Therefor, each voice has its own output pin. The individual voices are to be summed together by external circuitry, for example by an operational amplifier circuit (see \autoref{sec:external-output-circuitry}).
+The audiosignal is directly sent to a digital pin. However, overlapping squarewaves of differing phase and frequency, again produce an analog signal (shown in \autoref{fig:multiple_squarewaves}), which cannot be output by a single pin. Therefor, each voice has its own output pin. The individual voices are to be summed together by external circuitry, for example by an operational amplifier circuit.
 
 \begin{figure}[h]
 	\centering
