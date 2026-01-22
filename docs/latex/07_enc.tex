@@ -1,3 +1,4 @@
+\newpage
 \section{Encoding the number of active oscillators}
 
 A feature of the design is, that the pin \texttt{uo[7]} outputs a PWM signal, which encodes the number of actively playing oscillator. The idea behind this, is that if the PWM signal is heavily lowpassed, the average DC-voltage can be used to control the gain of external mixing circuitry.
@@ -7,14 +8,15 @@ The synth module registers, which oscillators are currently active in a register
 Counting the bits in the active oscillator register is straight forward by summing each bit together shown in \autoref{lst:bitcnt}.
 
 \lstinputlisting[
-	firstline=12,
-	lastline=26,
+	firstline=21,
+	lastline=24,
 	label={lst:bitcnt},
 	caption={A for loop generates an adder circuit for each bit in the input register.}
 ]{bitcount.v}
 
 The resulting count of the active oscillator register, determines the duty cycle of the \acs{PWM}. The maximum number of voices is set as the total counter period of the \acs{PWM}. A trivial implementaton of a \acs{PWM} generator is given in \autoref{lst:pwm}.
 
+\newpage
 \lstinputlisting[
 	firstline=12,
 	lastline=37,

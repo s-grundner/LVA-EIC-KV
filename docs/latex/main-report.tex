@@ -3,17 +3,6 @@
 % !TeX spellcheck = en_US
 % !BIB program = biber
 %% 
-%% The above lines help editors like TeXstudio to automatically choose the right tools
-%% to compile your LaTeX source file. If your tool does not support these magic comments,
-%% you will need to make appropriate manual choices.
-%% 
-%% You can safely use "pdflatex" instead of "xelatex" if you prefer the pdfLaTeX toolchain.
-%% However, pdfLaTeX will not be able to deliver the professional font experience that you
-%% will get with XeLaTeX. You can also safely use "lualatex" instead of "xelatex" while
-%% preserving the professional font experience if you prefer the LuaLaTeX toolchain.
-%% 
-%% _Important_: These magic comments should be on the first lines of your source file.
-%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,62 +17,28 @@
 %%  JJJJJJJJJJJJJ    KKKKKKKKKKKKKKKKKKKKKKKKKKK    UUUUUUUUUUUUUUU   
 %%    JJJJJJJJJ      KKKKKKKKKKKKKKKKKKKKKKKKKKK      UUUUUUUUUUU     
 %% 
-%% This is an example file for using the JKU LaTeX technical report template
-%% for your technical report.
-%% 
-%% Template created by Michael Roland (2021)
+%%             Template created by Michael Roland (2021)
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
-%% Document class: This is a koma-script article.
-%% 
-\documentclass[a4paper,oneside,11pt,english]{scrartcl}
-%% 
-%% The comma-separated list in square brackets are class options.
-%% Useful options that you might want to use:
-%% 
-%% Paper size:
-%%  * a4paper ... A4 paper size
-%% 
-%% Optimize for single-sided or double-sided printing:
-%%  * oneside ... single-sided
-%%  * twoside ... double-sided
-%% 
-%% Base font size:
-%%  * 10pt ... 10-pt font is used for normal text
-%%  * 11pt ... 11-pt font is used for normal text
-%% 
-%% Define document languages (the last specified language becomes the document default
-%% language):
-%%  * ngerman ... German
-%%  * english ... English
-%%  * ...
-%% 
-%% Alternate document classes: The JKU report template supports the koma-script classes
-%% `scrartcl', `scrreprt' and `scrbook'. The article class `scrartcl' is well-suited
-%% for a typical technical report. However, `scrbook' or `scrreprt' may be better
-%% suited for longer reports since they permit structuring your work in chapters.
-%%  
-%% _Important_: The document class should be the first line of LaTeX code in your main
-%% source file. Do not place anything but comments / magic comments above that line (unless
-%% you really know what you are doing).
+\documentclass[
+	a4paper,
+	oneside,
+	11pt,
+	english
+]{scrartcl}
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% Treat input files as UTF-8 encoded. Make sure to always load this when you use pdfLaTeX
-%% so that pdfLaTeX knows how to read and interpret characters in this source file.
 %% 
 \usepackage[utf8]{inputenc}
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% Use the JKU LaTeX technical report template for this document.
 %% 
 \usepackage[
 	TNF,
@@ -92,62 +47,9 @@
 	equalmargins
 ]{jkureport}
 %% 
-%% The comma-separated list in square brackets are theme options. Useful options that you
-%% might want to use:
-%% 
-%% Document type:
-%%  * phdthesis     ... PhD thesis.
-%%  * mathesis      ... Master's thesis.
-%%  * diplomathesis ... Diploma thesis.
-%%  * bathesis      ... Bachelor's thesis.
-%%  * seminarreport ... Seminar report.
-%%  * techreport    ... Technical report.
-%% 
-%% Color scheme selection options:
-%%  * JKU  ... Use JKU (gray) color scheme (this is the default if no scheme is selected).
-%%  * BUS  ... Use Business School color scheme.
-%%  * LIT  ... Use Linz Institute of Technology color scheme.
-%%  * MED  ... Use MED faculty color scheme.
-%%  * RE   ... Use RE faculty color scheme.
-%%  * SOE  ... Use School of Education color scheme.
-%%  * SOWI ... Use SOWI faculty color scheme.
-%%  * TNF  ... Use TNF faculty color scheme.
-%% 
-%% Space-efficient monospace font options (requires XeTeX/LuaTeX):
-%%  * compactmono   ... Use condensed fixed-width font everywhere.
-%%  * nocompactverb ... Do not use condensed fixed-width font for verbatim and listings.
-%% 
-%% Style-breaking options:
-%%  * noimprint      ... Do not insert imprint on title pages.
-%%  * nojkulogo      ... Do not insert JKU & K logos on title pages.
-%%  * capstitle      ... Set document title in capital letters.
-%%  * nofancyfonts   ... Do not use custom TTF fonts with XeTeX/LuaTeX / supress pdfLaTeX warning.
-%%  * equalmargins   ... Decrease the outer page margin to have both page margins of equal size
-%%                       (the additional outer margin is intentional and to be used for
-%%                       anotations; equalmargins also causes the text width to be
-%%                       significantly larger than optimal for reading).
-%% 
-%% Experimental options:
-%%  * mathastext ... Use standard document fonts (enhanced with symbols from Fira Math font
-%%                   when using XeTeX/LuaTeX) in math mode.
-%% 
-%% Advanced options:
-%%  * noautopdfinfo     ... Do not automatically try to add pdfinfo with hyperref from document
-%%                          metadata fields.
-%%  * logopath={<path>} ... Set the path where the theme can find its own logo resources. This
-%%                          should typically be a relative path and the default is `./logos'.
-%%  * fontpath={<path>} ... Set the path where the theme can find its own font resources. This
-%%                          should typically be a relative path and the default is `./fonts'.
-%% 
-%% Hint: Boolean options can be used in the forms `option' or `option=true' the enable the
-%% option and `nooption' or `option=false' to disable the option.
-%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 
-%% This is the place where you can load additional packages. If you want to load
-%% a package `biblatex', you would use the command `\usepackage{biblatex}'.
 %% 
 
 \usepackage{amsfonts}
@@ -172,8 +74,11 @@
 \usepackage{typicons}
 \usepackage{trfsigns}
 \usepackage{euler}
+\usepackage{algorithm}
+\usepackage[noEnd=false,indLines=false]{algpseudocodex}
+\usepackage{bm}
 
-%%c
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Settings
 
@@ -181,6 +86,8 @@
 \setcounter{tocdepth}{3}
 \captionsetup{font=small}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
+\newcommand{\vecb}[1]{\bm{#1}}
+\newcommand{\matb}[1]{\bm{#1}}
 
 %% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -194,18 +101,12 @@
 }
 
 \title{Tiny Tapeout - MIDI Polyphonic Synthesizer}
-
-%% Command \titleshort{short title}: sets an abbreviated version of the report title for page heads
-%\titleshort{Optional space for your abbreviated title}
-
-%% Command \subtitle{subtitle}: sets the subtitle for seminar/technical reports (not used for theses)
 \subtitle{Technical Report\\%
 	\usekomafont{subtitlesmall}%
 	\hfill\\%
 	KV Integrated Circuits Design - WiSe25\\
 	\hfill\\%
 }
-
 \author{%
 	Simon Grundner \\ k12136610%
 	\authornewline%
@@ -239,24 +140,42 @@
 \input{05_midi-decoder}
 \input{06_synth}
 \input{07_enc}
-\input{07_test}
-\input{08_ext}
+\input{08_test}
+% \input{08_ext}
 
 \newpage
 \appendix
+\section{Submission}
+
+For the submission, the git tag \texttt{Sky25b-Submission}\footnote{\url{https://github.com/s-grundner/LVA-EIC-KV/releases/tag/Sky25b-Submission}} was created, for which all workflows \emph{gds, docs} and \emph{test} passed.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.5\textwidth]{badges.png}
+	\caption{Badges of the passing workflows}
+\end{figure}
+
+The Datasheet of the IC is publicly available\footnote{\url{https://tinytapeout.github.io/tinytapeout-sky-25b/datasheet.pdf}} and the project can be found on page 228.
 
 \section{Used Software}\label{sec:sw}
 
 \begin{table}[h]
-	\caption{List of used software for development and comissioning this project}\label{tab:sw}
-	\begin{tabularx}{\textwidth}{llXX}
+	\caption{List of used software for this report}\label{tab:sw}
+	\begin{tabularx}{\textwidth}{
+		p{(\linewidth - 4\tabcolsep) * \real{0.16}}
+		p{(\linewidth - 4\tabcolsep) * \real{0.1}}
+		p{(\linewidth - 4\tabcolsep) * \real{0.175}}
+		p{(\linewidth - 4\tabcolsep) * \real{0.515}}@{}
+		}
 		\toprule
-		Name                  & Version & Description & Usage                                                                                           \\ \midrule
-		Ableton Live 11 Suite & 11.3.43 & \ac{DAW}    & Spectral analysis for instruments. Experiments for audible perceptions of frequency deviations. \\ \bottomrule
+		Name                  & Version         & Description          & Usage                                                                                                   \\ \midrule
+		Ableton Live 11 Suite & 11.3.43         & \ac{DAW}             & Spectral analysis for instruments. Experiments for audible perceptions of frequency deviations.         \\
+		Surfer                & v0.5.0-2        & Waveform Viewer      & Function and Timing analysis of the Verilog Modules.                                                    \\
+		IIC-OSIC Tools        & Release 2025.12 & IC design tools      & Docker container providing the LibreLane Toolchain and PDK among other useful open source applications. \\
+		Intel Quartus Prime   & 20.1.1          & FPGA Design Software & Examination of RTL diagrams.                                                                            \\
+		\bottomrule
 	\end{tabularx}
 \end{table}
-
-appendix: Setting up a development env.
 
 \section{Wikipedia References}
 
@@ -268,6 +187,7 @@ appendix: Setting up a development env.
 	\item \href{https://en.wikipedia.org/wiki/A440_(pitch_standard)}{A440 (pitch standard) - Wikipedia}
 \end{itemize}
 
+\newpage
 \input{literature}
 
 \end{document}

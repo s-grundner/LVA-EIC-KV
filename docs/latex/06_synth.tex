@@ -185,20 +185,63 @@ At last, the time base value and the shift amount are registered to the output o
 
 \subsection{Oscillator}
 
-Each oscillator in the oscillator stack now receives the channel number and control strobes from the \acs{MIDI} decoder and the time base and shift value from the \acs{LUT} logic. The inputs of the oscillator only take effect, if the MIDI channel match, the ID generated with the \emph{generate-for} (compare \autoref{lst:synth-gen-for}, line 13).
+Each oscillator in the oscillator stack receives the channel number and control strobes from the \acs{MIDI} decoder and the time base and shift value from the \acs{LUT} logic.
 
-The oscillator uses combinatorial signal to control its state:
+\lstinputlisting[
+	firstline=13,
+	lastline=23
+]{osc.v}
+
+The inputs of the oscillator only take effect, if the MIDI channel match the ID generated with the \emph{generate-for} (compare \autoref{lst:synth-gen-for}, line 13). The oscillator uses combinatorial signal to control its state:
 
 \begin{itemize}
 	\item \texttt{start}: High, if the channels match and an \emph{on} strobe is received.
+		\lstinputlisting[linerange={44-44},framexleftmargin=-2em,xleftmargin=-2em,numbers=none]{osc.v}
 	\item \texttt{stop}: High, if the channels match and an \emph{off} strobe is received. An additional contition is, that the counter value at the input must match the currently playing note. This is needed, that if a second note overrides the currently playing note, releasing the old key does not turn off the oscillator. Only releasing the key playing the note should turn off the output.
+		\lstinputlisting[firstline=45,lastline=45,framexleftmargin=-2em,xleftmargin=-2em,numbers=none]{osc.v}
 	\item \texttt{cntReached}: The free running counter is shifted right by the shift amount and compared with the timebase. If the signals match, this signal is high. Also, the previously omitted bit from the LUT is added in this comparison.
-	\item \texttt{enabled}: While start and stop are strobe signals, this signal is high all the time while the oscillator is playing.
+		\lstinputlisting[linerange={51-51,55-55},framexleftmargin=-2em,xleftmargin=-2em,numbers=none]{osc.v}
+	\item \texttt{enabled}: While start and stop are strobe signals, this signal is high all the time while the oscillator is playing. This value is registered each cycle as
+		\lstinputlisting[linerange={69-69},framexleftmargin=-6em,xleftmargin=-6em,numbers=none]{osc.v}
 \end{itemize}
 
 When the oscillator starts, the time base and the shift values are latched. With the oscillator enabled, whenever the counter reaches its limit, the counter is reset and the output wave is toggled with an XOR operation.
 
-The oscillator module was optimized to route as few wide signals as possible and reducing the size for logic operation.
+\subsubsection{Optimisations}
 
+The oscillator module was optimized to route as few wide signals as possible and reducing the size for logic operation. For example, to reduce the size of the time base comparison, only the set of the smallest distinguishable bit indices is compared. As there are much less entries in the lookup table, than variations of a 7 bit number, there must be bit-positions in each entry, which do not amount to the distiction between them.
 
+With each combination of bit indices, the elements of $\vecb{v}$ at the current subset are collected into a new vector $\vecb{p}$ and then added to a set $P$ with unique elements. When the set $P$ reaches the size of the \acs{LUT}, a subset has been found. To achieve this, the \texttt{combinations}\footnote{\url{https://docs.python.org/3/library/itertools.html\#itertools.combinations}} method from the \texttt{itertools} python library is used. The algorithm for this is given in Algorithm \ref{alg:subset}.
 
+\begin{algorithm}
+	\caption{Extract the smallest subset of indices, to distinguish two time bases from the binary \acs{LUT} values in \autoref{tab:candidates}.}\label{alg:subset}
+	\begin{algorithmic}[1]
+		\Require A set of $n$ binary vectors $V = \{\vecb{v}_1, \vecb{v}_2, \dots, \vecb{v}_n\}$ of length $M$
+		\Ensure A minimal subset of bit indices $S \subseteq \{0,1,\dots,M-1\}$ such that all vectors are unique on $S$
+		\For{$r \gets 1$ to $M$}
+		\ForAll{subsets $S \subseteq \{0,1,\dots,M-1\}$ of size $r$}
+		\State $P \gets \emptyset$
+		\ForAll{$\vecb{v} \in V$}
+		\State $\vecb{p} \gets $ elements of $\vecb{v}$ at the indices in $S$
+		\State add $\vecb{p}$ to $P$
+		\EndFor
+		\If{$|P| = n$}
+		\State \Return $S$
+		\EndIf
+		\EndFor
+		\EndFor
+		\State \Return $\{0,1,\dots,M-1\}$ \Comment{if all bits are needed}
+	\end{algorithmic}
+\end{algorithm}
+
+The set on indices returned by evaluating the \acs{LUT} with the algorithm is
+\[
+	S = \{2,3,4,6\}
+\]
+In Verilog, the comparison if the timebase at the input matches the currently latched timebase can be written as
+\lstinputlisting[
+	firstline=40,
+	lastline=42
+]{osc.v}
+
+This optimization actually reduced the used space in the single digit percent range.

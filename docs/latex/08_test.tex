@@ -1,0 +1,79 @@
+\newpage
+\section{System Testing}\label{sec:test}
+
+To test the design, the default CocoTB\footnote{https://www.cocotb.org/} testbench provided in the TinyTapeout template was extended to a whole parametric testsuite, which tests each module individually under a broad range of input parameters. The Makefile has been extended, to run all the tests by the GitHub Action.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{testpass.png}
+	\caption{Workflow summary, that all 40 testcases have passed.}
+\end{figure}
+
+The testruns can be viewed in a waveformviewer like \emph{surfer}. In the following sections, a few waveforms from the tests for each module will be shown. Finally one large overall system test is carried out, to test if everything works together. The report for this can be found in the Github Action results of the \emph{test} workflow.
+
+\subsection{Counter Test}
+
+The trivial counter is a module not explicitly mentioned in the documentation but a core component of a few components such as PWM and the oscillator. A few base cases to ensure correct operation were tested out.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=2cm]{tests/counter1.png}
+	\caption{The synchronous reset condition determines if the counter stops.}
+\end{figure}
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{tests/counter2.png}
+	\caption{The counter overflows and restarts.}
+\end{figure}
+
+\newpage
+\subsection{PWM Test}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=2.5cm]{tests/pwm1.png}
+	\caption{PWM signal with a on time of 2 clock cycles and a period of 8 clock cycles, resulting in a duty cycles of 1/4.}
+\end{figure}
+
+\subsection{Receiver Test}
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{tests/rx1.png}
+	\caption{Conversion of a Bitstream to a Byte}
+\end{figure}
+
+\subsection{Oscillator Test}
+
+For the oscillator, several note inputs from the list in the \acs{LUT} are tested. In the tests, the time is measured automatically in the testbench and evaluated, if the period matches the note and what percentage of deviation occurs. In \autoref{fig:osctest}, a test is manually created and the time period is measured with cursors.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[height=2.5cm]{tests/osc1.png}
+	\caption{The input for the time base is \texttt{37} with an octave shift of 7. $37$ corresponds to an $E_9$ in \autoref{tab:candidates}. Shifted by $7$ octaves down yields $E_2$. The teasured time is $\SI{12.08}{\milli\second}$, which is indeed the fundamental timeperiod for an $E_2$.}\label{fig:osctest}
+\end{figure}
+
+\newpage
+\subsection{MIDI Test}
+
+Multiple different byte sequences are sent onto the \acs{MIDI} module input and tested for the correct output.
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{tests/midi1.png}
+	\caption{For example: The first Byte sequence is $91$,$40$,$00$ (in hex). This corresponds to a note on on MIDI channel 2 (logic starts counting at 0, MIDI channels start at 1). The note is $40$ in hex and $64$ in decimal, which is an $E_4$. The velocity byte is $0$.}
+\end{figure}
+
+\subsection{Lookup Table Test}
+
+For the \acl{LUT} test, a MIDI note is presented at the input. The \texttt{note2cnt} module must yield the correct time base and shift amount at the output.
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{tests/note2cnt1.png}
+	\caption{At the cursor, the MIDI note $69$, which is an $A_4$, is input. $A$ is at index $0$ in the LUT, and correctly yields $120$ according to \autoref{tab:candidates}. Looking at the octave of the note, one can see, that a shift amount of $4$ is also correct.}
+\end{figure}
+
+\subsection{Bitcount Test}
+
+\begin{figure}[h]
+	\includegraphics[width=\textwidth]{tests/bitcnt1.png}
+	\caption{A trivial test, shows that all input represented in binary yield the correct number of high bits.}
+\end{figure}
