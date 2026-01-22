@@ -18,7 +18,7 @@ The \acs{MIDI} decoder is responsible for extracting \acs{MIDI} command and chan
 	\caption{MIDI decoder statemachine}\label{fig:midi-fsm}
 \end{wrapfigure}
 
-Here again, a \acl{FSM} shown in \autoref{fig:midi-fsm} underlies the \acs{MIDI} decoder. The decoder has four states, representing which type of byte is currently received. \lstinline!IDLE!, \lstinline!CMD! and \lstinline!NOTE! (\autoref{lst:midi-nextFSM_p}). The \acs{FSM} state switches states upon receiving a data ready strobe (\lstinline!midiByteValid_i!) from the \acs{UART} reciever. The input byte is also latched on this event (\autoref{lst:midi-midiByteReg_p}) and is then being processed according to the state.
+Here again, a \acl{FSM} shown in \autoref{fig:midi-fsm} underlies the \acs{MIDI} decoder. The decoder has four states, representing which type of byte is currently received. \lstinline!IDLE!, \lstinline!CMD! and \lstinline!NOTE! (\autoref{lst:midi-nextFSM_p}). The \acs{FSM} state switches states upon receiving a data ready strobe (\lstinline!midiByteValid_i!) from the \acs{UART} receiver. The input byte is also latched on this event (\autoref{lst:midi-midiByteReg_p}) and is then being processed according to the state.
 
 \lstinputlisting[
 	firstline=44,

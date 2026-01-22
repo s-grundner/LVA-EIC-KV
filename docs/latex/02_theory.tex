@@ -40,7 +40,7 @@ The first byte combines two four-bit values representing a command and a channel
 
 \subsection{Instrument Tuning}
 
-A musical octave is an interval of two notes, where the frequency of the higher note is exactly twice as high as the lower note. The \acs{12ET} is a system which divides this octave into twelve notes, which are referred to in \ac{SPN} as letters from $A$ to $G$ with accidentals ($\flat$, $\sharp$) and an octave number $n$ as shown in \autoref{tab:octave}.
+A musical octave is an interval of two notes, where the frequency of the higher note is exactly twice as high as the lower note. The \acs{12ET} is a system, which divides this octave into twelve notes, which are referred to in \ac{SPN} as letters from $A$ to $G$ with accidentals ($\flat$, $\sharp$) and an octave number $n$ as shown in \autoref{tab:octave}.
 
 \begin{table}[h]
 	\centering
@@ -73,7 +73,7 @@ The frequency in \autoref{eq:f-K} yields the fundamental frequency of the sound 
 	}\label{fig:live-grandpiano-overtones}
 \end{figure}
 
-A classical method to characterise the voice of a synthesizer is by using a wavetable. A wavetable is a discrete list of values representing the waveform amplitude over the span of one period (\autoref{fig:wt}). To synthesize the audio waveform, the table is being iterated at a certain speed, such that one loop spans over the period of the fundamental frequency.
+A classical method to characterise the voice of a synthesizer, is by using a wavetable. A wavetable is a discrete list of values, representing the waveform amplitude over the span of one period (\autoref{fig:wt}). To synthesize the audio waveform, the table is being iterated at a certain speed, such that one loop spans over the period of the fundamental frequency.
 
 To implement this in the design, the output capabilites of the \acs{ASIC} have to be considered. As the design is purely digital, the output levels of the chip can only assume the logic levels high and low, which leaves following options:
 
@@ -126,7 +126,7 @@ The audiosignal is directly sent to a digital pin. However, overlapping squarewa
 
 \subsection{MIDI Physical Layer}
 
-The \acs{MIDI} protocol was originally transmitted asynchronously over a differential pair, which was daisychained between MIDI devices using 5 pole DIN connectors. This interface required additional hardware before the connection to a UART line driver \cite[p.~2]{m1_detailed_specification_online}. With rising popularity of the \ac{USB}, MIDI devices adapted to this standard. Nowadays most MIDI devices are able to communicate via \acs{USB} to a host device. Therefor MIDI instruments can also be controlled via USB under the usage of a USB to UART serial interface as it is intended with this design.
+The \acs{MIDI} protocol was originally transmitted asynchronously over a differential pair, which was daisychained between MIDI devices using 5 pole DIN connectors. This interface required additional hardware before the connection to a UART line driver \cite[p.~2]{m1_detailed_specification_online}. With rising popularity of the \ac{USB}, MIDI devices adapted to this standard. Nowadays most MIDI devices are able to communicate via \acs{USB} to a host device. Therefor MIDI instruments can also be controlled via USB under the usage of a USB to UART serial interface, as it is intended with this design.
 
 \newpage
 \subsubsection{UART}
@@ -138,7 +138,7 @@ The \acs{MIDI} protocol was originally transmitted asynchronously over a differe
 	\caption{Wiring of two devices communicating via a UART connection}\label{fig:uart}
 \end{wrapfigure}
 
-The \acl{UART} or \acs{UART} is a simple interface which allows two devices to communicate over a serial connection. The devices are connected as shown in \autoref{fig:uart}. Each device can initiate a communication on its own behalf, without the acknowledgement of the other device, allowing for simultaneously sending and receiving data. The connection does not feature a clock line, which indicates an asynchronous communication. The timing for the period of individual bits is determined by a baudrate, which has to be specified in both devices. For \acs{MIDI} devices, the standard baudrate is \SI{31250}{\bit\per\second} \cite{m1_detailed_specification_online}.
+The \acl{UART} or \acs{UART} is a simple interface, which allows two devices to communicate over a serial connection. The devices are connected as shown in \autoref{fig:uart}. Each device can initiate a communication on its own behalf, without the acknowledgement of the other device, allowing for simultaneously sending and receiving data. The connection does not feature a clock line, which indicates an asynchronous communication. The timing for the period of individual bits is determined by a baudrate, which has to be specified in both devices. For \acs{MIDI} devices, the standard baudrate is \SI{31250}{\bit\per\second} \cite{m1_detailed_specification_online}.
 
 \begin{figure}[h]
 	\centering

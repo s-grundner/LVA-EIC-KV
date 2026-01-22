@@ -1,12 +1,12 @@
 \newpage
 \section{Receiver}
 
-As \acs{UART} is a common interface, there are already several implementations available in Verilog. For this project, an open source implementation\footnote{https://github.com/ben-marshall/uart} under the MIT license was used as a starting point and has then been adjusted to the project. As the project only recieves data and does not sent any, only the \acs{UART}-receiver has to be implemented. 
+As \acs{UART} is a common interface, there are already several implementations available in Verilog. For this project, an open source implementation\footnote{https://github.com/ben-marshall/uart} under the MIT license was used as a starting point and has then been adjusted to the project. As the project only receives data and does not sent any, only the \acs{UART}-receiver has to be implemented.
 
 \lstinputlisting[
-    firstline=14,
-    lastline=20,
-    caption={Receiver module ports}
+	firstline=14,
+	lastline=20,
+	caption={Receiver module ports}
 ]{rx.v}
 
 \subsection{Statemachine}
@@ -14,66 +14,66 @@ As \acs{UART} is a common interface, there are already several implementations a
 At the core of the receiver is a \ac{FSM} (\autoref{fig:rx-fsm}), with the four states a UART transmission can assume: \texttt{IDLE}, \texttt{START}, \texttt{RECV} and \texttt{STOP}. A combinatorial process decides, which state is registered with the next clock cycle as shown in \autoref{lst:rx-nextFsmState_p}.
 
 \begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{rx-fsm.drawio.png}
-    \caption{Statemachine diagram for the receiver}\label{fig:rx-fsm}
+	\centering
+	\includegraphics[width=0.7\textwidth]{rx-fsm.drawio.png}
+	\caption{Statemachine diagram for the receiver}\label{fig:rx-fsm}
 \end{figure}
 
 \lstinputlisting[
-    firstline=56,
-    lastline=71,
-    label={lst:rx-nextFsmState_p},
-    caption={Combinatorics to select next FSM state}
+	firstline=56,
+	lastline=71,
+	label={lst:rx-nextFsmState_p},
+	caption={Combinatorics to select next FSM state}
 ]{rx.v}
 
 \begin{enumerate}[noitemsep]
-    \item \textbf{IDLE}: With each clock cycle, the input is latched in \lstinline!rxDataReg! (\autoref{lst:rx-rxBuffer_p}). The data register is normally high in the idle state. When a startbit is detected - so the \lstinline!rxDataReg! wire assumes a low state - the next state is set to \lstinline!START!.
-    \item \textbf{START}: The counter \lstinline!cycleCounter! divides the frequency into the baudrate defined in \texttt{global.v} (\autoref{lst:rx-countCycles_p}). After the period of the start bit has elapsed, the next state is set to \lstinline!RECV!.
-    \item \textbf{RECV}: A second counter \lstinline!bitCounter! counts the number of sampled databits at the input (\autoref{lst:rx-countBit_p}). When the expected payload is recieved, the next state is set to \lstinline!STOP!.
-    \item \textbf{STOP}: The cycle counter counts the remaining half bit period and sets the next state to \lstinline!IDLE!.
+	\item \textbf{IDLE}: With each clock cycle, the input is latched in \lstinline!rxDataReg! (\autoref{lst:rx-rxBuffer_p}). The data register is normally high in the idle state. When a startbit is detected - so the \lstinline!rxDataReg! wire assumes a low state - the next state is set to \lstinline!START!.
+	\item \textbf{START}: The counter \lstinline!cycleCounter! divides the frequency into the baudrate defined in \texttt{global.v} (\autoref{lst:rx-countCycles_p}). After the period of the start bit has elapsed, the next state is set to \lstinline!RECV!.
+	\item \textbf{RECV}: A second counter \lstinline!bitCounter! counts the number of sampled databits at the input (\autoref{lst:rx-countBit_p}). When the expected payload is received, the next state is set to \lstinline!STOP!.
+	\item \textbf{STOP}: The cycle counter counts the remaining half bit period and sets the next state to \lstinline!IDLE!.
 \end{enumerate}
 
 \lstinputlisting[
-    firstline=115,
-    lastline=123,
-    label={lst:rx-rxBuffer_p},
-    caption={Register the input wire with each clock cycle. To break up long combinatorial chains before registering, the received data is internally latched a second time.}
+	firstline=115,
+	lastline=123,
+	label={lst:rx-rxBuffer_p},
+	caption={Register the input wire with each clock cycle. To break up long combinatorial chains before registering, the received data is internally latched a second time.}
 ]{rx.v}
 
 \lstinputlisting[
-    firstline=141,
-    lastline=149,
-    label={lst:rx-countCycles_p},
-    caption={Increments the cycle counter. The counter is incremented in each clockcycle, when not in the \lstinline!IDLE! state. The counter is reset after the counter reaches the maximum cycles per bit count. After the counter overflows, a bit period defined by the baudrate is elapsed.}
+	firstline=141,
+	lastline=149,
+	label={lst:rx-countCycles_p},
+	caption={Increments the cycle counter. The counter is incremented in each clockcycle, when not in the \lstinline!IDLE! state. The counter is reset after the counter reaches the maximum cycles per bit count. After the counter overflows, a bit period defined by the baudrate is elapsed.}
 ]{rx.v}
 
 \lstinputlisting[
-    firstline=152,
-    lastline=160,
-    label={lst:rx-countBit_p},
-    caption={Increments the bit counter. The counter increments, when the cycle counter reaches its maximum (a new bit is ready to be sampled) and the \acs{FSM} is in the \lstinline!RECV! state. The counter is reset when the \acs{FSM} leaves the \lstinline!RECV! state.}
+	firstline=152,
+	lastline=160,
+	label={lst:rx-countBit_p},
+	caption={Increments the bit counter. The counter increments, when the cycle counter reaches its maximum (a new bit is ready to be sampled) and the \acs{FSM} is in the \lstinline!RECV! state. The counter is reset when the \acs{FSM} leaves the \lstinline!RECV! state.}
 ]{rx.v}
 
 
 To acquire the data, the input is latched into a sample register in the middle of a bit period (\autoref{lst:rx-sampleBit_p}). When the bit period has elapsed, the sampled bit is then collected in the \lstinline!midiData! byte (\autoref{lst:rx-updRxBuffer_p}), which is then assigned to the output of the module. Whenever the whole payload is received, the \lstinline!dataReady_o! strobe\footnote{A strobe is a signal, which is high until the next rising edge of the clock signal.} is pulsed (\autoref{lst:rx-dataReady_p}), which is required by the \acs{MIDI} decoder.
 
 \lstinputlisting[
-    firstline=96,
-    lastline=103,
-    label={lst:rx-sampleBit_p},
-    caption={Sample a bit in the middle of a bit period.}
+	firstline=96,
+	lastline=103,
+	label={lst:rx-sampleBit_p},
+	caption={Sample a bit in the middle of a bit period.}
 ]{rx.v}
 
 \lstinputlisting[
-    firstline=126,
-    lastline=138,
-    label={lst:rx-updRxBuffer_p},
-    caption={Collect sampled data into a \acs{MIDI} byte. The latest bit is always inserted at the \acs{MSB} position. Already received bits are shifted right.}
+	firstline=126,
+	lastline=138,
+	label={lst:rx-updRxBuffer_p},
+	caption={Collect sampled data into a \acs{MIDI} byte. The latest bit is always inserted at the \acs{MSB} position. Already received bits are shifted right.}
 ]{rx.v}
 
 \lstinputlisting[
-    firstline=85,
-    lastline=93,
-    label={lst:rx-dataReady_p},
-    caption={Output a data ready strobe whenever a transmission is complete.}
+	firstline=85,
+	lastline=93,
+	label={lst:rx-dataReady_p},
+	caption={Output a data ready strobe whenever a transmission is complete.}
 ]{rx.v}
